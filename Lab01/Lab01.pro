@@ -10,7 +10,7 @@ LIBS    += -lOpengl32
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = opengl1
+TARGET = Lab01
 TEMPLATE = app
 
 
