@@ -4,11 +4,8 @@ GLWidget::GLWidget( const QGLFormat& format, QWidget* parent ) : QGLWidget( form
 {
 }
 
-
-
 void GLWidget::initializeGL()
 {
-    // Arrays for vertices, UVs and normals
     QGLFormat glFormat = QGLWidget::format();
     if ( !glFormat.sampleBuffers() )
         qWarning() << "Could not enable sample buffers";
@@ -25,7 +22,7 @@ void GLWidget::initializeGL()
     if ( !prepareShaderProgram( vertexPath, fragmentPath ) )
         return;
 
-	cameraPosition = QVector3D(0,3,3);
+	cameraPosition = QVector3D(0,0,5);
 
     // Set up MVP camera
     projection.perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
@@ -36,44 +33,8 @@ void GLWidget::initializeGL()
     vao1.create();
     vao1.bind();
 
-    vertices = {
-        -1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-         1.0f, 1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		 1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		 1.0f,-1.0f,-1.0f,
-		 1.0f, 1.0f,-1.0f,
-		 1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f,-1.0f,
-		 1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f,-1.0f, 1.0f,
-		 1.0f,-1.0f, 1.0f,
-		 1.0f, 1.0f, 1.0f,
-		 1.0f,-1.0f,-1.0f,
-		 1.0f, 1.0f,-1.0f,
-		 1.0f,-1.0f,-1.0f,
-		 1.0f, 1.0f, 1.0f,
-		 1.0f,-1.0f, 1.0f,
-		 1.0f, 1.0f, 1.0f,
-		 1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		 1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		 1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		 1.0f,-1.0f, 1.0f
-    };
+	//Generate the vertices for the sphere
+	generateSphere(vertices);
 
     // VertexBuffer
     vertexBuffer.create();
@@ -118,7 +79,7 @@ void GLWidget::paintGL()
 
     // Transfer the now calculated MVP matrix to the vertex shader
     shader.setUniformValue("MVP",projection * view * model);
-
+	model.rotate(10.0f,QVector3D(0,1,0));
     // Draw stuff
     // For every VAO, bind, draw and then release. Repeat to EVERY VAO!
     vao1.bind();
@@ -153,6 +114,9 @@ void GLWidget::keyPressEvent( QKeyEvent* e )
         updateRenderMode = true;
         repaint();
         break;
+	case Qt::Key_F2:
+		repaint();
+		break;
     default:
         QGLWidget::keyPressEvent( e );
     }
@@ -176,4 +140,83 @@ bool GLWidget::prepareShaderProgram( const QString& vertexShaderPath, const QStr
         qWarning() << "Could not link shader program:" << shader.log();
 
     return result;
+}
+
+void GLWidget::generateSphere(std::vector<GLfloat>& outVertices)
+{
+//	outVertices = {
+//		-1.0f,-1.0f,-1.0f,
+//		-1.0f,-1.0f, 1.0f,
+//		-1.0f, 1.0f, 1.0f,
+//		 1.0f, 1.0f,-1.0f,
+//		-1.0f,-1.0f,-1.0f,
+//		-1.0f, 1.0f,-1.0f,
+//		 1.0f,-1.0f, 1.0f,
+//		-1.0f,-1.0f,-1.0f,
+//		 1.0f,-1.0f,-1.0f,
+//		 1.0f, 1.0f,-1.0f,
+//		 1.0f,-1.0f,-1.0f,
+//		-1.0f,-1.0f,-1.0f,
+//		-1.0f,-1.0f,-1.0f,
+//		-1.0f, 1.0f, 1.0f,
+//		-1.0f, 1.0f,-1.0f,
+//		 1.0f,-1.0f, 1.0f,
+//		-1.0f,-1.0f, 1.0f,
+//		-1.0f,-1.0f,-1.0f,
+//		-1.0f, 1.0f, 1.0f,
+//		-1.0f,-1.0f, 1.0f,
+//		 1.0f,-1.0f, 1.0f,
+//		 1.0f, 1.0f, 1.0f,
+//		 1.0f,-1.0f,-1.0f,
+//		 1.0f, 1.0f,-1.0f,
+//		 1.0f,-1.0f,-1.0f,
+//		 1.0f, 1.0f, 1.0f,
+//		 1.0f,-1.0f, 1.0f,
+//		 1.0f, 1.0f, 1.0f,
+//		 1.0f, 1.0f,-1.0f,
+//		-1.0f, 1.0f,-1.0f,
+//		 1.0f, 1.0f, 1.0f,
+//		-1.0f, 1.0f,-1.0f,
+//		-1.0f, 1.0f, 1.0f,
+//		 1.0f, 1.0f, 1.0f,
+//		-1.0f, 1.0f, 1.0f,
+//		 1.0f,-1.0f, 1.0f
+//	};
+
+	outVertices = {
+		0.0f , 0.0f , 0.0f ,
+		1.0f , 0.0f , 1.5707964f ,
+		6.123234E-17f , 1.0f , 1.5707964f ,
+
+		0.0f , 0.0f , 0.0f ,
+		6.123234E-17f , 1.0f , 1.5707964f ,
+		-1.0f , 1.2246469E-16f , 1.5707964f ,
+
+		-0.0f , 0.0f , 0.0f ,
+		-1.0f , 1.2246469E-16f , 1.5707964f ,
+		-1.8369701E-16f , -1.0f , 1.5707964f ,
+
+		-0.0f , -0.0f , 0.0f ,
+		-1.8369701E-16f , -1.0f , 1.5707964f ,
+		1.0f , 0.0f , 1.5707964f ,
+
+
+		//Duplicate?
+		1.0f , 0.0f , 1.5707964f ,
+		0.0f , 0.0f , 0.0f ,
+		0.0f , 0.0f , 0.0f ,
+
+		6.123234E-17f , 1.0f , 1.5707964f ,
+		0.0f , 0.0f , 0.0f ,
+		-0.0f , 0.0f , 0.0f ,
+
+		-1.0f , 1.2246469E-16f , 1.5707964f ,
+		-0.0f , 0.0f , 0.0f ,
+		-0.0f , -0.0f , 0.0f ,
+
+		-1.8369701E-16f , -1.0f , 1.5707964f ,
+		-0.0f , -0.0f , 0.0f ,
+		0.0f , 0.0f , 0.0f
+
+	};
 }
