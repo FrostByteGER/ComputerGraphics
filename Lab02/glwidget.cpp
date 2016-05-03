@@ -1,4 +1,5 @@
 #include "glwidget.h"
+#include "cmath"
 
 GLWidget::GLWidget( const QGLFormat& format, QWidget* parent ) : QGLWidget( format, parent ), vertexBuffer( QOpenGLBuffer::VertexBuffer )
 {
@@ -34,7 +35,7 @@ void GLWidget::initializeGL()
     vao1.bind();
 
 	//Generate the vertices for the sphere
-	generateSphere(vertices);
+    generateSphere(vertices,32);
 
     // VertexBuffer
     vertexBuffer.create();
@@ -122,6 +123,8 @@ void GLWidget::keyPressEvent( QKeyEvent* e )
     }
 }
 
+
+
 bool GLWidget::prepareShaderProgram( const QString& vertexShaderPath, const QString& fragmentShaderPath )
 {
     // First we load and compile the vertex shader…
@@ -142,81 +145,88 @@ bool GLWidget::prepareShaderProgram( const QString& vertexShaderPath, const QStr
     return result;
 }
 
-void GLWidget::generateSphere(std::vector<GLfloat>& outVertices)
+void GLWidget::generateSphere(std::vector<GLfloat>& outVertices ,int size)
 {
-//	outVertices = {
-//		-1.0f,-1.0f,-1.0f,
-//		-1.0f,-1.0f, 1.0f,
-//		-1.0f, 1.0f, 1.0f,
-//		 1.0f, 1.0f,-1.0f,
-//		-1.0f,-1.0f,-1.0f,
-//		-1.0f, 1.0f,-1.0f,
-//		 1.0f,-1.0f, 1.0f,
-//		-1.0f,-1.0f,-1.0f,
-//		 1.0f,-1.0f,-1.0f,
-//		 1.0f, 1.0f,-1.0f,
-//		 1.0f,-1.0f,-1.0f,
-//		-1.0f,-1.0f,-1.0f,
-//		-1.0f,-1.0f,-1.0f,
-//		-1.0f, 1.0f, 1.0f,
-//		-1.0f, 1.0f,-1.0f,
-//		 1.0f,-1.0f, 1.0f,
-//		-1.0f,-1.0f, 1.0f,
-//		-1.0f,-1.0f,-1.0f,
-//		-1.0f, 1.0f, 1.0f,
-//		-1.0f,-1.0f, 1.0f,
-//		 1.0f,-1.0f, 1.0f,
-//		 1.0f, 1.0f, 1.0f,
-//		 1.0f,-1.0f,-1.0f,
-//		 1.0f, 1.0f,-1.0f,
-//		 1.0f,-1.0f,-1.0f,
-//		 1.0f, 1.0f, 1.0f,
-//		 1.0f,-1.0f, 1.0f,
-//		 1.0f, 1.0f, 1.0f,
-//		 1.0f, 1.0f,-1.0f,
-//		-1.0f, 1.0f,-1.0f,
-//		 1.0f, 1.0f, 1.0f,
-//		-1.0f, 1.0f,-1.0f,
-//		-1.0f, 1.0f, 1.0f,
-//		 1.0f, 1.0f, 1.0f,
-//		-1.0f, 1.0f, 1.0f,
-//		 1.0f,-1.0f, 1.0f
-//	};
+    double pointAmount = static_cast<double>(size);
+    double circle = M_PI*2.0;
 
-	outVertices = {
-		0.0f , 0.0f , 0.0f ,
-		1.0f , 0.0f , 1.5707964f ,
-		6.123234E-17f , 1.0f , 1.5707964f ,
+    std::vector<GLfloat> circleXpoint = {};
+    std::vector<GLfloat> circleYpoint = {};
+    std::vector<GLfloat> circleZpoint = {};
+    double circleAmount = circle/pointAmount;
 
-		0.0f , 0.0f , 0.0f ,
-		6.123234E-17f , 1.0f , 1.5707964f ,
-		-1.0f , 1.2246469E-16f , 1.5707964f ,
+    double circleRadius = 0.0;
 
-		-0.0f , 0.0f , 0.0f ,
-		-1.0f , 1.2246469E-16f , 1.5707964f ,
-		-1.8369701E-16f , -1.0f , 1.5707964f ,
+    for (double z = 0.0; z < pointAmount+1; z++) {
 
-		-0.0f , -0.0f , 0.0f ,
-		-1.8369701E-16f , -1.0f , 1.5707964f ,
-		1.0f , 0.0f , 1.5707964f ,
+        circleRadius = sin((circleAmount*z)/2.0);
 
+        circleZpoint.push_back(cos((circleAmount*z)/2.0));
 
-		//Duplicate?
-		1.0f , 0.0f , 1.5707964f ,
-		0.0f , 0.0f , 0.0f ,
-		0.0f , 0.0f , 0.0f ,
+        for (double y = 0.0; y < size*circleAmount; y+=circleAmount) {
 
-		6.123234E-17f , 1.0f , 1.5707964f ,
-		0.0f , 0.0f , 0.0f ,
-		-0.0f , 0.0f , 0.0f ,
+            circleXpoint.push_back(cos(y)*circleRadius);
+            circleYpoint.push_back(sin(y)*circleRadius);
+        }
+    }
 
-		-1.0f , 1.2246469E-16f , 1.5707964f ,
-		-0.0f , 0.0f , 0.0f ,
-		-0.0f , -0.0f , 0.0f ,
+    int zint = 0;
 
-		-1.8369701E-16f , -1.0f , 1.5707964f ,
-		-0.0f , -0.0f , 0.0f ,
-		0.0f , 0.0f , 0.0f
+    for(int i = 0 ; i < circleXpoint.size()-pointAmount ; i++){
 
-	};
+        if(i > 0 && (i%size) == 0){
+            zint++;
+
+        }
+        if(i > 0 && (i%size) == size-1){
+
+            outVertices.push_back(circleZpoint[zint]);
+            outVertices.push_back(circleXpoint[i]);
+            outVertices.push_back(circleYpoint[i]);
+
+            outVertices.push_back(circleZpoint[zint+1]);
+            outVertices.push_back(circleXpoint[i+size]);
+            outVertices.push_back(circleYpoint[i+size]);
+
+            outVertices.push_back(circleZpoint[zint+1]);
+            outVertices.push_back(circleXpoint[i+1]);
+            outVertices.push_back(circleYpoint[i+1]);
+
+            outVertices.push_back(circleZpoint[zint+1]);
+            outVertices.push_back(circleXpoint[i+1]);
+            outVertices.push_back(circleYpoint[i+1]);
+
+            outVertices.push_back(circleZpoint[zint+1]);
+            outVertices.push_back(circleXpoint[i+size]);
+            outVertices.push_back(circleYpoint[i+size]);
+
+            outVertices.push_back(circleZpoint[zint+2]);
+            outVertices.push_back(circleXpoint[i+size+1]);
+            outVertices.push_back(circleYpoint[i+size+1]);
+        }else{
+        outVertices.push_back(circleZpoint[zint]);
+        outVertices.push_back(circleXpoint[i]);
+        outVertices.push_back(circleYpoint[i]);
+
+        outVertices.push_back(circleZpoint[zint+1]);
+        outVertices.push_back(circleXpoint[i+size]);
+        outVertices.push_back(circleYpoint[i+size]);
+
+        outVertices.push_back(circleZpoint[zint]);
+        outVertices.push_back(circleXpoint[i+1]);
+        outVertices.push_back(circleYpoint[i+1]);
+
+        outVertices.push_back(circleZpoint[zint]);
+        outVertices.push_back(circleXpoint[i+1]);
+        outVertices.push_back(circleYpoint[i+1]);
+
+        outVertices.push_back(circleZpoint[zint+1]);
+        outVertices.push_back(circleXpoint[i+size]);
+        outVertices.push_back(circleYpoint[i+size]);
+
+        outVertices.push_back(circleZpoint[zint+1]);
+        outVertices.push_back(circleXpoint[i+size+1]);
+        outVertices.push_back(circleYpoint[i+size+1]);
+        }
+    }
 }

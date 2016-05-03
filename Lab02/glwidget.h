@@ -23,7 +23,7 @@ protected:
     virtual void resizeGL( int w, int h );
     virtual void paintGL();
     virtual void keyPressEvent( QKeyEvent* e );
-	virtual void generateSphere(std::vector<GLfloat>& outVertices);
+    virtual void generateSphere(std::vector<GLfloat>& outVertices ,int size);
 
 private:
     bool prepareShaderProgram( const QString& vertexShaderPath, const QString& fragmentShaderPath );
