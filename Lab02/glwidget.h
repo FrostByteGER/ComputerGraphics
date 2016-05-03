@@ -11,6 +11,8 @@
 
 
 
+
+
 class GLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -37,6 +39,7 @@ private:
     QOpenGLVertexArrayObject vao1;
     GLint renderMode;
 	GLboolean updateRenderMode = false;
+	GLboolean rotateMesh = false;
 	const QString vertexPath   = ":/Resources/Shaders/simple.vert";
 	const QString fragmentPath = ":/Resources/Shaders/simple.frag";
 

@@ -1,5 +1,7 @@
+#define _USE_MATH_DEFINES
 #include "glwidget.h"
-#include "cmath"
+#include <cmath>
+
 
 GLWidget::GLWidget( const QGLFormat& format, QWidget* parent ) : QGLWidget( format, parent ), vertexBuffer( QOpenGLBuffer::VertexBuffer )
 {
@@ -35,7 +37,7 @@ void GLWidget::initializeGL()
     vao1.bind();
 
 	//Generate the vertices for the sphere
-    generateSphere(vertices,32);
+	generateSphere(vertices,16);
 
     // VertexBuffer
     vertexBuffer.create();
@@ -73,14 +75,17 @@ void GLWidget::paintGL()
 {
     // Clear the buffer with the current clearing color
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    if(updateRenderMode)
+	if(updateRenderMode == true)
     {
         changeRenderMode();
     }
 
     // Transfer the now calculated MVP matrix to the vertex shader
     shader.setUniformValue("MVP",projection * view * model);
-	model.rotate(10.0f,QVector3D(0,1,0));
+	if(rotateMesh == true){
+		model.rotate(10.0f,QVector3D(0,1,0));
+		rotateMesh = false;
+	}
     // Draw stuff
     // For every VAO, bind, draw and then release. Repeat to EVERY VAO!
     vao1.bind();
@@ -116,6 +121,7 @@ void GLWidget::keyPressEvent( QKeyEvent* e )
         repaint();
         break;
 	case Qt::Key_F2:
+		rotateMesh = true;
 		repaint();
 		break;
     default:
@@ -147,6 +153,7 @@ bool GLWidget::prepareShaderProgram( const QString& vertexShaderPath, const QStr
 
 void GLWidget::generateSphere(std::vector<GLfloat>& outVertices ,int size)
 {
+	// Change to double parameter
     double pointAmount = static_cast<double>(size);
     double circle = M_PI*2.0;
 
@@ -171,8 +178,8 @@ void GLWidget::generateSphere(std::vector<GLfloat>& outVertices ,int size)
     }
 
     int zint = 0;
-
-    for(int i = 0 ; i < circleXpoint.size()-pointAmount ; i++){
+	//TODO check if -1 is correct
+	for(int i = 0 ; i < circleXpoint.size()-pointAmount-1 ; i++){
 
         if(i > 0 && (i%size) == 0){
             zint++;
@@ -204,29 +211,31 @@ void GLWidget::generateSphere(std::vector<GLfloat>& outVertices ,int size)
             outVertices.push_back(circleXpoint[i+size+1]);
             outVertices.push_back(circleYpoint[i+size+1]);
         }else{
-        outVertices.push_back(circleZpoint[zint]);
-        outVertices.push_back(circleXpoint[i]);
-        outVertices.push_back(circleYpoint[i]);
+			outVertices.push_back(circleZpoint[zint]);
+			outVertices.push_back(circleXpoint[i]);
+			outVertices.push_back(circleYpoint[i]);
 
-        outVertices.push_back(circleZpoint[zint+1]);
-        outVertices.push_back(circleXpoint[i+size]);
-        outVertices.push_back(circleYpoint[i+size]);
+			outVertices.push_back(circleZpoint[zint+1]);
+			outVertices.push_back(circleXpoint[i+size]);
+			outVertices.push_back(circleYpoint[i+size]);
 
-        outVertices.push_back(circleZpoint[zint]);
-        outVertices.push_back(circleXpoint[i+1]);
-        outVertices.push_back(circleYpoint[i+1]);
+			outVertices.push_back(circleZpoint[zint]);
+			outVertices.push_back(circleXpoint[i+1]);
+			outVertices.push_back(circleYpoint[i+1]);
 
-        outVertices.push_back(circleZpoint[zint]);
-        outVertices.push_back(circleXpoint[i+1]);
-        outVertices.push_back(circleYpoint[i+1]);
+			outVertices.push_back(circleZpoint[zint]);
+			outVertices.push_back(circleXpoint[i+1]);
+			outVertices.push_back(circleYpoint[i+1]);
 
-        outVertices.push_back(circleZpoint[zint+1]);
-        outVertices.push_back(circleXpoint[i+size]);
-        outVertices.push_back(circleYpoint[i+size]);
+			outVertices.push_back(circleZpoint[zint+1]);
+			outVertices.push_back(circleXpoint[i+size]);
+			outVertices.push_back(circleYpoint[i+size]);
 
-        outVertices.push_back(circleZpoint[zint+1]);
-        outVertices.push_back(circleXpoint[i+size+1]);
-        outVertices.push_back(circleYpoint[i+size+1]);
+			outVertices.push_back(circleZpoint[zint+1]);
+			outVertices.push_back(circleXpoint[i+size+1]);
+			outVertices.push_back(circleYpoint[i+size+1]);
         }
     }
+	// Debug Print
+	qWarning() << "SUCCESSFULL";
 }
