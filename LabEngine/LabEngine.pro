@@ -25,16 +25,16 @@ HEADERS += \
     Mesh.h \
     Model.h
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../Development-Tools/Assimp/assimp-3.2/lib/msvc2015/ -lassimp-vc130-mt
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../Development-Tools/Assimp/assimp-3.2/lib/msvc2015/ -lassimp-vc130-mtd
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mtd
 
-INCLUDEPATH += $$PWD/../../../../../Development-Tools/Assimp/assimp-3.2/include
-DEPENDPATH += $$PWD/../../../../../Development-Tools/Assimp/assimp-3.2/include
+INCLUDEPATH += $$PWD/Libraries/Assimp/include
+DEPENDPATH += $$PWD/Libraries/Assimp/include
 
-unix: LIBS += -L$$PWD/../../../../../Development-Tools/Assimp/assimp-3.2/lib/mingw/ -llibassimp.dll
+unix: LIBS += -L$$PWD/Libraries/Assimp/mingw/ -llibassimp.dll
 
-INCLUDEPATH += $$PWD/../../../../../Development-Tools/Assimp/assimp-3.2/include
-DEPENDPATH += $$PWD/../../../../../Development-Tools/Assimp/assimp-3.2/include
+INCLUDEPATH += $$PWD/Libraries/Assimp/include
+DEPENDPATH += $$PWD/Libraries/Assimp/include
 
 DISTFILES += \
     Resources/Shaders/simple.frag \
