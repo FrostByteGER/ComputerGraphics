@@ -6,19 +6,15 @@
 #include <QOpenGLContext>
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
+#include <QOpenGLTexture>
 #include "Shader.h"
-
-struct Texture{
-		GLuint id;
-		std::string type;
-};
-
 
 class Mesh
 {
 	public:
-		Mesh(std::vector<QVector3D> vertices,std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<Texture> textures);
+		Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures);
 		Mesh(Mesh& other);
+		~Mesh();
 		void DrawMesh();
 		static void Mesh::generateSphere(std::vector<GLfloat>& outVertices, int size);
 
@@ -26,7 +22,7 @@ class Mesh
 		std::vector<QVector3D> normals;
 		std::vector<QVector2D> uvs;
 		std::vector<GLuint> indices;
-		std::vector<Texture> textures;
+		std::vector<QOpenGLTexture*> textures;
 
 	private:
 		QOpenGLBuffer vertexBuffer;

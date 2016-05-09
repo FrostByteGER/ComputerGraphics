@@ -1,6 +1,8 @@
 #include "Mesh.h"
+#include <QDebug>
+#include <memory>
 
-Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<Texture> textures) :
+Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures) :
 	vertices(vertices), normals(normals), uvs(uvs), indices(indices), textures(textures),elementBuffer(QOpenGLBuffer::IndexBuffer)
 {
 	this->SetupMesh();
@@ -9,6 +11,10 @@ Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std:
 Mesh::Mesh(Mesh& other) : vertices(other.vertices), normals(other.normals), uvs(other.uvs), indices(other.indices), textures(other.textures),elementBuffer(QOpenGLBuffer::IndexBuffer)
 {
 	//TODO verify working!
+}
+
+Mesh::~Mesh(){
+	std::for_each(textures.begin(), textures.end(), std::default_delete<QOpenGLTexture>());
 }
 
 
@@ -49,9 +55,21 @@ void Mesh::SetupMesh(){
 
 void Mesh::DrawMesh(){
 	vao.bind();
-	Shader::getInstance()->bind();
-	glDrawArrays(GL_TRIANGLES,0,vertices.size());
-	Shader::getInstance()->release();
+	{
+		qWarning() << "DRAWING MESH";
+		//TODO: Fix Shader error. Maybe initialize?
+		//Shader::getInstance()->bind();
+		{
+			for(QOpenGLTexture* t : textures){
+				t->bind();
+			}
+			glDrawArrays(GL_TRIANGLES,0,vertices.size());
+			for(QOpenGLTexture* t : textures){
+				t->release();
+			}
+		}
+		//Shader::getInstance()->release();
+	}
 	vao.release();
 }
 

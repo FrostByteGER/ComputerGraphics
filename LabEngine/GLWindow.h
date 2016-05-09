@@ -2,6 +2,7 @@
 
 #include <QOpenGLWindow>
 #include <QOpenGLFunctions>
+#include "Model.h"
 
 
 class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
@@ -14,13 +15,20 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 		void initializeGL();
 		void resizeGL(int width, int height);
 		void paintGL();
+
+	protected:
+		virtual void keyPressEvent( QKeyEvent* e );
+
+	protected slots:
 		void teardownGL();
 
 	private:
 		void printContextInformation();
 
+		Model* model;
 		const QString vertexPath   = "Resources/Shaders/simple.vert";
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
-		const QString cubePath     = "Resources/Models/cube.obj";
+		//TODO: Fix string path
+		const QString cubePath     = "debug/Resources/Models/cube.obj";
 };
 
