@@ -9,7 +9,7 @@ class Model
 	public:
 		Model(const std::string& path);
 		~Model();
-		void DrawModel();
+		void DrawModel(Shader* shader);
 
 	private:
 		//TODO: Maybe change to smartpointer!

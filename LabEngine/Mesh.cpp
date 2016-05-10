@@ -11,6 +11,7 @@ Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std:
 Mesh::Mesh(Mesh& other) : vertices(other.vertices), normals(other.normals), uvs(other.uvs), indices(other.indices), textures(other.textures),elementBuffer(QOpenGLBuffer::IndexBuffer)
 {
 	//TODO verify working!
+	//TODO delete?
 }
 
 Mesh::~Mesh(){
@@ -53,12 +54,11 @@ void Mesh::SetupMesh(){
 	uvBuffer.release();
 }
 
-void Mesh::DrawMesh(){
+void Mesh::DrawMesh(Shader* shader){
 	vao.bind();
 	{
 		qWarning() << "DRAWING MESH";
-		//TODO: Fix Shader error. Maybe initialize?
-		//Shader::getInstance()->bind();
+		shader->getShader()->bind();
 		{
 			for(QOpenGLTexture* t : textures){
 				t->bind();
@@ -68,7 +68,7 @@ void Mesh::DrawMesh(){
 				t->release();
 			}
 		}
-		//Shader::getInstance()->release();
+		shader->getShader()->release();
 	}
 	vao.release();
 }

@@ -24,11 +24,10 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 
 	private:
 		void printContextInformation();
-
+		Shader* shader;
 		Model* model;
 		const QString vertexPath   = "Resources/Shaders/simple.vert";
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
-		//TODO: Fix string path
-		const QString cubePath     = "debug/Resources/Models/cube.obj";
+		const QString cubePath     = "Resources/Models/cube.obj";
 };
 

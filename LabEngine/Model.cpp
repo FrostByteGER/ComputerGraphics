@@ -14,9 +14,9 @@ Model::~Model(){
 	std::for_each(meshes.begin(), meshes.end(), std::default_delete<Mesh>());
 }
 
-void Model::DrawModel(){
+void Model::DrawModel(Shader* shader){
 	for(Mesh* m : meshes){
-		m->DrawMesh();
+		m->DrawMesh(shader);
 	}
 }
 

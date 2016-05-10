@@ -15,8 +15,8 @@ class Mesh
 		Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures);
 		Mesh(Mesh& other);
 		~Mesh();
-		void DrawMesh();
-		static void Mesh::generateSphere(std::vector<GLfloat>& outVertices, int size);
+		void DrawMesh(Shader* shader);
+		static void generateSphere(std::vector<GLfloat>& outVertices, int size);
 
 		std::vector<QVector3D> vertices;
 		std::vector<QVector3D> normals;

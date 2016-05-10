@@ -6,6 +6,7 @@
 
 GLWindow::GLWindow()
 {
+	shader = new Shader();
 }
 
 GLWindow::~GLWindow(){
@@ -21,6 +22,9 @@ void GLWindow::initializeGL(){
 	glEnable(GL_MULTISAMPLE); // Enable MSAA
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
+
+	shader->loadShader(vertexPath, fragmentPath);
+
 	this->model = new Model(cubePath.toStdString());
 }
 
@@ -31,8 +35,7 @@ void GLWindow::resizeGL(int width, int height){
 
 void GLWindow::paintGL(){
 	glClear(GL_COLOR_BUFFER_BIT);
-	//TODO: Fix ASSERT error
-	model->DrawModel();
+	model->DrawModel(shader);
 }
 
 void GLWindow::teardownGL(){

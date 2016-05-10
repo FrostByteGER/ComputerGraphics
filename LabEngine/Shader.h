@@ -7,13 +7,12 @@
 class Shader
 {
 	public:
-		static QOpenGLShaderProgram* getInstance(){
-			return &shader;
-		}
-
-		static bool loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath);
+		Shader();
+		~Shader();
+		bool loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath);
+		QOpenGLShaderProgram* getShader() const;
 
 	private:
-		static QOpenGLShaderProgram shader;
+		QOpenGLShaderProgram* shader;
 };
 
