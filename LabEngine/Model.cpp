@@ -5,16 +5,25 @@
 #include <memory>
 #include "Model.h"
 
-Model::Model(const std::string& path)
+Model::Model(const std::string& path, ShaderManager* sm)
 {
+	shaderManager = sm;
+	this->name = QString::fromStdString(path.substr(path.find_last_of('/') + 1,std::string::npos));
+	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
 	this->loadModel(path);
+
 }
 
 Model::~Model(){
 	std::for_each(meshes.begin(), meshes.end(), std::default_delete<Mesh>());
 }
 
-void Model::DrawModel(Shader* shader){
+void Model::DrawModel(){
+	QOpenGLShaderProgram* shader = shaderManager->getShader(shaderID);
+	// If we don't have a shader, do NOT draw!
+	if(!shader){
+		return;
+	}
 	for(Mesh* m : meshes){
 		m->DrawMesh(shader);
 	}
@@ -84,7 +93,11 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	}
 
 	// Return the constructed Mesh
-	return new Mesh(vertices, normals, uvs, indices, textures);
+	QOpenGLShaderProgram* shader = shaderManager->getShader(shaderID);
+	if(!shader){
+		qWarning() << "SHADER NOT FOUND";
+	}
+	return new Mesh(vertices, normals, uvs, indices, textures, shader);
 }
 
 std::vector<QOpenGLTexture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)

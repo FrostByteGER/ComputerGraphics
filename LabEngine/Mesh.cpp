@@ -1,9 +1,10 @@
 #include "Mesh.h"
 #include <QDebug>
 #include <memory>
+#include <QOpenGLShaderProgram>
 
-Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures) :
-	vertices(vertices), normals(normals), uvs(uvs), indices(indices), textures(textures),elementBuffer(QOpenGLBuffer::IndexBuffer)
+Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures, QOpenGLShaderProgram* shader) :
+	vertices(vertices), normals(normals), uvs(uvs), indices(indices), textures(textures),elementBuffer(QOpenGLBuffer::IndexBuffer), shader(shader)
 {
 	this->SetupMesh();
 }
@@ -35,6 +36,9 @@ void Mesh::SetupMesh(){
 	vertexBuffer.bind();
 	vertexBuffer.allocate(&vertices[0], vertices.size() * sizeof(QVector3D));
 
+	shader->setAttributeBuffer( "vertexPosition_modelspace", GL_FLOAT, 0, 3 );
+	shader->enableAttributeArray( "vertexPosition_modelspace" );
+
 	// Normalbuffer
 	normalBuffer.create();
 	normalBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -54,11 +58,11 @@ void Mesh::SetupMesh(){
 	uvBuffer.release();
 }
 
-void Mesh::DrawMesh(Shader* shader){
+void Mesh::DrawMesh(QOpenGLShaderProgram* shader){
 	vao.bind();
 	{
 		qWarning() << "DRAWING MESH";
-		shader->getShader()->bind();
+		shader->bind();
 		{
 			for(QOpenGLTexture* t : textures){
 				t->bind();
@@ -68,7 +72,7 @@ void Mesh::DrawMesh(Shader* shader){
 				t->release();
 			}
 		}
-		shader->getShader()->release();
+		shader->release();
 	}
 	vao.release();
 }

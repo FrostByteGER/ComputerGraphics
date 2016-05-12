@@ -6,7 +6,7 @@
 
 GLWindow::GLWindow()
 {
-	shader = new Shader();
+	shader = new ShaderManager();
 }
 
 GLWindow::~GLWindow(){
@@ -23,9 +23,7 @@ void GLWindow::initializeGL(){
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
-	shader->loadShader(vertexPath, fragmentPath);
-
-	this->model = new Model(cubePath.toStdString());
+	this->model = new Model(cubePath.toStdString(), shader);
 }
 
 void GLWindow::resizeGL(int width, int height){
@@ -35,13 +33,15 @@ void GLWindow::resizeGL(int width, int height){
 
 void GLWindow::paintGL(){
 	glClear(GL_COLOR_BUFFER_BIT);
-	model->DrawModel(shader);
+	model->DrawModel();
 }
 
 void GLWindow::teardownGL(){
 	qWarning() << "TEARING DOWN OPENGL";
 	delete model;
 	model = nullptr;
+	delete shader;
+	shader = nullptr;
 }
 
 void GLWindow::keyPressEvent( QKeyEvent* e )

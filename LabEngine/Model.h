@@ -7,11 +7,14 @@
 class Model
 {
 	public:
-		Model(const std::string& path);
+		Model(const std::string& path, ShaderManager* sm);
 		~Model();
-		void DrawModel(Shader* shader);
+		void DrawModel();
 
 	private:
+		QString name;
+		QString shaderID;
+		ShaderManager* shaderManager;
 		//TODO: Maybe change to smartpointer!
 		std::vector<Mesh*> meshes;
 		std::string directory;

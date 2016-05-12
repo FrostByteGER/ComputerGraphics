@@ -14,29 +14,22 @@ TEMPLATE = app
 
 SOURCES += \
     GLWindow.cpp \
-    Shader.cpp \
     Mesh.cpp \
     Model.cpp \
-    Main.cpp
+    Main.cpp \
+    ShaderManager.cpp
 
 HEADERS += \
     GLWindow.h \
-    Shader.h \
     Mesh.h \
-    Model.h
+    Model.h \
+    ShaderManager.h
 
-message($$QMAKESPEC)
 
 win32-msvc2015:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt
 else:win32-msvc2015:CONFIG(debug, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mtd
 
-INCLUDEPATH += $$PWD/Libraries/Assimp/include
-DEPENDPATH += $$PWD/Libraries/Assimp/include
-
 win32-g++: LIBS += -L$$PWD/Libraries/Assimp/mingw/ -llibassimp.dll
-
-INCLUDEPATH += $$PWD/Libraries/Assimp/include
-DEPENDPATH += $$PWD/Libraries/Assimp/include
 
 unix: LIBS += -L$$PWD/Libraries/Assimp/mingw/ -llibassimp.dll
 
