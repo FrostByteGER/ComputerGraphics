@@ -20,7 +20,7 @@ class ShaderManager
 		QString getShaderName() const;
 		QMultiMap<uint32_t, Mesh*> getModelList() const;
 		void addMesh(uint32_t shaderID, Mesh* mesh);
-		void ShaderManager::removeMesh(const Mesh* mesh);
+		void removeMesh(const Mesh* mesh);
 
 	private:
 		QString shaderName;
