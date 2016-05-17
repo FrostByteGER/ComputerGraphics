@@ -1,5 +1,7 @@
 #include "ShaderManager.h"
-#include <map>
+#include "UUID.h"
+#include <QMultiMap>
+#include <QMap>
 
 ShaderManager::ShaderManager()
 {
@@ -7,9 +9,10 @@ ShaderManager::ShaderManager()
 
 ShaderManager::~ShaderManager()
 {
+	//TODO add delete arrays and pointers!
 }
 
-QString ShaderManager::loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath){
+uint32_t ShaderManager::loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath){
 	QOpenGLShaderProgram* shader = new QOpenGLShaderProgram();
 	// Load Vertex Shader
 	bool result = shader->addShaderFromSourceFile( QOpenGLShader::Vertex, vertexShaderPath );
@@ -27,21 +30,56 @@ QString ShaderManager::loadShader(const QString& vertexShaderPath, const QString
 	if ( !result ){
 		qWarning() << "Could not link shader program:" << shader->log();
 	}
-	QString id;
+	uint32_t id;
 	if(result){
 
-		id = QString("TESTSHADER");
-		shaderList.insert(std::make_pair(id, shader));
+		id = LEUUID::generateUUID();
+		shaderList.insert(id, shader);
 	}
 	return id;
 }
 
-QOpenGLShaderProgram* ShaderManager::getShader(QString id) const
+QMap<uint32_t, QOpenGLShaderProgram*> ShaderManager::getShaderList() const
 {
-	auto position = shaderList.find(id);
-	if(position == shaderList.end()){
-		return nullptr;
-	}else{
-		return position->second;
+	return shaderList;
+}
+
+QOpenGLShaderProgram* ShaderManager::getShader(uint32_t id) const
+{
+	QOpenGLShaderProgram* value = nullptr;
+	for(auto i = shaderList.find(id); i != shaderList.end() ; ++i){
+		value = i.value();
 	}
+	return value;
+}
+
+std::vector<Mesh*> ShaderManager::getMeshes() const
+{
+	return modelList.values().toVector().toStdVector();
+}
+
+QList<Mesh*> ShaderManager::getMeshes(uint32_t shaderID) const
+{
+	return modelList.values(shaderID);
+}
+
+QString ShaderManager::getShaderName() const
+{
+	//TODO add to QOpenGLShaderProgram
+	return shaderName;
+}
+
+QMultiMap<uint32_t, Mesh*> ShaderManager::getModelList() const
+{
+	return modelList;
+}
+
+void ShaderManager::addMesh(uint32_t shaderID, Mesh* mesh)
+{
+	modelList.insert(shaderID, mesh);
+}
+
+void ShaderManager::removeMesh(const Mesh* mesh)
+{
+	modelList.remove(mesh->getShaderID());
 }

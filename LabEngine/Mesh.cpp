@@ -56,14 +56,24 @@ void Mesh::SetupMesh(){
 	vertexBuffer.release();
 	normalBuffer.release();
 	uvBuffer.release();
+
+	projection.setToIdentity();
+	projection.perspective(45.0f, 800.0f / 600.0f, 0.0f, 1000.0f);
+
+	transform.translate(0.0f, 0.0f, -5.0f);
 }
 
 void Mesh::DrawMesh(QOpenGLShaderProgram* shader){
+	transform.rotate(0.5f, QVector3D(0.0f,1.0f,0.0f));
+	int modelToWorld = shader->uniformLocation("modelToWorld");
+	int worldToView = shader->uniformLocation("worldToView");
+	shader->setUniformValue(worldToView, projection);
 	vao.bind();
 	{
 		qWarning() << "DRAWING MESH";
-		shader->bind();
+
 		{
+			shader->setUniformValue(modelToWorld, transform.toMatrix());
 			for(QOpenGLTexture* t : textures){
 				t->bind();
 			}
@@ -72,7 +82,6 @@ void Mesh::DrawMesh(QOpenGLShaderProgram* shader){
 				t->release();
 			}
 		}
-		shader->release();
 	}
 	vao.release();
 }
@@ -162,4 +171,9 @@ void Mesh::generateSphere(std::vector<GLfloat>& outVertices ,int size)
 			outVertices.push_back(circleYpoint[i+size+1]);
 		}
 	}
+}
+
+uint32_t Mesh::getShaderID() const
+{
+	return shaderID;
 }

@@ -10,6 +10,7 @@ Model::Model(const std::string& path, ShaderManager* sm)
 	shaderManager = sm;
 	this->name = QString::fromStdString(path.substr(path.find_last_of('/') + 1,std::string::npos));
 	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
+
 	this->loadModel(path);
 
 }
@@ -45,7 +46,9 @@ void Model::processNode(aiNode* node, const aiScene* scene)
 {
 	for(uint i = 0; i < node->mNumMeshes; ++i){
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		this->meshes.push_back(this->processMesh(mesh, scene));
+		auto* processedMesh = this->processMesh(mesh, scene);
+		shaderManager->addMesh(shaderID, processedMesh);
+		this->meshes.push_back(processedMesh);
 	}
 
 	for(uint i = 0; i < node->mNumChildren; ++i){

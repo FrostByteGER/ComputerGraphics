@@ -7,6 +7,7 @@
 GLWindow::GLWindow()
 {
 	shader = new ShaderManager();
+	transform.translate(0.0f,0.0f,-5.0f);
 }
 
 GLWindow::~GLWindow(){
@@ -17,6 +18,7 @@ GLWindow::~GLWindow(){
 void GLWindow::initializeGL(){
 	initializeOpenGLFunctions();
 	connect(context(), SIGNAL(aboutToBeDestroyed()), this, SLOT(teardownGL()), Qt::DirectConnection);
+	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 	printContextInformation();
 
 	glEnable(GL_MULTISAMPLE); // Enable MSAA
@@ -24,16 +26,25 @@ void GLWindow::initializeGL(){
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
 	this->model = new Model(cubePath.toStdString(), shader);
+	this->model2 = new Model(spherePath.toStdString(), shader);
 }
 
 void GLWindow::resizeGL(int width, int height){
-	(void)width;
-	(void)height;
+	projection.setToIdentity();
+	projection.perspective(45.0f, width / float(height), 0.0f, 1000.0f);
 }
 
 void GLWindow::paintGL(){
 	glClear(GL_COLOR_BUFFER_BIT);
-	model->DrawModel();
+	auto shaders = shader->getShaderList();
+	for(auto it = shaders.begin(); it != shaders.end(); ++it){
+		it.value()->bind();
+		auto meshes = shader->getMeshes(it.key());
+		for(Mesh* mesh : meshes){
+			mesh->DrawMesh(it.value());
+		}
+		it.value()->release();
+	}
 }
 
 void GLWindow::teardownGL(){
@@ -42,6 +53,11 @@ void GLWindow::teardownGL(){
 	model = nullptr;
 	delete shader;
 	shader = nullptr;
+}
+
+void GLWindow::update(){
+	qWarning() << "UPDATING";
+	QOpenGLWindow::update();
 }
 
 void GLWindow::keyPressEvent( QKeyEvent* e )

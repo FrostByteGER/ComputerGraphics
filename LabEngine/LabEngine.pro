@@ -18,14 +18,17 @@ SOURCES += \
     Model.cpp \
     Main.cpp \
     ShaderManager.cpp \
-    Collision.cpp
+    Collision.cpp \
+    Transform3D.cpp
 
 HEADERS += \
     GLWindow.h \
     Mesh.h \
     Model.h \
     ShaderManager.h \
-    Collision.h
+    Collision.h \
+    Transform3D.h \
+    UUID.h
 
 
 win32-msvc2015:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt

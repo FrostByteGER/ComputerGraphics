@@ -3,6 +3,7 @@
 #include <assimp/scene.h>
 #include <vector>
 #include "Mesh.h"
+#include "ShaderManager.h"
 
 class Model
 {
@@ -13,7 +14,7 @@ class Model
 
 	private:
 		QString name;
-		QString shaderID;
+		uint32_t shaderID;
 		ShaderManager* shaderManager;
 		//TODO: Maybe change to smartpointer!
 		std::vector<Mesh*> meshes;

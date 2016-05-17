@@ -7,7 +7,8 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLTexture>
-#include "ShaderManager.h"
+#include <QOpenGLShaderProgram>
+#include "Transform3D.h"
 
 class Mesh
 {
@@ -24,15 +25,19 @@ class Mesh
 		std::vector<GLuint> indices;
 		std::vector<QOpenGLTexture*> textures;
 
+		uint32_t getShaderID() const;
+
 	private:
 		QString name;
-		QString shaderID; // Unused
+		uint32_t shaderID;
 		QOpenGLBuffer vertexBuffer;
 		QOpenGLBuffer normalBuffer;
 		QOpenGLBuffer uvBuffer;
 		QOpenGLBuffer elementBuffer;
 		QOpenGLVertexArrayObject vao;
 		QOpenGLShaderProgram* shader;
+		QMatrix4x4 projection;
+		Transform3D transform;
 
 		void SetupMesh();
 };
