@@ -100,7 +100,7 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	if(!shader){
 		qWarning() << "SHADER NOT FOUND";
 	}
-	return new Mesh(vertices, normals, uvs, indices, textures, shader);
+	return new Mesh(vertices, normals, uvs, indices, textures, shader, this);
 }
 
 std::vector<QOpenGLTexture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
@@ -121,4 +121,109 @@ QOpenGLTexture* Model::loadTextureFromFile(const std::string& name, const std::s
 	tex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
 	tex->setMagnificationFilter(QOpenGLTexture::Linear);
 	return tex;
+}
+
+const Transform3D& Model::getTransform() const
+{
+	return transform;
+}
+
+void Model::setTransform(const Transform3D& value)
+{
+	transform = value;
+}
+
+const QVector3D& Model::getLocation() const
+{
+	return transform.translation();
+}
+
+void Model::setLocation(const QVector3D& location)
+{
+	transform.setTranslation(location);
+}
+
+void Model::setLocation(const float& x, const float& y, const float& z)
+{
+	transform.setTranslation(x, y, z);
+}
+
+const QVector3D& Model::getScale() const
+{
+	return transform.scale();
+}
+
+void Model::setScale(const QVector3D& scale)
+{
+	transform.setScale(scale);
+}
+
+void Model::setScale(const float& x, const float& y, const float& z)
+{
+	transform.setScale(x, y, z);
+}
+
+const QQuaternion& Model::getRotation() const
+{
+	return transform.rotation();
+}
+
+void Model::setRotation(const QQuaternion& rotation)
+{
+	transform.setRotation(rotation);
+}
+
+void Model::setRotation(const QVector3D& rotation)
+{
+	transform.setRotation(rotation);
+}
+
+void Model::setRotation(const float& x, const float& y, const float& z)
+{
+	transform.setRotation(x, y, z);
+}
+
+void Model::translate(const float& dx, const float& dy, const float& dz){
+	transform.translate(dx, dy, dz);
+}
+
+void Model::translate(const QVector3D& translation){
+	transform.translate(translation);
+}
+
+void Model::scale(const float& dx, const float& dy, const float& dz){
+	transform.scale(dx, dy, dz);
+}
+
+void Model::scale(const float& uniformFactor){
+	transform.scale(QVector3D(uniformFactor, uniformFactor, uniformFactor));
+}
+
+void Model::scale(const QVector3D& scale){
+	transform.scale(scale);
+}
+
+void Model::rotate(const float& dyaw, const float& dpitch, const float& droll){
+	transform.rotate(dyaw, dpitch, droll);
+}
+
+void Model::rotate(const float& angle, const QVector3D& axis){
+	transform.rotate(angle, axis);
+}
+
+void Model::rotate(const float& angle, const float& dyaw, const float& dpitch, const float& droll){
+	transform.rotate(angle, dyaw, dpitch, droll);
+}
+
+void Model::rotate(const QVector3D& drotation){
+	transform.rotate(drotation);
+}
+
+void Model::rotate(const QQuaternion& drotation){
+	transform.rotate(drotation);
+}
+
+
+QMatrix4x4 Model::toMatrix(){
+	return transform.toMatrix();
 }

@@ -3,11 +3,13 @@
 #include <QString>
 #include <QGuiApplication>
 #include <QKeyEvent>
+#include <QTime>
+#include <cmath>
 
 GLWindow::GLWindow()
 {
 	shader = new ShaderManager();
-	transform.translate(0.0f,0.0f,-5.0f);
+	timer.start();
 }
 
 GLWindow::~GLWindow(){
@@ -27,6 +29,9 @@ void GLWindow::initializeGL(){
 
 	this->model = new Model(cubePath.toStdString(), shader);
 	this->model2 = new Model(spherePath.toStdString(), shader);
+
+	this->model->setLocation(0,0,-5);
+	this->model2->setLocation(0,0,-5);
 }
 
 void GLWindow::resizeGL(int width, int height){
@@ -35,6 +40,9 @@ void GLWindow::resizeGL(int width, int height){
 }
 
 void GLWindow::paintGL(){
+	model->setLocation(std::sin(2.0f * 3.14f * 2.0f * static_cast<float>(timer.elapsed())), 0, -5);
+	model->rotate(0,1,0);
+	model2->rotate(0,-1,-1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	auto shaders = shader->getShaderList();
 	for(auto it = shaders.begin(); it != shaders.end(); ++it){

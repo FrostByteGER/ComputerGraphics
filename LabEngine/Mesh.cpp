@@ -2,9 +2,10 @@
 #include <QDebug>
 #include <memory>
 #include <QOpenGLShaderProgram>
+#include "Model.h"
 
-Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures, QOpenGLShaderProgram* shader) :
-	vertices(vertices), normals(normals), uvs(uvs), indices(indices), textures(textures),elementBuffer(QOpenGLBuffer::IndexBuffer), shader(shader)
+Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures, QOpenGLShaderProgram* shader, Model* parent) :
+	vertices(vertices), normals(normals), uvs(uvs), indices(indices), textures(textures),elementBuffer(QOpenGLBuffer::IndexBuffer), shader(shader), parent(parent)
 {
 	this->SetupMesh();
 }
@@ -39,6 +40,9 @@ void Mesh::SetupMesh(){
 	shader->setAttributeBuffer( "vertexPosition_modelspace", GL_FLOAT, 0, 3 );
 	shader->enableAttributeArray( "vertexPosition_modelspace" );
 
+	modelToWorld = shader->uniformLocation("modelToWorld");
+	worldToView = shader->uniformLocation("worldToView");
+
 	// Normalbuffer
 	normalBuffer.create();
 	normalBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -60,24 +64,19 @@ void Mesh::SetupMesh(){
 	projection.setToIdentity();
 	projection.perspective(45.0f, 800.0f / 600.0f, 0.0f, 1000.0f);
 
-	transform.translate(0.0f, 0.0f, -5.0f);
 }
 
 void Mesh::DrawMesh(QOpenGLShaderProgram* shader){
-	transform.rotate(0.5f, QVector3D(0.0f,1.0f,0.0f));
-	int modelToWorld = shader->uniformLocation("modelToWorld");
-	int worldToView = shader->uniformLocation("worldToView");
 	shader->setUniformValue(worldToView, projection);
 	vao.bind();
 	{
 		qWarning() << "DRAWING MESH";
-
 		{
-			shader->setUniformValue(modelToWorld, transform.toMatrix());
+			shader->setUniformValue(modelToWorld, parent->toMatrix());
 			for(QOpenGLTexture* t : textures){
 				t->bind();
 			}
-			glDrawArrays(GL_TRIANGLES,0,vertices.size());
+			glDrawArrays(GL_TRIANGLES,0, vertices.size());
 			for(QOpenGLTexture* t : textures){
 				t->release();
 			}
@@ -176,4 +175,24 @@ void Mesh::generateSphere(std::vector<GLfloat>& outVertices ,int size)
 uint32_t Mesh::getShaderID() const
 {
 	return shaderID;
+}
+
+Transform3D Mesh::getTransform() const
+{
+	return transform;
+}
+
+void Mesh::setTransform(const Transform3D& value)
+{
+	transform = value;
+}
+
+Model* Mesh::getParent() const
+{
+	return parent;
+}
+
+void Mesh::setParent(Model* value)
+{
+	parent = value;
 }

@@ -4,6 +4,7 @@
 #include <QOpenGLFunctions>
 #include "Model.h"
 #include "Transform3D.h"
+#include <QTime>
 
 
 class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
@@ -27,13 +28,11 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 	private:
 		void printContextInformation();
 
-		int modelToWorld;
-		int modelToView;
 		QMatrix4x4 projection;
-		Transform3D transform;
 		ShaderManager* shader;
 		Model* model;
 		Model* model2;
+		QTime timer;
 		const QString vertexPath   = "Resources/Shaders/simple.vert";
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
 		const QString cubePath     = "Resources/Models/cube.obj";
