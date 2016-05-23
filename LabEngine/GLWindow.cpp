@@ -224,5 +224,5 @@ void GLWindow::setWindowTitle(const QString& title)
 
 void GLWindow::updateWindowTitle()
 {
-	setTitle(windowTitle + "    Frame-Time: " + QString::number(deltaTimeMS, 'g', 2) + "ms");
+    setTitle(windowTitle + "    Frame-Time: " + QString::number(deltaTimeMS, 'g', 2) + "ms" + "    FPS: " + QString::number(1000.0 / deltaTimeMS));
 }
