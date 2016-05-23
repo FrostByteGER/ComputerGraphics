@@ -19,7 +19,9 @@ SOURCES += \
     Main.cpp \
     ShaderManager.cpp \
     Collision.cpp \
-    Transform3D.cpp
+    Transform3D.cpp \
+    InputManager.cpp \
+    Camera.cpp
 
 HEADERS += \
     GLWindow.h \
@@ -28,7 +30,9 @@ HEADERS += \
     ShaderManager.h \
     Collision.h \
     Transform3D.h \
-    UUID.h
+    InputManager.h \
+    Camera.h \
+    Definitions.h
 
 
 win32-msvc2015:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt

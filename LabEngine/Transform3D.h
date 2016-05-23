@@ -11,6 +11,11 @@ class Transform3D
 		// Constructors
 		Transform3D();
 
+		// Constants
+		static const QVector3D LocalForward;
+		static const QVector3D LocalUp;
+		static const QVector3D LocalRight;
+
 		// Transform By (Add/Scale)
 		void translate(const QVector3D &dt);
 		void translate(float dx, float dy, float dz);
@@ -44,7 +49,10 @@ class Transform3D
 		const QQuaternion& rotation() const;
 		const QMatrix4x4& toMatrix();
 
-
+		// Queries
+		QVector3D forward() const;
+		QVector3D up() const;
+		QVector3D right() const;
 
 	private:
 		bool needsUpdate;

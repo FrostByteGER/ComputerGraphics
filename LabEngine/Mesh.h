@@ -28,7 +28,7 @@ class Mesh
 		std::vector<GLuint> indices;
 		std::vector<QOpenGLTexture*> textures;
 
-		uint32_t getShaderID() const;
+		GLuint getShaderID() const;
 
 		Transform3D getTransform() const;
 		void setTransform(const Transform3D& value);
@@ -38,16 +38,14 @@ class Mesh
 
 	private:
 		QString name;
-		uint32_t shaderID;
+		GLuint shaderID;
 		QOpenGLBuffer vertexBuffer;
 		QOpenGLBuffer normalBuffer;
 		QOpenGLBuffer uvBuffer;
 		QOpenGLBuffer elementBuffer;
 		QOpenGLVertexArrayObject vao;
 		QOpenGLShaderProgram* shader;
-		QMatrix4x4 projection;
 		int modelToWorld;
-		int worldToView;
 		Transform3D transform;
 		Model* parent;
 

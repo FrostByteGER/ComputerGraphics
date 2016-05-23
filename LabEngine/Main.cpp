@@ -14,22 +14,24 @@ int main(int argc, char *argv[])
 	GLWindow window;
 	window.setFormat(format);
 	window.resize(800,600);
+
 	#ifdef __MINGW32__
-		window.setTitle("MINGW x32");
+		window.setWindowTitle("MINGW x32");
 	#endif
 
 	#ifdef _MSC_VER
-	#if _MSC_VER == 1900
-		window.setTitle("MSVC2015 x64");
-	#define COMPILER_NAME
-	#elif _MSC_VER == 1800
-		window.setTitle("MSVC2013 x64");
-	#endif
+		#if _MSC_VER == 1900
+			window.setWindowTitle("MSVC2015 x64");
+		#define COMPILER_NAME
+		#elif _MSC_VER == 1800
+			window.setWindowTitle("MSVC2013 x64");
+		#endif
 	#endif
 
 	#ifdef __ARM_ARCH_7A__
-		window.setTitle("ARMv7");
+		window.setWindowTitle("ARMv7");
 	#endif
+	window.updateWindowTitle();
 	window.show();
 	return app.exec();
 }

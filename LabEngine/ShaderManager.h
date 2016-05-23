@@ -12,19 +12,19 @@ class ShaderManager
 	public:
 		ShaderManager();
 		~ShaderManager();
-		uint32_t loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath);
-		QMap<uint32_t, QOpenGLShaderProgram*> getShaderList() const;
-		QOpenGLShaderProgram* getShader(uint32_t id) const;
+		GLuint loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath);
+		QMap<GLuint, QOpenGLShaderProgram*> getShaderList() const;
+		QOpenGLShaderProgram* getShader(GLuint id) const;
 		std::vector<Mesh*> getMeshes() const;
-		QList<Mesh*> getMeshes(uint32_t shaderID) const;
+		QList<Mesh*> getMeshes(GLuint shaderID) const;
 		QString getShaderName() const;
-		QMultiMap<uint32_t, Mesh*> getModelList() const;
-		void addMesh(uint32_t shaderID, Mesh* mesh);
+		QMultiMap<GLuint, Mesh*> getModelList() const;
+		void addMesh(GLuint shaderID, Mesh* mesh);
 		void removeMesh(const Mesh* mesh);
 
 	private:
 		QString shaderName;
-		QMap<uint32_t, QOpenGLShaderProgram*> shaderList;
-		QMultiMap<uint32_t, Mesh*> modelList;
+		QMap<GLuint, QOpenGLShaderProgram*> shaderList;
+		QMultiMap<GLuint, Mesh*> modelList;
 };
 

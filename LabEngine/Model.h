@@ -40,7 +40,7 @@ class Model
 
 	private:
 		QString name;
-		uint32_t shaderID;
+		GLuint shaderID;
 		ShaderManager* shaderManager;
 		//TODO: Maybe change to smartpointer!
 		std::vector<Mesh*> meshes;

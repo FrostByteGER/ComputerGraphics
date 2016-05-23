@@ -223,7 +223,6 @@ void Model::rotate(const QQuaternion& drotation){
 	transform.rotate(drotation);
 }
 
-
 QMatrix4x4 Model::toMatrix(){
 	return transform.toMatrix();
 }

@@ -3,6 +3,7 @@
 #include <memory>
 #include <QOpenGLShaderProgram>
 #include "Model.h"
+#include "Definitions.h"
 
 Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures, QOpenGLShaderProgram* shader, Model* parent) :
 	vertices(vertices), normals(normals), uvs(uvs), indices(indices), textures(textures),elementBuffer(QOpenGLBuffer::IndexBuffer), shader(shader), parent(parent)
@@ -41,7 +42,6 @@ void Mesh::SetupMesh(){
 	shader->enableAttributeArray( "vertexPosition_modelspace" );
 
 	modelToWorld = shader->uniformLocation("modelToWorld");
-	worldToView = shader->uniformLocation("worldToView");
 
 	// Normalbuffer
 	normalBuffer.create();
@@ -60,17 +60,14 @@ void Mesh::SetupMesh(){
 	vertexBuffer.release();
 	normalBuffer.release();
 	uvBuffer.release();
-
-	projection.setToIdentity();
-	projection.perspective(45.0f, 800.0f / 600.0f, 0.0f, 1000.0f);
-
 }
 
 void Mesh::DrawMesh(QOpenGLShaderProgram* shader){
-	shader->setUniformValue(worldToView, projection);
 	vao.bind();
 	{
+#ifdef LAB_ENGINE_DEBUG
 		qWarning() << "DRAWING MESH";
+#endif
 		{
 			shader->setUniformValue(modelToWorld, parent->toMatrix());
 			for(QOpenGLTexture* t : textures){
@@ -172,7 +169,7 @@ void Mesh::generateSphere(std::vector<GLfloat>& outVertices ,int size)
 	}
 }
 
-uint32_t Mesh::getShaderID() const
+GLuint Mesh::getShaderID() const
 {
 	return shaderID;
 }

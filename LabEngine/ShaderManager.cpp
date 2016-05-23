@@ -12,7 +12,7 @@ ShaderManager::~ShaderManager()
 	//TODO add delete arrays and pointers!
 }
 
-uint32_t ShaderManager::loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath){
+GLuint ShaderManager::loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath){
 	QOpenGLShaderProgram* shader = new QOpenGLShaderProgram();
 	// Load Vertex Shader
 	bool result = shader->addShaderFromSourceFile( QOpenGLShader::Vertex, vertexShaderPath );
@@ -30,21 +30,19 @@ uint32_t ShaderManager::loadShader(const QString& vertexShaderPath, const QStrin
 	if ( !result ){
 		qWarning() << "Could not link shader program:" << shader->log();
 	}
-	uint32_t id;
 	if(result){
-
-		id = LEUUID::generateUUID();
-		shaderList.insert(id, shader);
+		//TODO Change ID to QOpenGLShaderProgram::programId()
+		shaderList.insert(shader->programId(), shader);
 	}
-	return id;
+	return shader->programId();
 }
 
-QMap<uint32_t, QOpenGLShaderProgram*> ShaderManager::getShaderList() const
+QMap<GLuint, QOpenGLShaderProgram*> ShaderManager::getShaderList() const
 {
 	return shaderList;
 }
 
-QOpenGLShaderProgram* ShaderManager::getShader(uint32_t id) const
+QOpenGLShaderProgram* ShaderManager::getShader(GLuint id) const
 {
 	QOpenGLShaderProgram* value = nullptr;
 	for(auto i = shaderList.find(id); i != shaderList.end() ; ++i){
@@ -58,7 +56,7 @@ std::vector<Mesh*> ShaderManager::getMeshes() const
 	return modelList.values().toVector().toStdVector();
 }
 
-QList<Mesh*> ShaderManager::getMeshes(uint32_t shaderID) const
+QList<Mesh*> ShaderManager::getMeshes(GLuint shaderID) const
 {
 	return modelList.values(shaderID);
 }
@@ -69,12 +67,12 @@ QString ShaderManager::getShaderName() const
 	return shaderName;
 }
 
-QMultiMap<uint32_t, Mesh*> ShaderManager::getModelList() const
+QMultiMap<GLuint, Mesh*> ShaderManager::getModelList() const
 {
 	return modelList;
 }
 
-void ShaderManager::addMesh(uint32_t shaderID, Mesh* mesh)
+void ShaderManager::addMesh(GLuint shaderID, Mesh* mesh)
 {
 	modelList.insert(shaderID, mesh);
 }
