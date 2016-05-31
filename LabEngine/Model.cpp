@@ -20,7 +20,7 @@ Model::~Model(){
 }
 
 void Model::DrawModel(){
-	QOpenGLShaderProgram* shader = shaderManager->getShader(shaderID);
+	Shader* shader = shaderManager->getShader(shaderID);
 	// If we don't have a shader, do NOT draw!
 	if(!shader){
 		return;
@@ -47,7 +47,6 @@ void Model::processNode(aiNode* node, const aiScene* scene)
 	for(uint i = 0; i < node->mNumMeshes; ++i){
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		auto* processedMesh = this->processMesh(mesh, scene);
-		shaderManager->addMesh(shaderID, processedMesh);
 		this->meshes.push_back(processedMesh);
 	}
 
@@ -96,7 +95,7 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	}
 
 	// Return the constructed Mesh
-	QOpenGLShaderProgram* shader = shaderManager->getShader(shaderID);
+	Shader* shader = shaderManager->getShader(shaderID);
 	if(!shader){
 		qWarning() << "SHADER NOT FOUND";
 	}

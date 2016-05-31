@@ -6,6 +6,7 @@
 #include "Transform3D.h"
 #include "Camera.h"
 #include <chrono>
+#include "Scene.h"
 
 
 
@@ -37,7 +38,7 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 
 	private:
 		void printContextInformation();
-
+		Scene* scene;
 		QMatrix4x4 projection;
 		int worldToView;
 		int worldToCamera;

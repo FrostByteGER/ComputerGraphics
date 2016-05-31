@@ -62,19 +62,35 @@ void GLWindow::paintGL(){
 		updateRenderType = false;
 	}
 	auto shaders = shader->getShaderList();
-	for(auto it = shaders.begin(); it != shaders.end(); ++it){
-		auto currentShader = it.value();
+	for(auto currentShader : shaders){
 		currentShader->bind();
 		worldToCamera = currentShader->uniformLocation("worldToCamera");
 		cameraToView = currentShader->uniformLocation("cameraToView");
 		currentShader->setUniformValue(worldToCamera, camera.toMatrix());
 		currentShader->setUniformValue(cameraToView, projection);
-		auto meshes = shader->getMeshes(it.key());
-		for(Mesh* mesh : meshes){
+		auto meshes = currentShader->getMeshes();
+		for(auto mesh : meshes){
 			mesh->DrawMesh(currentShader);
 		}
 		currentShader->release();
 	}
+
+
+
+
+//	for(auto it = shaders.begin(); it != shaders.end(); ++it){
+//		auto currentShader = it.
+//		currentShader->bind();
+//		worldToCamera = currentShader->uniformLocation("worldToCamera");
+//		cameraToView = currentShader->uniformLocation("cameraToView");
+//		currentShader->setUniformValue(worldToCamera, camera.toMatrix());
+//		currentShader->setUniformValue(cameraToView, projection);
+//		auto meshes = shader->getMeshes(it.key());
+//		for(Mesh* mesh : meshes){
+//			mesh->DrawMesh(currentShader);
+//		}
+//		currentShader->release();
+//	}
 	auto endTime = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> time = endTime - startTime;
 	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();

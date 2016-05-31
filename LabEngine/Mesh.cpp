@@ -1,24 +1,19 @@
 #include "Mesh.h"
 #include <QDebug>
 #include <memory>
-#include <QOpenGLShaderProgram>
 #include "Model.h"
 #include "Definitions.h"
 
-Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures, QOpenGLShaderProgram* shader, Model* parent) :
+Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures, Shader* shader, Model* parent) :
 	vertices(vertices), normals(normals), uvs(uvs), indices(indices), textures(textures),elementBuffer(QOpenGLBuffer::IndexBuffer), shader(shader), parent(parent)
 {
+	shader->addMesh(this);
 	this->SetupMesh();
-}
-
-Mesh::Mesh(Mesh& other) : vertices(other.vertices), normals(other.normals), uvs(other.uvs), indices(other.indices), textures(other.textures),elementBuffer(QOpenGLBuffer::IndexBuffer)
-{
-	//TODO verify working!
-	//TODO delete?
 }
 
 Mesh::~Mesh(){
 	std::for_each(textures.begin(), textures.end(), std::default_delete<QOpenGLTexture>());
+	shader->removeMesh(this);
 }
 
 
@@ -62,7 +57,7 @@ void Mesh::SetupMesh(){
 	uvBuffer.release();
 }
 
-void Mesh::DrawMesh(QOpenGLShaderProgram* shader){
+void Mesh::DrawMesh(Shader* shader){
 	vao.bind();
 	{
 #ifdef LAB_ENGINE_DEBUG
@@ -169,7 +164,7 @@ void Mesh::generateSphere(std::vector<GLfloat>& outVertices ,int size)
 	}
 }
 
-GLuint Mesh::getShaderID() const
+size_t Mesh::getShaderID() const
 {
 	return shaderID;
 }
@@ -192,4 +187,9 @@ Model* Mesh::getParent() const
 void Mesh::setParent(Model* value)
 {
 	parent = value;
+}
+
+Shader* Mesh::getShader() const
+{
+	return shader;
 }

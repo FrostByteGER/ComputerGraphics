@@ -7,19 +7,19 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLTexture>
-#include <QOpenGLShaderProgram>
+#include "Shader.h"
 #include "Transform3D.h"
 
 class Model;
+class Shader;
 
 class Mesh
 {
 	public:
 		Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices,
-			 std::vector<QOpenGLTexture*> textures, QOpenGLShaderProgram* shader, Model* parent);
-		Mesh(Mesh& other);
+			 std::vector<QOpenGLTexture*> textures, Shader* shader, Model* parent);
 		~Mesh();
-		void DrawMesh(QOpenGLShaderProgram* shader);
+		void DrawMesh(Shader* shader);
 		static void generateSphere(std::vector<GLfloat>& outVertices, int size);
 
 		std::vector<QVector3D> vertices;
@@ -28,7 +28,7 @@ class Mesh
 		std::vector<GLuint> indices;
 		std::vector<QOpenGLTexture*> textures;
 
-		GLuint getShaderID() const;
+		size_t getShaderID() const;
 
 		Transform3D getTransform() const;
 		void setTransform(const Transform3D& value);
@@ -36,15 +36,17 @@ class Mesh
 		Model* getParent() const;
 		void setParent(Model* value);
 
+		Shader* getShader() const;
+
 	private:
 		QString name;
-		GLuint shaderID;
+		size_t shaderID;
 		QOpenGLBuffer vertexBuffer;
 		QOpenGLBuffer normalBuffer;
 		QOpenGLBuffer uvBuffer;
 		QOpenGLBuffer elementBuffer;
 		QOpenGLVertexArrayObject vao;
-		QOpenGLShaderProgram* shader;
+		Shader* shader;
 		int modelToWorld;
 		Transform3D transform;
 		Model* parent;

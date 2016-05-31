@@ -1,6 +1,7 @@
 #include "ShaderManager.h"
 #include <QMultiMap>
 #include <QMap>
+#include "Shader.h"
 
 ShaderManager::ShaderManager()
 {
@@ -11,8 +12,8 @@ ShaderManager::~ShaderManager()
 	//TODO add delete arrays and pointers!
 }
 
-GLuint ShaderManager::loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath){
-	QOpenGLShaderProgram* shader = new QOpenGLShaderProgram();
+size_t ShaderManager::loadShader(const QString& vertexShaderPath, const QString& fragmentShaderPath){
+	Shader* shader = new Shader();
 	// Load Vertex Shader
 	bool result = shader->addShaderFromSourceFile( QOpenGLShader::Vertex, vertexShaderPath );
 	if ( !result ){
@@ -30,53 +31,17 @@ GLuint ShaderManager::loadShader(const QString& vertexShaderPath, const QString&
 		qWarning() << "Could not link shader program:" << shader->log();
 	}
 	if(result){
-		//TODO Change ID to QOpenGLShaderProgram::programId()
-		shaderList.insert(shader->programId(), shader);
+		shaderList.push_back(shader);
 	}
-	return shader->programId();
+	return shaderList.size() - 1;
 }
 
-QMap<GLuint, QOpenGLShaderProgram*> ShaderManager::getShaderList() const
+std::vector<Shader*> ShaderManager::getShaderList() const
 {
 	return shaderList;
 }
 
-QOpenGLShaderProgram* ShaderManager::getShader(GLuint id) const
+Shader* ShaderManager::getShader(size_t id) const
 {
-	QOpenGLShaderProgram* value = nullptr;
-	for(auto i = shaderList.find(id); i != shaderList.end() ; ++i){
-		value = i.value();
-	}
-	return value;
-}
-
-std::vector<Mesh*> ShaderManager::getMeshes() const
-{
-	return modelList.values().toVector().toStdVector();
-}
-
-QList<Mesh*> ShaderManager::getMeshes(GLuint shaderID) const
-{
-	return modelList.values(shaderID);
-}
-
-QString ShaderManager::getShaderName() const
-{
-	//TODO add to QOpenGLShaderProgram
-	return shaderName;
-}
-
-QMultiMap<GLuint, Mesh*> ShaderManager::getModelList() const
-{
-	return modelList;
-}
-
-void ShaderManager::addMesh(GLuint shaderID, Mesh* mesh)
-{
-	modelList.insert(shaderID, mesh);
-}
-
-void ShaderManager::removeMesh(const Mesh* mesh)
-{
-	modelList.remove(mesh->getShaderID());
+	return shaderList[id];
 }
