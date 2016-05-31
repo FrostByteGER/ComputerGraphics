@@ -11,25 +11,28 @@ int main(int argc, char *argv[])
 	format.setVersion(3,3);
 	format.setSamples(8); // 8x MSAA
 
+	//TODO: Add Collision Tests here!
+
 	GLWindow window;
 	window.setFormat(format);
 	window.resize(800,600);
 
+	//Application Name
+	const QString applicationName = "LabEngine";
+
+	//Determine Compiler Type
 	#ifdef __MINGW32__
-		window.setWindowTitle("MINGW x32");
-	#endif
-
-	#ifdef _MSC_VER
+		window.setWindowTitle(applicationName + "   " + "MINGW x32");
+	#elif _MSC_VER
 		#if _MSC_VER == 1900
-			window.setWindowTitle("MSVC2015 x64");
-		#define COMPILER_NAME
+			window.setWindowTitle(applicationName + "   " + "MSVC2015 x64");
 		#elif _MSC_VER == 1800
-			window.setWindowTitle("MSVC2013 x64");
+			window.setWindowTitle(applicationName + "   " + "MSVC2013 x64");
 		#endif
-	#endif
-
-	#ifdef __ARM_ARCH_7A__
-		window.setWindowTitle("ARMv7");
+	#elif __ARM_ARCH_7A__
+		window.setWindowTitle(applicationName + "   " + "ARMv7");
+	#else
+		window.setWindowTitle(applicationName + "   " + "UNKNOWN COMPILER");
 	#endif
 	window.updateWindowTitle();
 	window.show();
