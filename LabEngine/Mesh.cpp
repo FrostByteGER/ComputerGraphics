@@ -50,6 +50,9 @@ void Mesh::SetupMesh(){
 	uvBuffer.bind();
 	uvBuffer.allocate(&uvs[0], uvs.size() * sizeof(QVector2D));
 
+	shader->setAttributeBuffer( "texCoords", GL_FLOAT, 0, 2 );
+	shader->enableAttributeArray( "texCoords" );
+
 	vao.release();
 	elementBuffer.release();
 	vertexBuffer.release();
@@ -69,7 +72,6 @@ void Mesh::DrawMesh(Shader* shader){
 				shader->setUniformValue("colorOnly", 1);
 				shader->setUniformValue("fragColor", meshColor);
 			}
-
 
 			// Bind all textures
 			uint32_t sizePerType = MAX_TEXTURE_SIZE / 4;

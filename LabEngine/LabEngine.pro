@@ -57,4 +57,6 @@ DISTFILES += \
     Resources/Shaders/simple.vert \
     Resources/Models/cube.obj \
     Resources/Models/sphere.obj \
-    Resources/Models/nanosuit.obj
+    Resources/Models/nanosuit.obj \
+    Resources/Models/nanosuit/nanosuit.obj \
+    Resources/Models/crate/Crate.obj

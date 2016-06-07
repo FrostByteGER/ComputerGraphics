@@ -38,6 +38,7 @@ void GLWindow::initializeGL(){
 	glEnable(GL_MULTISAMPLE); // Enable MSAA
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	//glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, renderType);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 

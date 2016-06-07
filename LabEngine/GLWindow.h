@@ -59,7 +59,7 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 		QString windowTitle;
 		const QString vertexPath   = "Resources/Shaders/simple.vert";
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
-		const QString cubePath     = "Resources/Models/cube.obj";
+		const QString cubePath     = "Resources/Models/crate/Crate.obj";
 		const QString spherePath   = "Resources/Models/sphere.obj";
 		const QString customPath   = "Resources/Models/nanosuit/nanosuit.obj";
 };
