@@ -39,6 +39,7 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 	private:
 		void printContextInformation();
 		Scene* scene;
+
 		QMatrix4x4 projection;
 		int worldToView;
 		int worldToCamera;
@@ -60,6 +61,6 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
 		const QString cubePath     = "Resources/Models/cube.obj";
 		const QString spherePath   = "Resources/Models/sphere.obj";
-		const QString customPath   = "Resources/Models/nanosuit.obj";
+		const QString customPath   = "Resources/Models/nanosuit/nanosuit.obj";
 };
 

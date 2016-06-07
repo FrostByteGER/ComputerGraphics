@@ -225,3 +225,16 @@ void Model::rotate(const QQuaternion& drotation){
 QMatrix4x4 Model::toMatrix(){
 	return transform.toMatrix();
 }
+
+QColor Model::getModelColor() const
+{
+	return modelColor;
+}
+
+void Model::setModelColor(const QColor& value)
+{
+	modelColor = value;
+	for(Mesh* m : meshes){
+		m->setMeshColor(value);
+	}
+}

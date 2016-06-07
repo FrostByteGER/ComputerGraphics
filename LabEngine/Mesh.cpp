@@ -2,11 +2,11 @@
 #include <QDebug>
 #include <memory>
 #include "Model.h"
-#include "Definitions.h"
 
 Mesh::Mesh(std::vector<QVector3D> vertices, std::vector<QVector3D> normals, std::vector<QVector2D> uvs, std::vector<GLuint> indices, std::vector<QOpenGLTexture*> textures, Shader* shader, Model* parent) :
 	vertices(vertices), normals(normals), uvs(uvs), indices(indices), textures(textures),elementBuffer(QOpenGLBuffer::IndexBuffer), shader(shader), parent(parent)
 {
+	forceColorOnly = false;
 	shader->addMesh(this);
 	this->SetupMesh();
 }
@@ -60,15 +60,44 @@ void Mesh::SetupMesh(){
 void Mesh::DrawMesh(Shader* shader){
 	vao.bind();
 	{
-#ifdef LAB_ENGINE_DEBUG
-		qWarning() << "DRAWING MESH";
-#endif
+		//qWarning() << "DRAWING MESH";
 		{
+			// Send the mesh transform to the vertex shader
 			shader->setUniformValue(modelToWorld, parent->toMatrix());
-			for(QOpenGLTexture* t : textures){
-				t->bind();
+
+			if(textures.size() == 0 || forceColorOnly){
+				shader->setUniformValue("colorOnly", 1);
+				shader->setUniformValue("fragColor", meshColor);
 			}
+
+
+			// Bind all textures
+			uint32_t sizePerType = MAX_TEXTURE_SIZE / 4;
+			for(GLuint i = 0; i < textures.size(); ++i){
+				QOpenGLTexture* t = textures.at(i);
+				if(!t){
+					// Skip rest since its a nullptr.
+					continue;
+				}
+				// Bind the texture
+				t->bind(i);
+
+				// Send the bound texture to the fragment shader
+				if(i < sizePerType){ // Diffuse
+					shader->setUniformValue("texture_diffuse" + i, i);
+				}else if(i < sizePerType * 2){ // Specular
+					shader->setUniformValue("texture_specular" + i - sizePerType, i);
+				}else if(i < sizePerType * 3){ // Normal
+					shader->setUniformValue("texture_normal" + i - sizePerType * 2, i);
+				}else if(i < sizePerType * 4){ // Displacement
+					shader->setUniformValue("texture_displacement" + i - sizePerType * 3, i);
+				}
+			}
+
+			// Draw the mesh
 			glDrawArrays(GL_TRIANGLES,0, vertices.size());
+
+			// Release all textures
 			for(QOpenGLTexture* t : textures){
 				t->release();
 			}
@@ -192,4 +221,24 @@ void Mesh::setParent(Model* value)
 Shader* Mesh::getShader() const
 {
 	return shader;
+}
+
+QColor Mesh::getMeshColor() const
+{
+	return meshColor;
+}
+
+void Mesh::setMeshColor(const QColor& value)
+{
+	meshColor = value;
+}
+
+bool Mesh::getForceColorOnly() const
+{
+	return forceColorOnly;
+}
+
+void Mesh::setForceColorOnly(bool value)
+{
+	forceColorOnly = value;
 }

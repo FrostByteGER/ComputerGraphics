@@ -35,10 +35,11 @@ HEADERS += \
     Transform3D.h \
     InputManager.h \
     Camera.h \
-    Definitions.h \
     Scene.h \
     Shader.h \
-    Player.h
+    Player.h \
+    Light.h \
+    PointLight.h
 
 
 win32-msvc2015:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt

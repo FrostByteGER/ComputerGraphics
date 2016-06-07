@@ -22,12 +22,6 @@ class Mesh
 		void DrawMesh(Shader* shader);
 		static void generateSphere(std::vector<GLfloat>& outVertices, int size);
 
-		std::vector<QVector3D> vertices;
-		std::vector<QVector3D> normals;
-		std::vector<QVector2D> uvs;
-		std::vector<GLuint> indices;
-		std::vector<QOpenGLTexture*> textures;
-
 		size_t getShaderID() const;
 
 		Transform3D getTransform() const;
@@ -38,7 +32,21 @@ class Mesh
 
 		Shader* getShader() const;
 
+		std::vector<QVector3D> vertices;
+		std::vector<QVector3D> normals;
+		std::vector<QVector2D> uvs;
+		std::vector<GLuint> indices;
+		std::vector<QOpenGLTexture*> textures;
+		static const uint32_t MAX_TEXTURE_SIZE = 16;
+
+		QColor getMeshColor() const;
+		void setMeshColor(const QColor& value);
+
+		bool getForceColorOnly() const;
+		void setForceColorOnly(bool value);
+
 	private:
+
 		QString name;
 		size_t shaderID;
 		QOpenGLBuffer vertexBuffer;
@@ -47,10 +55,11 @@ class Mesh
 		QOpenGLBuffer elementBuffer;
 		QOpenGLVertexArrayObject vao;
 		Shader* shader;
+		QColor meshColor;
+		bool forceColorOnly;
 		int modelToWorld;
 		Transform3D transform;
 		Model* parent;
 
 		void SetupMesh();
 };
-

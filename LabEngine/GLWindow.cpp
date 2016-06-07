@@ -7,7 +7,6 @@
 #include <QTimer>
 #include <cmath>
 #include "InputManager.h"
-#include "Definitions.h"
 
 GLWindow::GLWindow()
 {
@@ -37,6 +36,8 @@ void GLWindow::initializeGL(){
 	printContextInformation();
 
 	glEnable(GL_MULTISAMPLE); // Enable MSAA
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 	glPolygonMode(GL_FRONT_AND_BACK, renderType);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
@@ -45,18 +46,24 @@ void GLWindow::initializeGL(){
 	this->model3 = new Model(customPath.toStdString(), shader);
 
 	this->model->setLocation(0,0,-5);
-	this->model2->setLocation(0,0,-5);
+	this->model2->setLocation(1,0,-5);
 	this->model3->setLocation(7,-10,-10);
+
+	this->model->setModelColor(QColor(255,0,0,255));
+	this->model2->setModelColor(QColor(0,255,0,255));
+	this->model3->setModelColor(QColor(0,0,255,255));
+
 }
 
 void GLWindow::resizeGL(int width, int height){
 	projection.setToIdentity();
-	projection.perspective(45.0f, width / float(height), 0.0f, 1000.0f);
+	projection.perspective(45.0f, float(width) / float(height), 0.01f, 1000.0f);
 }
 
 void GLWindow::paintGL(){
+
 	auto startTime = std::chrono::high_resolution_clock::now();
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if(updateRenderType){
 		glPolygonMode(GL_FRONT_AND_BACK, renderType);
 		updateRenderType = false;
@@ -103,18 +110,17 @@ void GLWindow::teardownGL(){
 	model = nullptr;
 	delete model2;
 	model2 = nullptr;
+	delete model3;
+	model3 = nullptr;
 	delete shader;
 	shader = nullptr;
 }
 
 void GLWindow::update(){
-#ifdef LAB_ENGINE_DEBUG
-	qWarning() << "UPDATING";
-#endif
+	//qWarning() << "UPDATING";
 
-	//model->setLocation(std::sin(2.0f * 3.14f * 2.0f * static_cast<float>(timer.elapsed())), 0, -5);
-	//model->rotate(0,1,0);
-	//model2->rotate(0,-1,-1);
+	model->rotate(0,1,0);
+	model2->rotate(0,-1,-1);
 
 	InputManager::update();
 

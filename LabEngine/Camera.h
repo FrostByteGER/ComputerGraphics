@@ -38,7 +38,7 @@ class Camera
 		QVector3D up() const;
 
 	private:
-		bool m_dirty;
+		bool needsUpdate;
 		QVector3D m_translation;
 		QQuaternion m_rotation;
 		QMatrix4x4 m_world;
@@ -53,7 +53,7 @@ class Camera
 Q_DECLARE_TYPEINFO(Camera, Q_MOVABLE_TYPE);
 
 // Constructors
-inline Camera::Camera() : m_dirty(true) {}
+inline Camera::Camera() : needsUpdate(true) {}
 
 // Transform By (Add/Scale)
 inline void Camera::translate(float dx, float dy,float dz) { translate(QVector3D(dx, dy, dz)); }

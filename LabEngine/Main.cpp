@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 	format.setProfile(QSurfaceFormat::CoreProfile);
 	format.setVersion(3,3);
 	format.setSamples(8); // 8x MSAA
+	format.setDepthBufferSize(24);
 
 	//TODO: Add Collision Tests here!
 
@@ -35,6 +36,14 @@ int main(int argc, char *argv[])
 		window.setWindowTitle(applicationName + "   " + "UNKNOWN COMPILER");
 	#endif
 	window.updateWindowTitle();
+	qWarning() << "### PRINTING BUFFER SIZE INFORMATION ###";
+	qWarning() << qPrintable("Depth Buffer:   " + QString::number(format.depthBufferSize()));
+	qWarning() << qPrintable("Alpha Buffer:   " + QString::number(format.alphaBufferSize()));
+	qWarning() << qPrintable("Blue Buffer:    " + QString::number(format.blueBufferSize()));
+	qWarning() << qPrintable("Green Buffer:   " + QString::number(format.greenBufferSize()));
+	qWarning() << qPrintable("Red Buffer:     " + QString::number(format.redBufferSize()));
+	qWarning() << qPrintable("Stencil Buffer: " + QString::number(format.stencilBufferSize()));
+	qWarning() << "### END ###";
 	window.show();
 	return app.exec();
 }

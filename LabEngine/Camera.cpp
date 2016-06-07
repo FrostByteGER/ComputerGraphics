@@ -8,35 +8,35 @@ const QVector3D Camera::LocalRight(1.0f, 0.0f, 0.0f);
 // Transform By (Add/Scale)
 void Camera::translate(const QVector3D &dt)
 {
-	m_dirty = true;
+	needsUpdate = true;
 	m_translation += dt;
 }
 
 void Camera::rotate(const QQuaternion &dr)
 {
-	m_dirty = true;
+	needsUpdate = true;
 	m_rotation = dr * m_rotation;
 }
 
 // Transform To (Setters)
 void Camera::setTranslation(const QVector3D &t)
 {
-	m_dirty = true;
+	needsUpdate = true;
 	m_translation = t;
 }
 
 void Camera::setRotation(const QQuaternion &r)
 {
-	m_dirty = true;
+	needsUpdate = true;
 	m_rotation = r;
 }
 
 // Accessors
 const QMatrix4x4& Camera::toMatrix()
 {
-	if (m_dirty)
+	if (needsUpdate)
 	{
-		m_dirty = false;
+		needsUpdate = false;
 		m_world.setToIdentity();
 		m_world.rotate(m_rotation.conjugate());
 		m_world.translate(-m_translation);
@@ -80,6 +80,6 @@ QDataStream &operator>>(QDataStream &in, Camera &transform)
 {
 	in >> transform.m_translation;
 	in >> transform.m_rotation;
-	transform.m_dirty = true;
+	transform.needsUpdate = true;
 	return in;
 }

@@ -38,6 +38,9 @@ class Model
 
 		QMatrix4x4 toMatrix();
 
+		QColor getModelColor() const;
+		void setModelColor(const QColor& value);
+
 	private:
 		QString name;
 		size_t shaderID;
@@ -46,6 +49,7 @@ class Model
 		std::vector<Mesh*> meshes;
 		std::string directory;
 		Transform3D transform;
+		QColor modelColor;
 		void loadModel(const std::string& path);
 		void processNode(aiNode* node, const aiScene* scene);
 		Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
