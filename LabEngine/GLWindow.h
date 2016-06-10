@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include <chrono>
 #include "Scene.h"
+#include "Light.h"
 
 
 
@@ -39,7 +40,7 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 	private:
 		void printContextInformation();
 		Scene* scene;
-
+		Light directionalLight;
 		QMatrix4x4 projection;
 		int worldToView;
 		int worldToCamera;
@@ -60,7 +61,7 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 		const QString vertexPath   = "Resources/Shaders/simple.vert";
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
 		const QString cubePath     = "Resources/Models/crate/Crate.obj";
-		const QString spherePath   = "Resources/Models/sphere.obj";
+		const QString spherePath   = "Resources/Models/Sphere.obj";
 		const QString customPath   = "Resources/Models/nanosuit/nanosuit.obj";
 };
 

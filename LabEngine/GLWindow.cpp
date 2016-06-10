@@ -10,6 +10,8 @@
 
 GLWindow::GLWindow()
 {
+	directionalLight.transform.setTranslation(0,10,5);
+	directionalLight.lightColor.setRgb(255,255,255);
 	deltaTimeNS = 0.0;
 	deltaTimeMS = 0.0;
 	windowUpdateTime = 100;
@@ -72,6 +74,8 @@ void GLWindow::paintGL(){
 	auto shaders = shader->getShaderList();
 	for(auto currentShader : shaders){
 		currentShader->bind();
+		currentShader->setUniformValue("lightPosition", directionalLight.transform.translation());
+		currentShader->setUniformValue("lightColor", directionalLight.lightColor);
 		worldToCamera = currentShader->uniformLocation("worldToCamera");
 		cameraToView = currentShader->uniformLocation("cameraToView");
 		currentShader->setUniformValue(worldToCamera, camera.toMatrix());
@@ -142,6 +146,12 @@ void GLWindow::update(){
 			renderType = GL_LINE;
 		}
 		updateRenderType = true;
+	}
+	if(InputManager::keyPressed(Qt::Key_F2)){
+		directionalLight.transform.translate(0,-1,0);
+	}
+	if(InputManager::keyPressed(Qt::Key_F3)){
+		directionalLight.transform.translate(0,1,0);
 	}
 
 	// Camera Transformation

@@ -44,6 +44,10 @@ void Mesh::SetupMesh(){
 	normalBuffer.bind();
 	normalBuffer.allocate(&normals[0], normals.size() * sizeof(QVector3D));
 
+	shader->setAttributeBuffer( "normal", GL_FLOAT, 0, 3 );
+	shader->enableAttributeArray( "normal" );
+
+
 	// UVbuffer
 	uvBuffer.create();
 	uvBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
