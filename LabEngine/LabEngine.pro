@@ -39,7 +39,8 @@ HEADERS += \
     Shader.h \
     Player.h \
     Light.h \
-    PointLight.h
+    PointLight.h \
+    SpotLight.h
 
 
 win32-msvc2015:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt

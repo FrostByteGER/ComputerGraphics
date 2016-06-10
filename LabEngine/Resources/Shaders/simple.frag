@@ -1,4 +1,4 @@
-#version 330 core
+#version 440 core
 
 
 layout(location = 0, index = 0) out vec4 finalColor;
@@ -29,10 +29,10 @@ uniform sampler2D texture_displacement3;
 
 void main( void )
 {
+    // Either render a solid color or a texture.
     if(colorOnly){
-        //finalColor = vec4(0,0.5,1,1);
         finalColor = fragColor;
     }else{
-        finalColor = texture2D(texture_diffuse0, TexCoords);
+        finalColor = texture(texture_diffuse0, TexCoords);
     }
 }

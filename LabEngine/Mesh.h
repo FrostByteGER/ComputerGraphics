@@ -43,10 +43,11 @@ class Mesh
 		void setMeshColor(const QColor& value);
 
 		bool getForceColorOnly() const;
-		void setForceColorOnly(bool value);
+		void setForceColorOnly(const bool value);
+
+		void setColor();
 
 	private:
-
 		QString name;
 		size_t shaderID;
 		QOpenGLBuffer vertexBuffer;

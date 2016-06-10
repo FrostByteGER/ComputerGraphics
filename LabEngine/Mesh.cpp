@@ -240,7 +240,7 @@ bool Mesh::getForceColorOnly() const
 	return forceColorOnly;
 }
 
-void Mesh::setForceColorOnly(bool value)
+void Mesh::setForceColorOnly(const bool value)
 {
 	forceColorOnly = value;
 }
