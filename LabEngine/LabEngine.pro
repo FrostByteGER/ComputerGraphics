@@ -24,7 +24,9 @@ SOURCES += \
     Camera.cpp \
     Scene.cpp \
     Shader.cpp \
-    Player.cpp
+    Player.cpp \
+    PhysicsObject.cpp \
+    PhysicsThread.cpp
 
 HEADERS += \
     GLWindow.h \
@@ -39,7 +41,9 @@ HEADERS += \
     Shader.h \
     Player.h \
     Light.h \
-    PointLight.h
+    PointLight.h \
+    PhysicsThread.h \
+    PhysicsObject.h
 
 
 win32-msvc2015:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt
