@@ -1,116 +1,38 @@
-
+#pragma once
 
 class PhysicsObject
 {
-public:
+	public:
 
-    double x;
-    double y;
-    double z;
+		PhysicsObject();
 
-    double velocityX;
-    double velocityY;
-    double velocityZ;
+		double getX() const;
+		void setX(const double value);
+		double getY() const;
+		void setY(const double value);
+		double getZ() const;
+		void setZ(const double value);
+		double getVelocityX() const;
+		void setVelocityX(const double value);
+		double getVelocityY() const;
+		void setVelocityY(const double value);
+		double getVelocityZ() const;
+		void setVelocityZ(const double value);
+		double getMass() const;
+		void setMass(const double value);
+		double getCollideCounter() const;
+		void setCollideCounter(const double value);
 
-    double mass;
+	private:
+		double x = 0.0;
+		double y = 0.0;
+		double z = 0.0;
 
-    double collideCounter;
+		double velocityX = 0.0;
+		double velocityY = 0.0;
+		double velocityZ = 0.0;
 
-    PhysicsObject();
-    double getX() const;
-    void setX(double value);
-    double getY() const;
-    void setY(double value);
-    double getZ() const;
-    void setZ(double value);
-    double getVelocityX() const;
-    void setVelocityX(double value);
-    double getVelocityY() const;
-    void setVelocityY(double value);
-    double getVelocityZ() const;
-    void setVelocityZ(double value);
-    double getMass() const;
-    void setMass(double value);
-    double getCollideCounter() const;
-    void setCollideCounter(double value);
+		double mass = 1.0;
+
+		double collideCounter = 0.0;
 };
-
-double PhysicsObject::getX() const
-{
-    return x;
-}
-
-void PhysicsObject::setX(double value)
-{
-    x = value;
-}
-
-double PhysicsObject::getY() const
-{
-    return y;
-}
-
-void PhysicsObject::setY(double value)
-{
-    y = value;
-}
-
-double PhysicsObject::getZ() const
-{
-    return z;
-}
-
-void PhysicsObject::setZ(double value)
-{
-    z = value;
-}
-
-double PhysicsObject::getVelocityX() const
-{
-    return velocityX;
-}
-
-void PhysicsObject::setVelocityX(double value)
-{
-    velocityX = value;
-}
-
-double PhysicsObject::getVelocityY() const
-{
-    return velocityY;
-}
-
-void PhysicsObject::setVelocityY(double value)
-{
-    velocityY = value;
-}
-
-double PhysicsObject::getVelocityZ() const
-{
-    return velocityZ;
-}
-
-void PhysicsObject::setVelocityZ(double value)
-{
-    velocityZ = value;
-}
-
-double PhysicsObject::getMass() const
-{
-    return mass;
-}
-
-void PhysicsObject::setMass(double value)
-{
-    mass = value;
-}
-
-double PhysicsObject::getCollideCounter() const
-{
-    return collideCounter;
-}
-
-void PhysicsObject::setCollideCounter(double value)
-{
-    collideCounter = value;
-}

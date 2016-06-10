@@ -1,18 +1,6 @@
 #include "PhysicsThread.h"
 #include <vector>
 
-int minx = 0;
-int miny = 0;
-int minz = 0;
-
-int maxx = 0;
-int maxy = 0;
-int maxz = 0;
-
-double g = 9.81;
-
-std::vector<PhysicsObject> pobjects;
-
 PhysicsThread::PhysicsThread(int minx ,int miny ,int minz ,int maxx ,int maxy ,int naxz)
 {
 
@@ -27,3 +15,62 @@ PhysicsThread::PhysicsThread(int minx ,int miny ,int minz ,int maxx ,int maxy ,i
 }
 
 
+int PhysicsThread::getMiny() const
+{
+	return miny;
+}
+
+void PhysicsThread::setMiny(const int value)
+{
+	miny = value;
+}
+
+int PhysicsThread::getMinz() const
+{
+	return minz;
+}
+
+void PhysicsThread::setMinz(const int value)
+{
+	minz = value;
+}
+
+int PhysicsThread::getMaxx() const
+{
+	return maxx;
+}
+
+void PhysicsThread::setMaxx(const int value)
+{
+	maxx = value;
+}
+
+int PhysicsThread::getMaxy() const
+{
+	return maxy;
+}
+
+void PhysicsThread::setMaxy(const int value)
+{
+	maxy = value;
+}
+
+int PhysicsThread::getMaxz() const
+{
+	return maxz;
+}
+
+void PhysicsThread::setMaxz(const int value)
+{
+	maxz = value;
+}
+
+int PhysicsThread::getMinx() const
+{
+	return minx;
+}
+
+void PhysicsThread::setMinx(const int value)
+{
+	minx = value;
+}
