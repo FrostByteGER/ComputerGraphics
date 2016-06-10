@@ -1,4 +1,5 @@
 #include "Collision.h"
+#include <cmath>
 
 Collision::Collision()
 {
@@ -7,9 +8,11 @@ Collision::Collision()
 
 bool Collision::SphereVersusSphere(const int& x1 , const int& y1 , const int& z1 , const int& size1 , const int& x2 , const int& y2 , const int& z2 , const int& size2)
 {
-	return     ((x1 - x2) * (x1 - x2) +
-				(y1 - y2) * (y1 - y2) +
-				(z1 - z2) * (z1 - z2)) >= ((size1+size2) * (size1+size2));
+
+    return     (std::abs((x1 - x2) * (x1 - x2)) +
+                std::abs((y1 - y2) * (y1 - y2)) +
+                std::abs((z1 - z2) * (z1 - z2))) <=
+                std::abs((size1+size2) * (size1+size2));
 }
 
 bool Collision::SphereVersusPoint(const int& sphereX , const int& sphereY , const int& sphereZ , const int& sphereSize , const int& PointX , const int& PointY , const int& PointZ)
@@ -45,6 +48,7 @@ bool Collision::SphereVersusBox(const int& sphereX ,const int& sphereY ,const in
 			(y - sphereY) * (y - sphereY) +
 			(z - sphereZ) * (z - sphereZ) < (sphereSize * sphereSize);
 }
+
 
 int Collision::Min(const int& i1 ,const int& i2)
 {
