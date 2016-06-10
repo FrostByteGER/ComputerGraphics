@@ -62,6 +62,6 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
 		const QString cubePath     = "Resources/Models/crate/Crate.obj";
 		const QString spherePath   = "Resources/Models/Sphere.obj";
-		const QString customPath   = "Resources/Models/nanosuit/nanosuit.obj";
+		const QString customPath   = "Resources/Models/nanosuit/Nanosuit.obj";
 };
 
