@@ -5,7 +5,9 @@
 #include <QKeyEvent>
 #include <QTime>
 #include <QTimer>
+#include <QPair>
 #include <cmath>
+#include <QOpenGLFunctions_4_3_Core>
 #include "InputManager.h"
 
 GLWindow::GLWindow()
@@ -56,6 +58,15 @@ void GLWindow::initializeGL(){
 	this->model2->setModelColor(QColor(0,255,0,255));
 	this->model3->setModelColor(QColor(0,0,255,255));
 
+
+
+	//TODO: Write custom class that wraps around this with simple integers
+	//TODO2: move to main again with thread synchronization and wait for completion of initializeGL
+	auto version = context()->versionFunctions<QOpenGLFunctions_4_3_Core>();
+	if(!version){
+		qFatal(QString("FATAL ERROR: OPENGL VERSION INSUFFICIENT. REQUIRED: " + QString::number(format().version().first) + "." + QString::number(format().version().second)).toStdString().c_str());
+		QCoreApplication::exit(-1);
+	}
 }
 
 void GLWindow::resizeGL(int width, int height){
