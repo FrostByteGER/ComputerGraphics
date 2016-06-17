@@ -33,6 +33,4 @@ class PhysicsObject
 		double velocityZ = 0.0;
 
 		double mass = 1.0;
-
-		double collideCounter = 0.0;
 };

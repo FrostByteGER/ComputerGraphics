@@ -1,4 +1,5 @@
 #include "PhysicsObject.h"
+#include <iostream>
 
 //TODO:Replace maybe
 
@@ -75,14 +76,4 @@ double PhysicsObject::getMass() const
 void PhysicsObject::setMass(const double value)
 {
 	mass = value;
-}
-
-double PhysicsObject::getCollideCounter() const
-{
-	return collideCounter;
-}
-
-void PhysicsObject::setCollideCounter(const double value)
-{
-	collideCounter = value;
 }

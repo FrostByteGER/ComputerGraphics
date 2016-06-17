@@ -10,6 +10,8 @@ class PhysicsThread
 
 		PhysicsThread(int minx ,int miny ,int minz ,int maxx ,int maxy ,int naxz);
 
+        void run(double delta);
+
 		void addPhysicsObject(PhysicsObject physicsObject);
 		PhysicsObject subPhysicsObject(PhysicsObject physicsObject);
 		PhysicsObject subPhysicsObject(int index);
