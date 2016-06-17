@@ -5,11 +5,15 @@
 #include <QKeyEvent>
 #include <QTime>
 #include <QTimer>
+#include <QPair>
 #include <cmath>
+#include <QOpenGLFunctions_4_3_Core>
 #include "InputManager.h"
 
 GLWindow::GLWindow()
 {
+	directionalLight.transform.setTranslation(0,10,5);
+	directionalLight.lightColor.setRgb(255,255,255);
 	deltaTimeNS = 0.0;
 	deltaTimeMS = 0.0;
 	windowUpdateTime = 100;
@@ -54,6 +58,15 @@ void GLWindow::initializeGL(){
 	this->model2->setModelColor(QColor(0,255,0,255));
 	this->model3->setModelColor(QColor(0,0,255,255));
 
+
+
+	//TODO: Write custom class that wraps around this with simple integers
+	//TODO2: move to main again with thread synchronization and wait for completion of initializeGL
+	auto version = context()->versionFunctions<QOpenGLFunctions_4_3_Core>();
+	if(!version){
+		qFatal(QString("FATAL ERROR: OPENGL VERSION INSUFFICIENT. REQUIRED: " + QString::number(format().version().first) + "." + QString::number(format().version().second)).toStdString().c_str());
+		QCoreApplication::exit(-1);
+	}
 }
 
 void GLWindow::resizeGL(int width, int height){
@@ -72,6 +85,8 @@ void GLWindow::paintGL(){
 	auto shaders = shader->getShaderList();
 	for(auto currentShader : shaders){
 		currentShader->bind();
+		currentShader->setUniformValue("lightPosition", directionalLight.transform.translation());
+		currentShader->setUniformValue("lightColor", directionalLight.lightColor);
 		worldToCamera = currentShader->uniformLocation("worldToCamera");
 		cameraToView = currentShader->uniformLocation("cameraToView");
 		currentShader->setUniformValue(worldToCamera, camera.toMatrix());
@@ -142,6 +157,12 @@ void GLWindow::update(){
 			renderType = GL_LINE;
 		}
 		updateRenderType = true;
+	}
+	if(InputManager::keyPressed(Qt::Key_F2)){
+		directionalLight.transform.translate(0,-1,0);
+	}
+	if(InputManager::keyPressed(Qt::Key_F3)){
+		directionalLight.transform.translate(0,1,0);
 	}
 
 	// Camera Transformation

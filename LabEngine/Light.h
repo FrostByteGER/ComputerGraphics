@@ -6,5 +6,5 @@
 struct Light{
 	Transform3D transform;
 	QColor lightColor;
-	float lightIntensity;
+	float lightIntensity = 1.0f;
 };

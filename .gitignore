@@ -17,7 +17,7 @@
 *.app
 
 #Exclude specific folders
-!LabEngine/Resources/Models/*.obj
+!LabEngine/Resources/Models/**/*.obj
 
 # =========================
 # Operating System Files
