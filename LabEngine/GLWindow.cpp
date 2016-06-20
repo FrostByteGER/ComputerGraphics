@@ -85,12 +85,13 @@ void GLWindow::paintGL(){
 	auto shaders = shader->getShaderList();
 	for(auto currentShader : shaders){
 		currentShader->bind();
-		currentShader->setUniformValue("lightPosition", directionalLight.transform.translation());
+		//currentShader->setUniformValue("lightPosition", directionalLight.transform.translation());
+		currentShader->setAttributeValue("lightPosition", directionalLight.transform.translation());
 		currentShader->setUniformValue("lightColor", directionalLight.lightColor);
 		worldToCamera = currentShader->uniformLocation("worldToCamera");
-		cameraToView = currentShader->uniformLocation("cameraToView");
+		cameraToProjection = currentShader->uniformLocation("cameraToProjection");
 		currentShader->setUniformValue(worldToCamera, camera.toMatrix());
-		currentShader->setUniformValue(cameraToView, projection);
+		currentShader->setUniformValue(cameraToProjection, projection);
 		auto meshes = currentShader->getMeshes();
 		for(auto mesh : meshes){
 			mesh->DrawMesh(currentShader);

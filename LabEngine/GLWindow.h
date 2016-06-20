@@ -42,9 +42,8 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 		Scene* scene;
 		Light directionalLight;
 		QMatrix4x4 projection;
-		int worldToView;
 		int worldToCamera;
-		int cameraToView;
+		int cameraToProjection;
 		double deltaTimeNS;
 		double deltaTimeMS;
 		uint32_t windowUpdateTime;

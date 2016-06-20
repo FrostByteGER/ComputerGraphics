@@ -5,9 +5,9 @@ layout(location = 0, index = 0) out vec4 finalColor;
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
+in vec3 LightPosition;
 uniform bool colorOnly;
 uniform vec4 fragColor;
-uniform vec3 lightPosition;
 uniform vec4 lightColor;
 
 uniform sampler2D texture_diffuse0;
@@ -39,14 +39,22 @@ void main( void )
 
     // Calculate Lighting and Diffuse component
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(lightPosition - FragPos);
+    vec3 lightDir = normalize(LightPosition - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
     vec4 diffuse = diff * lightColor;
 
+    // Calculate Specular
+    float specularStrength = 0.5; //TODO: Expose as variable
+    float shininess = 32.0; //TODO: Expose as variable
+    vec3 viewDir = normalize(-FragPos);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(norm, halfwayDir), 0.0), shininess);
+    vec4 specular = specularStrength * lightColor * spec;
+
     // Either render a solid color or a texture.
     if(colorOnly){
-        finalColor = (ambient + diffuse) * fragColor;
+        finalColor = (ambient + diffuse + specular) * fragColor;
     }else{
-        finalColor = (ambient + diffuse) * texture(texture_diffuse0, TexCoords);
+        finalColor = (ambient + diffuse + specular) * texture(texture_diffuse0, TexCoords);
     }
 }
