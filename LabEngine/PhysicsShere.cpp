@@ -2,7 +2,7 @@
 
 PhysicsShere::PhysicsShere()
 {
-    type = 2;
+
 }
 double PhysicsShere::getSize() const{
     return size;

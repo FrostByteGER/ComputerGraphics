@@ -1,4 +1,5 @@
 #include "PhysicsThread.h"
+#include "PhysicsObject.h"
 #include "Collision.h"
 #include <cmath>
 #include <vector>
@@ -6,7 +7,8 @@
 #include <iterator>
 
 
-std::vector<PhysicsObject> pobjects;
+std::vector<PhysicsShere> pobjectsShere;
+std::vector<PhysicsBox> pobjectsBox;
 
 int minx;
 int miny;
@@ -17,6 +19,7 @@ int maxy;
 int maxz;
 
 double g = 9.81;
+
 
 PhysicsThread::PhysicsThread(int minx ,int miny ,int minz ,int maxx ,int maxy ,int naxz)
 {
@@ -34,119 +37,186 @@ PhysicsThread::PhysicsThread(int minx ,int miny ,int minz ,int maxx ,int maxy ,i
 void run(double delta){
 
     // Collision Border
-    for(int i = 0 ; i < pobjects.size() ; i++) {
-        PhysicsObject op = pobjects.at(i);
+    for(int i = 0 ; i < pobjectsShere.size() ; i++) {
+
+        PhysicsShere op = pobjectsShere.at(i);
 
         if(op.getIsMovable()){
-            if(op.getX() < minx ){
-                if(op.getVelocityX() < 0){
-                    op.setVelocityX(-op.getVelocityX());
-                }else{
-                    op.setVelocityX(op.getVelocityX()*1.01);
+            // is Shere TODO
+            if(true){
+                if(op.getX()-(op.getSize()) < minx ){
+                    if(op.getVelocityX() < 0){
+                        op.setVelocityX(-op.getVelocityX());
+                    }else{
+                        op.setVelocityX(op.getVelocityX());
+                    }
+                }else if(op.getX()+(op.getSize()) > maxx) {
+                    if(op.getVelocityX() > 0){
+                        op.setVelocityX(-op.getVelocityX());
+                    }else{
+                        op.setVelocityX(op.getVelocityX());
+                    }
                 }
-            }else if(op.getX() > maxx) {
-                if(op.getVelocityX() > 0){
-                    op.setVelocityX(-op.getVelocityX());
-                }else{
-                    op.setVelocityX(op.getVelocityX()*1.01);
-                }
-            }
 
-            if(op.getY() < miny){
-                if(op.getVelocityY() < 0){
-                    op.setVelocityY(-op.getVelocityY());
-                }else{
-                    op.setVelocityY(op.getVelocityY()*1.01);
-                }
-            }else{
-                if(op.getY() > maxy){
-                    if(op.getVelocityY() > 0){
+                if(op.getY()-(op.getSize()) < miny){
+                    if(op.getVelocityY() < 0){
                         op.setVelocityY(-op.getVelocityY());
                     }else{
-                        op.setVelocityY(op.getVelocityY()*1.01);
+                        op.setVelocityY(op.getVelocityY());
                     }
+                }else{
+                    if(op.getY()+(op.getSize()) > maxy){
+                        if(op.getVelocityY() > 0){
+                            op.setVelocityY(-op.getVelocityY());
+                        }else{
+                            op.setVelocityY(op.getVelocityY());
+                        }
+                    }
+
+                    // G
+                    op.setVelocityY(g*delta*op.getMass());
+
                 }
 
-                // G
-                op.setVelocityY(g*delta*op.getMass());
-
-            }
-
-            if(op.getZ() < minz){
-                if(op.getVelocityZ() < 0){
-                    op.setVelocityZ(-op.getVelocityZ());
-                }else{
-                    op.setVelocityZ(op.getVelocityZ()*1.01);
-                }
-            }else if(op.getZ() > maxz){
-                if(op.getVelocityZ() > 0){
-                    op.setVelocityZ(-op.getVelocityZ());
-                }else{
-                    op.setVelocityZ(op.getVelocityZ()*1.01);
+                if(op.getZ()-(op.getSize()) < minz){
+                    if(op.getVelocityZ() < 0){
+                        op.setVelocityZ(-op.getVelocityZ());
+                    }else{
+                        op.setVelocityZ(op.getVelocityZ());
+                    }
+                }else if(op.getZ()+(op.getSize()) > maxz){
+                    if(op.getVelocityZ() > 0){
+                        op.setVelocityZ(-op.getVelocityZ());
+                    }else{
+                        op.setVelocityZ(op.getVelocityZ());
+                    }
                 }
             }
         }
     }
 
-    // Collision
-    for(int i = 0 ; i < pobjects.size() ; i++) {
-        PhysicsObject op1 = pobjects.at(i);
-        for(int j = i ; j < pobjects.size() ; j++) {
-            PhysicsObject op2 = pobjects.at(j);
+    // Collision Shere on Shere
+    for(int i = 0 ; i < pobjectsShere.size() ; i++) {
+        PhysicsShere op1 = pobjectsShere.at(i);
+        for(int j = i ; j < pobjectsShere.size() ; j++) {
+            PhysicsShere op2 = pobjectsShere.at(j);
 
             // bool Collision::SphereVersusSphere(const int& x1 , const int& y1 , const int& z1 , const int& size1 , const int& x2 , const int& y2 , const int& z2 , const int& size2)
+            // Shere on Shere
+            // SIZE
+            if(Collision::SphereVersusSphere(op1.getX() ,op1.getY() ,op1.getZ() ,op1.getSize() ,op2.getX() ,op2.getY() ,op2.getZ() ,op2.getSize())){
 
-            if(op1.getType() == 2 && op2.getType() == 2){
+                double tempX (op1.getX() - op2.getX());
+                double tempY (op1.getY() - op2.getY());
+                double tempZ (op1.getZ() - op2.getZ());
 
-                // SIZE
-                if(Collision::SphereVersusSphere(op1.getX() ,op1.getY() ,op1.getZ() ,((PhysicsShere*)&op1)->getSize() ,op2.getX() ,op2.getY() ,op2.getZ() ,((PhysicsShere*)&op2)->getSize())){
+                double norm = sqrt(tempX*tempX + tempY*tempY + tempZ*tempZ);
 
-                    double tempX (op1.getX() - op2.getX());
-                    double tempY (op1.getY() - op2.getY());
-                    double tempZ (op1.getZ() - op2.getZ());
+                tempX = tempX / norm;
+                tempY = tempY / norm;
+                tempZ = tempZ / norm;
 
-                    double norm = sqrt(tempX*tempX + tempY*tempY + tempZ*tempZ);
+                double a1 = (op1.getVelocityX() * tempX) + (op1.getVelocityY() * tempY) + (op1.getVelocityZ() * tempZ);
+                double a2 = (op2.getVelocityX() * tempX) + (op2.getVelocityY() * tempY) + (op2.getVelocityZ() * tempZ);
 
-                    tempX = tempX / norm;
-                    tempY = tempY / norm;
-                    tempZ = tempZ / norm;
+                // double optimizedP = (2.0D * (a1 - a2)) / (e1.getWhight() + e2.getWhight());
 
-                    double a1 = (op1.getVelocityX() * tempX) + (op1.getVelocityY() * tempY) + (op1.getVelocityZ() * tempZ);
-                    double a2 = (op2.getVelocityX() * tempX) + (op2.getVelocityY() * tempY) + (op2.getVelocityZ() * tempZ);
+                double optimizedP = (2.0 * (a1 - a2)) / (op1.getMass() + op2.getMass());
 
-                    // double optimizedP = (2.0D * (a1 - a2)) / (e1.getWhight() + e2.getWhight());
+                // fix
+                optimizedP = abs(optimizedP);
 
-                    double optimizedP = (2.0 * (a1 - a2)) / (op1.getMass() + op2.getMass());
-
-                    // fix
-                    optimizedP = abs(optimizedP);
-
-                    // 0.9 Verlusst
-                    if(op1.getIsMovable()){
-                        op1.setVelocityX( op1.getVelocityX() + (optimizedP * op2.getMass() * tempX) * 0.9);
-                        op1.setVelocityY( op1.getVelocityY() + (optimizedP * op2.getMass() * tempY) * 0.9);
-                        op1.setVelocityZ( op1.getVelocityZ() + (optimizedP * op2.getMass() * tempZ) * 0.9);
-                    }
-
-                    if(op2.getIsMovable()){
-                        op2.setVelocityX( op2.getVelocityX() + (optimizedP * op1.getMass() * tempX) * 0.9);
-                        op2.setVelocityY( op2.getVelocityY() + (optimizedP * op1.getMass() * tempY) * 0.9);
-                        op2.setVelocityZ( op2.getVelocityZ() + (optimizedP * op1.getMass() * tempZ) * 0.9);
-                    }
-
-                    // TODO
+                // 0.9 Verlusst
+                if(op1.getIsMovable()){
+                    op1.setVelocityX( op1.getVelocityX() + (optimizedP * op2.getMass() * tempX) * (op1.getFriction()*op2.getFriction()));
+                    op1.setVelocityY( op1.getVelocityY() + (optimizedP * op2.getMass() * tempY) * (op1.getFriction()*op2.getFriction()));
+                    op1.setVelocityZ( op1.getVelocityZ() + (optimizedP * op2.getMass() * tempZ) * (op1.getFriction()*op2.getFriction()));
                 }
-            }
-            if(op1.getType() == 2 && op2.getType() == 1){
 
+                if(op2.getIsMovable()){
+                    op2.setVelocityX( op2.getVelocityX() + (optimizedP * op1.getMass() * tempX) * (op1.getFriction()*op2.getFriction()));
+                    op2.setVelocityY( op2.getVelocityY() + (optimizedP * op1.getMass() * tempY) * (op1.getFriction()*op2.getFriction()));
+                    op2.setVelocityZ( op2.getVelocityZ() + (optimizedP * op1.getMass() * tempZ) * (op1.getFriction()*op2.getFriction()));
+                }
+
+                // TODO
             }
         }
-
     }
 
+    // Collision Shere on Box
+    // bool Collision::SphereVersusBox
+    //(const int& sphereX ,const int& sphereY ,const int& sphereZ ,const int& sphereSize
+    // ,const int& boxMinX ,const int& boxMinY ,const int& boxMinZ ,const int& boxMaxX ,const int& boxMaxY ,const int& boxMaxZ)
+
+
+    for(int i = 0 ; i < pobjectsShere.size() ; i++) {
+        PhysicsShere op1 = pobjectsShere.at(i);
+        for(int j = 0 ; j < pobjectsBox.size() ; j++) {
+            PhysicsBox op2 = pobjectsBox.at(j);
+
+            if(Collision::SphereVersusBox( op1.getX() ,op1.getY() ,op1.getZ() ,op1.getSize() ,op2.getMinX() ,op2.getMinY() ,op2.getMinZ() ,op2.getMaxX() ,op2.getMaxY() ,op2.getMaxZ())){
+                double closeDistance = std::abs( op1.getX()-op2.getMaxX());
+
+                if(closeDistance > std::abs( op1.getX() - op2.getMinX())){
+                    closeDistance = std::abs( op1.getX() - op2.getMinX());
+                }
+
+                if(closeDistance > std::abs( op1.getY() - op2.getMaxY())){
+                    closeDistance = std::abs( op1.getY() - op2.getMaxY());
+                }
+
+                if(closeDistance > std::abs( op1.getY() - op2.getMinY())){
+                    closeDistance = std::abs( op1.getY() - op2.getMinY());
+                }
+
+                if(closeDistance > std::abs( op1.getZ() - op2.getMaxZ())){
+                    closeDistance = std::abs( op1.getZ() - op2.getMaxZ());
+                }
+
+                if(closeDistance > std::abs( op1.getZ() - op2.getMinZ())){
+                    closeDistance = std::abs( op1.getZ() - op2.getMinZ());
+                }
+
+                if(closeDistance == std::abs( op1.getX()-op2.getMaxX())){
+                    // maxX
+                    if(op1.getVelocityX() < 0){
+                        op1.setVelocityX(-op1.getVelocityX());
+                    }
+                }else if(closeDistance == std::abs( op1.getX() - op2.getMinX())){
+                    // minX
+                    if(op1.getVelocityX() > 0){
+                        op1.setVelocityX(-op1.getVelocityX());
+                    }
+                }else if(closeDistance == std::abs( op1.getY() - op2.getMaxY())){
+                    // maxY
+                    if(op1.getVelocityY() < 0){
+                        op1.setVelocityY(-op1.getVelocityY());
+                    }
+                }else if(closeDistance == std::abs( op1.getY() - op2.getMinY())){
+                    // minY
+                    if(op1.getVelocityY() > 0){
+                        op1.setVelocityY(-op1.getVelocityY());
+                    }
+                }else if(closeDistance == std::abs( op1.getZ() - op2.getMaxZ())){
+                    // maxZ
+                    if(op1.getVelocityZ() < 0){
+                        op1.setVelocityZ(-op1.getVelocityZ());
+                    }
+                }else if(closeDistance == std::abs( op1.getZ() - op2.getMinZ())){
+                    // minZ
+                    if(op1.getVelocityZ() > 0){
+                        op1.setVelocityZ(-op1.getVelocityZ());
+                    }
+                }
+            }
+        }
+    }
+
+
     // Move
-    for(int i = 0 ; i < pobjects.size() ; i++) {
-        PhysicsObject op = pobjects.at(i);
+    for(int i = 0 ; i < pobjectsShere.size() ; i++) {
+        PhysicsShere op = pobjectsShere.at(i);
 
         op.setX(op.getVelocityX()*delta);
         op.setY(op.getVelocityY()*delta);
@@ -214,9 +284,13 @@ void PhysicsThread::setMinx(const int value)
 	minx = value;
 }
 
-void addPhysicsObject(PhysicsObject physicsObject)
+void addPhysicsShere(PhysicsShere physicsObject)
 {
-    pobjects.push_back(physicsObject);
+    pobjectsShere.push_back(physicsObject);
 }
 
+void addPhysicsBox(PhysicsBox physicsObject)
+{
+    pobjectsBox.push_back(physicsObject);
+}
 

@@ -88,7 +88,10 @@ void PhysicsObject::setIsMovable(bool value)
     isMovable = value;
 };
 
-int PhysicsObject::getType() const
-{
-    return type;
+double PhysicsObject::getFriction() const{
+    return friction;
+};
+
+void PhysicsObject::setFriction(const double value){
+    friction = value;
 };

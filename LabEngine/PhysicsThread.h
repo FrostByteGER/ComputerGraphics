@@ -12,9 +12,13 @@ class PhysicsThread
 
         void run(double delta);
 
-		void addPhysicsObject(PhysicsObject physicsObject);
-		PhysicsObject subPhysicsObject(PhysicsObject physicsObject);
-		PhysicsObject subPhysicsObject(int index);
+        void addPhysicsShere(PhysicsShere physicsObject);
+        PhysicsObject subPhysicsShere(PhysicsShere physicsObject);
+        PhysicsObject subPhysicsShere(int index);
+
+        void addPhysicsBox(PhysicsBox physicsObject);
+        PhysicsObject subPhysicsBox(PhysicsBox physicsObject);
+        PhysicsObject subPhysicsBox(int index);
 
 		int getMinx() const;
 		void setMinx(const int value);

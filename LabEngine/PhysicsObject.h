@@ -22,13 +22,10 @@ class PhysicsObject
 		void setMass(const double value);
 		double getCollideCounter() const;
 		void setCollideCounter(const double value);
-
+        double getFriction() const;
+        void setFriction(const double value);
         bool getIsMovable() const;
         void setIsMovable(bool value);
-
-        int getType() const;
-
-        int type = 0;
 
 	private:
 		double x = 0.0;
@@ -40,6 +37,8 @@ class PhysicsObject
 		double velocityZ = 0.0;
 
 		double mass = 1.0;
+
+        double friction = 0.94868329805;
 
         bool isMovable = false;
 

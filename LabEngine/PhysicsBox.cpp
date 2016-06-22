@@ -2,7 +2,7 @@
 
 PhysicsBox::PhysicsBox()
 {
-    type = 1;
+
 }
 
 double PhysicsBox::getMaxX() const
