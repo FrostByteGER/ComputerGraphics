@@ -23,6 +23,13 @@ class PhysicsObject
 		double getCollideCounter() const;
 		void setCollideCounter(const double value);
 
+        bool getIsMovable() const;
+        void setIsMovable(bool value);
+
+        int getType() const;
+
+        int type = 0;
+
 	private:
 		double x = 0.0;
 		double y = 0.0;
@@ -33,4 +40,53 @@ class PhysicsObject
 		double velocityZ = 0.0;
 
 		double mass = 1.0;
+
+        bool isMovable = false;
+
+
+};
+
+class PhysicsBox : public PhysicsObject
+{
+    public:
+        PhysicsBox();
+
+        double getMaxX() const;
+        void setMaxX(double value);
+
+        double getMaxY() const;
+        void setMaxY(double value);
+
+        double getMaxZ() const;
+        void setMaxZ(double value);
+
+        double getMinX() const;
+        void setMinX(double value);
+
+        double getMinY() const;
+        void setMinY(double value);
+
+        double getMinZ() const;
+        void setMinZ(double value);
+
+    private:
+        double maxX = 0;
+        double maxY = 0;
+        double maxZ = 0;
+
+        double minX = 0;
+        double minY = 0;
+        double minZ = 0;
+};
+
+class PhysicsShere : public PhysicsObject
+{
+    public:
+        PhysicsShere();
+
+        double getSize() const;
+        void setSize(double value);
+
+    private:
+        double size = 0;
 };

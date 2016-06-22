@@ -26,7 +26,9 @@ SOURCES += \
     Shader.cpp \
     Player.cpp \
     PhysicsObject.cpp \
-    PhysicsThread.cpp
+    PhysicsThread.cpp \
+    PhysicsShere.cpp \
+    PhysicsBox.cpp
 
 HEADERS += \
     GLWindow.h \

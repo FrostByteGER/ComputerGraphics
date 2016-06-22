@@ -77,3 +77,18 @@ void PhysicsObject::setMass(const double value)
 {
 	mass = value;
 }
+
+bool PhysicsObject::getIsMovable() const
+{
+    return isMovable;
+};
+
+void PhysicsObject::setIsMovable(bool value)
+{
+    isMovable = value;
+};
+
+int PhysicsObject::getType() const
+{
+    return type;
+};
