@@ -26,6 +26,7 @@ GLWindow::GLWindow()
 GLWindow::~GLWindow(){
 	makeCurrent();
 	teardownGL();
+	physicsSimulation.quit();
 	windowUpdateTimer->stop();
 	delete windowUpdateTimer;
 	windowUpdateTimer = nullptr;
@@ -141,7 +142,6 @@ void GLWindow::update(){
 
 	InputManager::update();
 
-
 	if(InputManager::keyTriggered(Qt::Key_Escape)){
 		qWarning() << "CLOSING APPLICATION!";
 		QGuiApplication::instance()->quit();
@@ -164,6 +164,21 @@ void GLWindow::update(){
 	}
 	if(InputManager::keyPressed(Qt::Key_F3)){
 		directionalLight.transform.translate(0,1,0);
+	}
+
+	if(InputManager::keyTriggered(Qt::Key_F5)){
+		qDebug() << ">>>STARTING PHYSICS-SIMULATION<<<";
+		physicsSimulation.start();
+	}
+
+	if(InputManager::keyTriggered(Qt::Key_F6)){
+		qDebug() << ">>>PAUSING/RESUMING PHYSICS-SIMULATION<<<";
+		physicsSimulation.TogglePause();
+	}
+
+	if(InputManager::keyTriggered(Qt::Key_F7)){
+		qDebug() << ">>>STOPPING PHYSICS-SIMULATION<<<";
+		physicsSimulation.quit();
 	}
 
 	// Camera Transformation

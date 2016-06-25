@@ -34,6 +34,9 @@ class Transform3D
 		// Transform To (Setters)
 		void setTranslation(const QVector3D& t);
 		void setTranslation(const float& x, const float& y, const float& z);
+		void setTranslationX(const float& x);
+		void setTranslationY(const float& y);
+		void setTranslationZ(const float& z);
 		void setScale(const QVector3D& s);
 		void setScale(const float& x, const float& y, const float& z);
 		void setScale(const float& k);
@@ -84,6 +87,9 @@ inline void Transform3D::grow(float factor) { grow(QVector3D(factor, factor, fac
 
 // Transform To (Setters)
 inline void Transform3D::setTranslation(const float& x, const float& y, const float& z) { setTranslation(QVector3D(x, y, z)); }
+inline void Transform3D::setTranslationX(const float& x) { setTranslation(QVector3D(x, m_position.y(), m_position.z())); }
+inline void Transform3D::setTranslationY(const float& y) { setTranslation(QVector3D(m_position.x(), y, m_position.z())); }
+inline void Transform3D::setTranslationZ(const float& z) { setTranslation(QVector3D(m_position.x(), m_position.y(), z)); }
 inline void Transform3D::setScale(const float& x, const float& y, const float& z) { setScale(QVector3D(x, y, z)); }
 inline void Transform3D::setScale(const float& k) { setScale(QVector3D(k, k, k)); }
 inline void Transform3D::setRotation(const float& angle, const QVector3D& axis) { setRotation(QQuaternion::fromAxisAndAngle(axis, angle)); }

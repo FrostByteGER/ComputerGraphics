@@ -8,6 +8,7 @@
 #include <chrono>
 #include "Scene.h"
 #include "Light.h"
+#include "PhysicsThread.h"
 
 
 
@@ -40,6 +41,7 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 	private:
 		void printContextInformation();
 		Scene* scene;
+		PhysicsThread physicsSimulation;
 		Light directionalLight;
 		QMatrix4x4 projection;
 		int worldToCamera;

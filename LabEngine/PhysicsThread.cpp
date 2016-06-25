@@ -5,223 +5,264 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <QDebug>
 
 
-std::vector<PhysicsShere> pobjectsShere;
-std::vector<PhysicsBox> pobjectsBox;
-
-int minx;
-int miny;
-int minz;
-
-int maxx;
-int maxy;
-int maxz;
-
-double g = 9.81;
 
 
-PhysicsThread::PhysicsThread(int minx ,int miny ,int minz ,int maxx ,int maxy ,int naxz)
+
+PhysicsThread::PhysicsThread()
+{
+}
+
+PhysicsThread::PhysicsThread(int minx ,int miny ,int minz ,int maxx ,int maxy ,int maxz)
 {
 
-    this->minx = minx;
-    this->miny = miny;
-    this->minz = minz;
+	this->minx = minx;
+	this->miny = miny;
+	this->minz = minz;
 
-    this->maxx = maxx;
-    this->maxy = maxy;
-    this->maxz = naxz;
+	this->maxx = maxx;
+	this->maxy = maxy;
+	this->maxz = maxz;
 
 }
 
-void run(double delta){
+PhysicsThread::~PhysicsThread()
+{
 
-    // Collision Border
-    for(int i = 0 ; i < pobjectsShere.size() ; i++) {
+}
 
-        PhysicsShere op = pobjectsShere.at(i);
+void PhysicsThread::run(){
+	qDebug() << "SUCCESSFULLY STARTED UP PHYSICS-SIMULATION";
+	forever{
+		mutex.lock();
+		qDebug() << "RUNNING PHYSICS-SIMULATION";
+		runSimulation(1.0/60.0);
+		if(stop){
+			break;
+		}
+		if(bPause){
+			pauseManager.wait(&mutex);
+		}
+		mutex.unlock();
+	}
+}
 
-        if(op.getIsMovable()){
-            // is Shere TODO
-            if(true){
-                if(op.getX()-(op.getSize()) < minx ){
-                    if(op.getVelocityX() < 0){
-                        op.setVelocityX(-op.getVelocityX());
-                    }else{
-                        op.setVelocityX(op.getVelocityX());
-                    }
-                }else if(op.getX()+(op.getSize()) > maxx) {
-                    if(op.getVelocityX() > 0){
-                        op.setVelocityX(-op.getVelocityX());
-                    }else{
-                        op.setVelocityX(op.getVelocityX());
-                    }
-                }
+void PhysicsThread::TogglePause()
+{
+	bPause = !bPause;
+	if(!bPause){
+		pauseManager.wakeAll();
+	}
+}
 
-                if(op.getY()-(op.getSize()) < miny){
-                    if(op.getVelocityY() < 0){
-                        op.setVelocityY(-op.getVelocityY());
-                    }else{
-                        op.setVelocityY(op.getVelocityY());
-                    }
-                }else{
-                    if(op.getY()+(op.getSize()) > maxy){
-                        if(op.getVelocityY() > 0){
-                            op.setVelocityY(-op.getVelocityY());
-                        }else{
-                            op.setVelocityY(op.getVelocityY());
-                        }
-                    }
+void PhysicsThread::pause()
+{
+	bPause = true;
+}
 
-                    // G
-                    op.setVelocityY(g*delta*op.getMass());
+void PhysicsThread::resume()
+{
+	bPause = false;
+	pauseManager.wakeAll();
+}
 
-                }
+void PhysicsThread::quit()
+{
+	stop = true;
+	QThread::quit();
+	qDebug() << "STOPPING PHYSICS-THREAD";
+}
 
-                if(op.getZ()-(op.getSize()) < minz){
-                    if(op.getVelocityZ() < 0){
-                        op.setVelocityZ(-op.getVelocityZ());
-                    }else{
-                        op.setVelocityZ(op.getVelocityZ());
-                    }
-                }else if(op.getZ()+(op.getSize()) > maxz){
-                    if(op.getVelocityZ() > 0){
-                        op.setVelocityZ(-op.getVelocityZ());
-                    }else{
-                        op.setVelocityZ(op.getVelocityZ());
-                    }
-                }
-            }
-        }
-    }
+void PhysicsThread::runSimulation(const double& delta){
 
-    // Collision Shere on Shere
-    for(int i = 0 ; i < pobjectsShere.size() ; i++) {
-        PhysicsShere op1 = pobjectsShere.at(i);
-        for(int j = i ; j < pobjectsShere.size() ; j++) {
-            PhysicsShere op2 = pobjectsShere.at(j);
+	// Collision Border
+	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
 
-            // bool Collision::SphereVersusSphere(const int& x1 , const int& y1 , const int& z1 , const int& size1 , const int& x2 , const int& y2 , const int& z2 , const int& size2)
-            // Shere on Shere
-            // SIZE
-            if(Collision::SphereVersusSphere(op1.getX() ,op1.getY() ,op1.getZ() ,op1.getSize() ,op2.getX() ,op2.getY() ,op2.getZ() ,op2.getSize())){
+		PhysicsSphere* op = pobjectsSphere.at(i);
 
-                double tempX (op1.getX() - op2.getX());
-                double tempY (op1.getY() - op2.getY());
-                double tempZ (op1.getZ() - op2.getZ());
+		if(op->getIsMovable()){
+			// is Shere TODO
+			if(true){
+				if(op->getX()-(op->getSize()) < minx ){
+					if(op->getVelocityX() < 0){
+						op->setVelocityX(-op->getVelocityX());
+					}else{
+						op->setVelocityX(op->getVelocityX());
+					}
+				}else if(op->getX()+(op->getSize()) > maxx) {
+					if(op->getVelocityX() > 0){
+						op->setVelocityX(-op->getVelocityX());
+					}else{
+						op->setVelocityX(op->getVelocityX());
+					}
+				}
 
-                double norm = sqrt(tempX*tempX + tempY*tempY + tempZ*tempZ);
+				if(op->getY()-(op->getSize()) < miny){
+					if(op->getVelocityY() < 0){
+						op->setVelocityY(-op->getVelocityY());
+					}else{
+						op->setVelocityY(op->getVelocityY());
+					}
+				}else{
+					if(op->getY()+(op->getSize()) > maxy){
+						if(op->getVelocityY() > 0){
+							op->setVelocityY(-op->getVelocityY());
+						}else{
+							op->setVelocityY(op->getVelocityY());
+						}
+					}
 
-                tempX = tempX / norm;
-                tempY = tempY / norm;
-                tempZ = tempZ / norm;
+					// G
+					op->setVelocityY(g*delta*op->getMass());
 
-                double a1 = (op1.getVelocityX() * tempX) + (op1.getVelocityY() * tempY) + (op1.getVelocityZ() * tempZ);
-                double a2 = (op2.getVelocityX() * tempX) + (op2.getVelocityY() * tempY) + (op2.getVelocityZ() * tempZ);
+				}
 
-                // double optimizedP = (2.0D * (a1 - a2)) / (e1.getWhight() + e2.getWhight());
+				if(op->getZ()-(op->getSize()) < minz){
+					if(op->getVelocityZ() < 0){
+						op->setVelocityZ(-op->getVelocityZ());
+					}else{
+						op->setVelocityZ(op->getVelocityZ());
+					}
+				}else if(op->getZ()+(op->getSize()) > maxz){
+					if(op->getVelocityZ() > 0){
+						op->setVelocityZ(-op->getVelocityZ());
+					}else{
+						op->setVelocityZ(op->getVelocityZ());
+					}
+				}
+			}
+		}
+	}
 
-                double optimizedP = (2.0 * (a1 - a2)) / (op1.getMass() + op2.getMass());
+	// Collision Shere on Shere
+	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
+		PhysicsSphere* op1 = pobjectsSphere.at(i);
+		for(int j = i ; j < pobjectsSphere.size() ; j++) {
+			PhysicsSphere* op2 = pobjectsSphere.at(j);
 
-                // fix
-                optimizedP = abs(optimizedP);
+			// bool Collision::SphereVersusSphere(const int& x1 , const int& y1 , const int& z1 , const int& size1 , const int& x2 , const int& y2 , const int& z2 , const int& size2)
+			// Shere on Shere
+			// SIZE
+			if(Collision::SphereVersusSphere(op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getX() ,op2->getY() ,op2->getZ() ,op2->getSize())){
 
-                // 0.9 Verlusst
-                if(op1.getIsMovable()){
-                    op1.setVelocityX( op1.getVelocityX() + (optimizedP * op2.getMass() * tempX) * (op1.getFriction()*op2.getFriction()));
-                    op1.setVelocityY( op1.getVelocityY() + (optimizedP * op2.getMass() * tempY) * (op1.getFriction()*op2.getFriction()));
-                    op1.setVelocityZ( op1.getVelocityZ() + (optimizedP * op2.getMass() * tempZ) * (op1.getFriction()*op2.getFriction()));
-                }
+				double tempX (op1->getX() - op2->getX());
+				double tempY (op1->getY() - op2->getY());
+				double tempZ (op1->getZ() - op2->getZ());
 
-                if(op2.getIsMovable()){
-                    op2.setVelocityX( op2.getVelocityX() + (optimizedP * op1.getMass() * tempX) * (op1.getFriction()*op2.getFriction()));
-                    op2.setVelocityY( op2.getVelocityY() + (optimizedP * op1.getMass() * tempY) * (op1.getFriction()*op2.getFriction()));
-                    op2.setVelocityZ( op2.getVelocityZ() + (optimizedP * op1.getMass() * tempZ) * (op1.getFriction()*op2.getFriction()));
-                }
+				double norm = sqrt(tempX*tempX + tempY*tempY + tempZ*tempZ);
 
-                // TODO
-            }
-        }
-    }
+				tempX = tempX / norm;
+				tempY = tempY / norm;
+				tempZ = tempZ / norm;
 
-    // Collision Shere on Box
-    // bool Collision::SphereVersusBox
-    //(const int& sphereX ,const int& sphereY ,const int& sphereZ ,const int& sphereSize
-    // ,const int& boxMinX ,const int& boxMinY ,const int& boxMinZ ,const int& boxMaxX ,const int& boxMaxY ,const int& boxMaxZ)
+				double a1 = (op1->getVelocityX() * tempX) + (op1->getVelocityY() * tempY) + (op1->getVelocityZ() * tempZ);
+				double a2 = (op2->getVelocityX() * tempX) + (op2->getVelocityY() * tempY) + (op2->getVelocityZ() * tempZ);
 
+				// double optimizedP = (2.0D * (a1 - a2)) / (e1.getWhight() + e2.getWhight());
 
-    for(int i = 0 ; i < pobjectsShere.size() ; i++) {
-        PhysicsShere op1 = pobjectsShere.at(i);
-        for(int j = 0 ; j < pobjectsBox.size() ; j++) {
-            PhysicsBox op2 = pobjectsBox.at(j);
+				double optimizedP = (2.0 * (a1 - a2)) / (op1->getMass() + op2->getMass());
 
-            if(Collision::SphereVersusBox( op1.getX() ,op1.getY() ,op1.getZ() ,op1.getSize() ,op2.getMinX() ,op2.getMinY() ,op2.getMinZ() ,op2.getMaxX() ,op2.getMaxY() ,op2.getMaxZ())){
-                double closeDistance = std::abs( op1.getX()-op2.getMaxX());
+				// fix
+				optimizedP = abs(optimizedP);
 
-                if(closeDistance > std::abs( op1.getX() - op2.getMinX())){
-                    closeDistance = std::abs( op1.getX() - op2.getMinX());
-                }
+				// 0.9 Verlusst
+				if(op1->getIsMovable()){
+					op1->setVelocityX( op1->getVelocityX() + (optimizedP * op2->getMass() * tempX) * (op1->getFriction()*op2->getFriction()));
+					op1->setVelocityY( op1->getVelocityY() + (optimizedP * op2->getMass() * tempY) * (op1->getFriction()*op2->getFriction()));
+					op1->setVelocityZ( op1->getVelocityZ() + (optimizedP * op2->getMass() * tempZ) * (op1->getFriction()*op2->getFriction()));
+				}
 
-                if(closeDistance > std::abs( op1.getY() - op2.getMaxY())){
-                    closeDistance = std::abs( op1.getY() - op2.getMaxY());
-                }
+				if(op2->getIsMovable()){
+					op2->setVelocityX( op2->getVelocityX() + (optimizedP * op1->getMass() * tempX) * (op1->getFriction()*op2->getFriction()));
+					op2->setVelocityY( op2->getVelocityY() + (optimizedP * op1->getMass() * tempY) * (op1->getFriction()*op2->getFriction()));
+					op2->setVelocityZ( op2->getVelocityZ() + (optimizedP * op1->getMass() * tempZ) * (op1->getFriction()*op2->getFriction()));
+				}
 
-                if(closeDistance > std::abs( op1.getY() - op2.getMinY())){
-                    closeDistance = std::abs( op1.getY() - op2.getMinY());
-                }
+				// TODO
+			}
+		}
+	}
 
-                if(closeDistance > std::abs( op1.getZ() - op2.getMaxZ())){
-                    closeDistance = std::abs( op1.getZ() - op2.getMaxZ());
-                }
-
-                if(closeDistance > std::abs( op1.getZ() - op2.getMinZ())){
-                    closeDistance = std::abs( op1.getZ() - op2.getMinZ());
-                }
-
-                if(closeDistance == std::abs( op1.getX()-op2.getMaxX())){
-                    // maxX
-                    if(op1.getVelocityX() < 0){
-                        op1.setVelocityX(-op1.getVelocityX());
-                    }
-                }else if(closeDistance == std::abs( op1.getX() - op2.getMinX())){
-                    // minX
-                    if(op1.getVelocityX() > 0){
-                        op1.setVelocityX(-op1.getVelocityX());
-                    }
-                }else if(closeDistance == std::abs( op1.getY() - op2.getMaxY())){
-                    // maxY
-                    if(op1.getVelocityY() < 0){
-                        op1.setVelocityY(-op1.getVelocityY());
-                    }
-                }else if(closeDistance == std::abs( op1.getY() - op2.getMinY())){
-                    // minY
-                    if(op1.getVelocityY() > 0){
-                        op1.setVelocityY(-op1.getVelocityY());
-                    }
-                }else if(closeDistance == std::abs( op1.getZ() - op2.getMaxZ())){
-                    // maxZ
-                    if(op1.getVelocityZ() < 0){
-                        op1.setVelocityZ(-op1.getVelocityZ());
-                    }
-                }else if(closeDistance == std::abs( op1.getZ() - op2.getMinZ())){
-                    // minZ
-                    if(op1.getVelocityZ() > 0){
-                        op1.setVelocityZ(-op1.getVelocityZ());
-                    }
-                }
-            }
-        }
-    }
+	// Collision Shere on Box
+	// bool Collision::SphereVersusBox
+	//(const int& sphereX ,const int& sphereY ,const int& sphereZ ,const int& sphereSize
+	// ,const int& boxMinX ,const int& boxMinY ,const int& boxMinZ ,const int& boxMaxX ,const int& boxMaxY ,const int& boxMaxZ)
 
 
-    // Move
-    for(int i = 0 ; i < pobjectsShere.size() ; i++) {
-        PhysicsShere op = pobjectsShere.at(i);
+	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
+		PhysicsSphere* op1 = pobjectsSphere.at(i);
+		for(int j = 0 ; j < pobjectsBox.size() ; j++) {
+			PhysicsBox* op2 = pobjectsBox.at(j);
 
-        op.setX(op.getVelocityX()*delta);
-        op.setY(op.getVelocityY()*delta);
-        op.setZ(op.getVelocityZ()*delta);
-    }
+			if(Collision::SphereVersusBox( op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getMinX() ,op2->getMinY() ,op2->getMinZ() ,op2->getMaxX() ,op2->getMaxY() ,op2->getMaxZ())){
+				double closeDistance = std::abs( op1->getX()-op2->getMaxX());
+
+				if(closeDistance > std::abs( op1->getX() - op2->getMinX())){
+					closeDistance = std::abs( op1->getX() - op2->getMinX());
+				}
+
+				if(closeDistance > std::abs( op1->getY() - op2->getMaxY())){
+					closeDistance = std::abs( op1->getY() - op2->getMaxY());
+				}
+
+				if(closeDistance > std::abs( op1->getY() - op2->getMinY())){
+					closeDistance = std::abs( op1->getY() - op2->getMinY());
+				}
+
+				if(closeDistance > std::abs( op1->getZ() - op2->getMaxZ())){
+					closeDistance = std::abs( op1->getZ() - op2->getMaxZ());
+				}
+
+				if(closeDistance > std::abs( op1->getZ() - op2->getMinZ())){
+					closeDistance = std::abs( op1->getZ() - op2->getMinZ());
+				}
+
+				if(closeDistance == std::abs( op1->getX()-op2->getMaxX())){
+					// maxX
+					if(op1->getVelocityX() < 0){
+						op1->setVelocityX(-op1->getVelocityX());
+					}
+				}else if(closeDistance == std::abs( op1->getX() - op2->getMinX())){
+					// minX
+					if(op1->getVelocityX() > 0){
+						op1->setVelocityX(-op1->getVelocityX());
+					}
+				}else if(closeDistance == std::abs( op1->getY() - op2->getMaxY())){
+					// maxY
+					if(op1->getVelocityY() < 0){
+						op1->setVelocityY(-op1->getVelocityY());
+					}
+				}else if(closeDistance == std::abs( op1->getY() - op2->getMinY())){
+					// minY
+					if(op1->getVelocityY() > 0){
+						op1->setVelocityY(-op1->getVelocityY());
+					}
+				}else if(closeDistance == std::abs( op1->getZ() - op2->getMaxZ())){
+					// maxZ
+					if(op1->getVelocityZ() < 0){
+						op1->setVelocityZ(-op1->getVelocityZ());
+					}
+				}else if(closeDistance == std::abs( op1->getZ() - op2->getMinZ())){
+					// minZ
+					if(op1->getVelocityZ() > 0){
+						op1->setVelocityZ(-op1->getVelocityZ());
+					}
+				}
+			}
+		}
+	}
+
+
+	// Move
+	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
+		PhysicsSphere* op = pobjectsSphere.at(i);
+
+		op->setX(op->getVelocityX()*delta);
+		op->setY(op->getVelocityY()*delta);
+		op->setZ(op->getVelocityZ()*delta);
+	}
 }
 
 int PhysicsThread::getMiny() const
@@ -284,13 +325,23 @@ void PhysicsThread::setMinx(const int value)
 	minx = value;
 }
 
-void addPhysicsShere(PhysicsShere physicsObject)
+void PhysicsThread::registerPhysicsSphere(PhysicsSphere* physicsObject)
 {
-    pobjectsShere.push_back(physicsObject);
+	pobjectsSphere.push_back(physicsObject);
 }
 
-void addPhysicsBox(PhysicsBox physicsObject)
+void PhysicsThread::deregisterPhysicsSphere(PhysicsSphere* physicsObject)
 {
-    pobjectsBox.push_back(physicsObject);
+	pobjectsSphere.erase(std::remove(pobjectsSphere.begin(), pobjectsSphere.end(),physicsObject), pobjectsSphere.end());
+}
+
+void PhysicsThread::registerPhysicsBox(PhysicsBox* physicsObject)
+{
+	pobjectsBox.push_back(physicsObject);
+}
+
+void PhysicsThread::deregisterPhysicsBox(PhysicsBox* physicsObject)
+{
+	pobjectsBox.erase(std::remove(pobjectsBox.begin(), pobjectsBox.end(),physicsObject), pobjectsBox.end());
 }
 

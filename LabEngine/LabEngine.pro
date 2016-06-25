@@ -27,8 +27,8 @@ SOURCES += \
     Player.cpp \
     PhysicsObject.cpp \
     PhysicsThread.cpp \
-    PhysicsShere.cpp \
-    PhysicsBox.cpp
+    PhysicsBox.cpp \
+    PhysicsSphere.cpp
 
 HEADERS += \
     GLWindow.h \

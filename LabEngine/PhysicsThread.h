@@ -1,23 +1,31 @@
 #pragma once
 
+#include <QThread>
 #include <vector>
 #include "PhysicsObject.h"
+#include <limits>
+#include <QMutex>
+#include <QWaitCondition>
 
 
-class PhysicsThread
+class PhysicsThread : public QThread
 {
 	public:
 
-		PhysicsThread(int minx ,int miny ,int minz ,int maxx ,int maxy ,int naxz);
+		PhysicsThread();
+		PhysicsThread(int minx , int miny , int minz , int maxx , int maxy , int maxz);
+		~PhysicsThread();
 
-        void run(double delta);
+		void runSimulation(const double& delta);
 
-        void addPhysicsShere(PhysicsShere physicsObject);
-        PhysicsObject subPhysicsShere(PhysicsShere physicsObject);
-        PhysicsObject subPhysicsShere(int index);
+		void registerPhysicsSphere(PhysicsSphere* physicsObject);
+		void deregisterPhysicsSphere(PhysicsSphere* physicsObject);
+		PhysicsObject subPhysicsSphere(PhysicsSphere* physicsObject);
+		PhysicsObject subPhysicsSphere(int index);
 
-        void addPhysicsBox(PhysicsBox physicsObject);
-        PhysicsObject subPhysicsBox(PhysicsBox physicsObject);
+		void registerPhysicsBox(PhysicsBox* physicsObject);
+		void deregisterPhysicsBox(PhysicsBox* physicsObject);
+		PhysicsObject subPhysicsBox(PhysicsBox* physicsObject);
         PhysicsObject subPhysicsBox(int index);
 
 		int getMinx() const;
@@ -33,16 +41,33 @@ class PhysicsThread
 		int getMaxz() const;
 		void setMaxz(const int value);
 
-	private:
-		int minx;
-		int miny;
-		int minz;
+		void TogglePause();
+		void pause();
+		void resume();
 
-		int maxx;
-		int maxy;
-		int maxz;
+	public slots:
+		virtual void quit();
+
+	private:
+		int minx = std::numeric_limits<int>::min();
+		int miny = std::numeric_limits<int>::min();
+		int minz = std::numeric_limits<int>::min();
+
+		int maxx = std::numeric_limits<int>::max();
+		int maxy = std::numeric_limits<int>::max();
+		int maxz = std::numeric_limits<int>::max();
 
 		double g = 9.81;
+		bool stop = false;
+		bool bPause = false;
 
-		std::vector<PhysicsObject> pobjects;
+		// Observer, do not delete pointers!
+		std::vector<PhysicsObject*> pobjects;
+		std::vector<PhysicsSphere*> pobjectsSphere;
+		std::vector<PhysicsBox*> pobjectsBox;
+
+		QWaitCondition pauseManager;
+		QMutex mutex;
+
+		virtual void run();
 };
