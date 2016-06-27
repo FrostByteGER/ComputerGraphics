@@ -40,7 +40,9 @@ class PhysicsObject
 		double getRemainingEnergy() const;
 		void setRemainingEnergy(const double value);
         bool getIsMovable() const;
-        void setIsMovable(bool value);
+        void setIsMovable(const bool value);
+        int getID() const;
+        void setID(const int value);
 
 	private:
 		Model* parent;
@@ -59,6 +61,8 @@ class PhysicsObject
 		double remainingEnergy = 0.94868329805;
 
 		bool isMovable = true;
+
+        int ID = -1;
 
 
 };

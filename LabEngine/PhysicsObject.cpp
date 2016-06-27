@@ -141,3 +141,11 @@ double PhysicsObject::getRemainingEnergy() const{
 void PhysicsObject::setRemainingEnergy(const double value){
 	remainingEnergy = value;
 }
+
+int PhysicsObject::getID() const{
+    return ID;
+};
+
+void PhysicsObject::setID(const int value){
+    ID = value;
+};

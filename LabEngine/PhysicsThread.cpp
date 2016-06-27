@@ -181,7 +181,7 @@ void PhysicsThread::runSimulation(const double& delta){
 
 				// TODO
 				qDebug() << op1->getPosition() << "BEFORE";
-                if(!op1->getIsMovable() && op2->getIsMovable){
+                if(!op1->getIsMovable() && op2->getIsMovable()){
                     op2->setX(op2->getX() - op1->getVelocityX() * delta);
                     op2->setY(op2->getY() - op1->getVelocityY() * delta);
                     op2->setZ(op2->getZ() - op1->getVelocityZ() * delta);
@@ -190,7 +190,7 @@ void PhysicsThread::runSimulation(const double& delta){
                     op1->setVelocityY(0.0);
                     op1->setVelocityZ(0.0);
 
-                }else if(op1->getIsMovable() && !op2->getIsMovable){
+                }else if(op1->getIsMovable() && !op2->getIsMovable()){
                     op1->setX(op1->getX() - op2->getVelocityX() * delta);
                     op1->setY(op1->getY() - op2->getVelocityY() * delta);
                     op1->setZ(op1->getZ() - op2->getVelocityZ() * delta);
