@@ -149,3 +149,19 @@ int PhysicsObject::getID() const{
 void PhysicsObject::setID(const int value){
     ID = value;
 };
+
+double PhysicsObject::getHorizontalFriction() const{
+    return horizontalFriction;
+};
+void PhysicsObject::setHorizontalFriction(const double value)
+{
+    horizontalFriction = value;
+};
+
+double PhysicsObject::getVerticalFriction() const{
+    return verticalFriction;
+};
+void PhysicsObject::setVerticalFriction(const double value)
+{
+    verticalFriction = value;
+};

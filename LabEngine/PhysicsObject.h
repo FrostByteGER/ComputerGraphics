@@ -44,6 +44,12 @@ class PhysicsObject
         int getID() const;
         void setID(const int value);
 
+        double getHorizontalFriction() const;
+        void setHorizontalFriction(double value);
+
+        double getVerticalFriction() const;
+        void setVerticalFriction(double value);
+
 	private:
 		Model* parent;
 		double x = 0.0;
@@ -59,6 +65,9 @@ class PhysicsObject
 		double mass = 1.0;
 
 		double remainingEnergy = 0.94868329805;
+        double horizontalFriction = 0.9;
+        double verticalFriction = 0.9;
+
 
 		bool isMovable = true;
 

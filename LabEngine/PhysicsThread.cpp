@@ -100,8 +100,12 @@ void PhysicsThread::runSimulation(){
 
 			if(op->getY()-(op->getSize()) < miny){
 				if(op->getVelocityY() < 0){
-					op->setVelocityY(-op->getVelocityY() * op->getRemainingEnergy());
-				}else{
+                    //op->setVelocityY(-op->getVelocityY() * op->getRemainingEnergy());
+                    op->setVelocityY(-op->getVelocityY() * op->getVerticalFriction());
+                    op->setVelocityX(op->getVelocityX() * op->getHorizontalFriction());
+                    op->setVelocityZ(op->getVelocityZ() * op->getHorizontalFriction());
+
+                }else{
 					op->setVelocityY(op->getVelocityY());
 				}
 			}else{
@@ -271,8 +275,11 @@ void PhysicsThread::runSimulation(){
 	auto endTime = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> time = endTime - startTime;
 	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
-	deltaTimeMS = deltaTimeNS / 1000000.0;
-	//qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;
+    deltaTimeMS = deltaTimeNS / 1000000.0;
+    if(deltaTimeMS == 0){
+        deltaTimeMS = 0.05;
+    }
+    qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;
 }
 
 int PhysicsThread::getMiny() const
@@ -354,4 +361,3 @@ void PhysicsThread::deregisterPhysicsBox(PhysicsBox* physicsObject)
 {
 	pobjectsBox.erase(std::remove(pobjectsBox.begin(), pobjectsBox.end(),physicsObject), pobjectsBox.end());
 }
-
