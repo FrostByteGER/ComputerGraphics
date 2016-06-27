@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QOpenGLWindow>
+#include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include "Model.h"
 #include "Transform3D.h"
@@ -12,13 +12,13 @@
 
 
 
-class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
+class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
 
 	public:
-		GLWindow();
-		~GLWindow();
+		GLWidget(QWidget* parent = nullptr);
+		~GLWidget();
 		void initializeGL();
 		void resizeGL(int width, int height);
 		void paintGL();

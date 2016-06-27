@@ -13,7 +13,6 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += \
-    GLWindow.cpp \
     Mesh.cpp \
     Model.cpp \
     Main.cpp \
@@ -28,10 +27,10 @@ SOURCES += \
     PhysicsObject.cpp \
     PhysicsThread.cpp \
     PhysicsBox.cpp \
-    PhysicsSphere.cpp
+    PhysicsSphere.cpp \
+    GLWidget.cpp
 
 HEADERS += \
-    GLWindow.h \
     Mesh.h \
     Model.h \
     ShaderManager.h \
@@ -45,7 +44,11 @@ HEADERS += \
     Light.h \
     PointLight.h \
     PhysicsThread.h \
-    PhysicsObject.h
+    PhysicsObject.h \
+    GLWidget.h
+
+FORMS += \
+    MainWindow.ui
 
 
 win32-msvc2015:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt

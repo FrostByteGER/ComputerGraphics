@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QString>
-#include "GLWindow.h"
+#include "ui_MainWindow.h"
+#include "GLWidget.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +19,7 @@ int main(int argc, char *argv[])
 	const int OPENGL_ALPHA_BUFFER_SIZE   = -1;
 	const int OPENGL_MSAA_COUNT          = 8;
 
-	QGuiApplication app(argc,argv);
+	QApplication app(argc,argv);
 	QSurfaceFormat format;
 
 	// Set all required Information
@@ -34,31 +35,30 @@ int main(int argc, char *argv[])
 	format.setAlphaBufferSize(OPENGL_ALPHA_BUFFER_SIZE);
 
 
-	//TODO: Add Collision Tests here!
+	Ui::MainWindow ui;
+	QMainWindow* mainWindow = new QMainWindow();
+	ui.setupUi(mainWindow);
 
-	GLWindow window;
-	window.setFormat(format);
-	window.resize(800,600);
-
+	ui.renderWidget->setFormat(format);
 	//Application Name
 	const QString applicationName = "LabEngine";
 
 	//Determine Compiler Type
 #ifdef __MINGW32__
-	window.setWindowTitle(applicationName + "   " + "MINGW x32");
+	mainWindow->setWindowTitle(applicationName + "   " + "MINGW x32");
 #elif _MSC_VER
 #if _MSC_VER == 1900
-	window.setWindowTitle(applicationName + "   " + "MSVC2015 x64");
+	mainWindow->setWindowTitle(applicationName + "   " + "MSVC2015 x64");
 #elif _MSC_VER == 1800
-	window.setWindowTitle(applicationName + "   " + "MSVC2013 x64");
+	mainWindow->setWindowTitle(applicationName + "   " + "MSVC2013 x64");
 #endif
 #elif __ARM_ARCH_7A__
-	window.setWindowTitle(applicationName + "   " + "ARMv7");
+	mainWindow->setWindowTitle(applicationName + "   " + "ARMv7");
 #else
-	window.setWindowTitle(applicationName + "   " + "UNKNOWN COMPILER");
+	mainWindow->setWindowTitle(applicationName + "   " + "UNKNOWN COMPILER");
 #endif
 
-	window.updateWindowTitle();
+	//mainWindow.updateWindowTitle();
 
 	qWarning() << "### BUFFER SIZE INFORMATION ###";
 	qWarning() << qPrintable("Depth Buffer:   " + QString::number(format.depthBufferSize()));
@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
 	qWarning() << qPrintable("Alpha Buffer:   " + QString::number(format.alphaBufferSize()));
 	qWarning() << "### END ###";
 
-	window.show();
+	//window.show();
+	mainWindow->show();
 	return app.exec();
 }

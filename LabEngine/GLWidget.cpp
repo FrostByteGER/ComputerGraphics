@@ -1,4 +1,4 @@
-#include "GLWindow.h"
+#include "GLWidget.h"
 #include <QDebug>
 #include <QString>
 #include <QGuiApplication>
@@ -10,7 +10,7 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include "InputManager.h"
 
-GLWindow::GLWindow()
+GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent)
 {
 	directionalLight.transform.setTranslation(0,10,5);
 	directionalLight.lightColor.setRgb(255,255,255);
@@ -23,7 +23,7 @@ GLWindow::GLWindow()
 	renderType = GL_LINE;
 }
 
-GLWindow::~GLWindow(){
+GLWidget::~GLWidget(){
 	makeCurrent();
 	teardownGL();
 	physicsSimulation.quit();
@@ -32,7 +32,7 @@ GLWindow::~GLWindow(){
 	windowUpdateTimer = nullptr;
 }
 
-void GLWindow::initializeGL(){
+void GLWidget::initializeGL(){
 	initializeOpenGLFunctions();
 	connect(context(), SIGNAL(aboutToBeDestroyed()), this, SLOT(teardownGL()), Qt::DirectConnection);
 	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
@@ -77,12 +77,12 @@ void GLWindow::initializeGL(){
 	}
 }
 
-void GLWindow::resizeGL(int width, int height){
+void GLWidget::resizeGL(int width, int height){
 	projection.setToIdentity();
 	projection.perspective(45.0f, float(width) / float(height), 0.01f, 1000.0f);
 }
 
-void GLWindow::paintGL(){
+void GLWidget::paintGL(){
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -129,7 +129,7 @@ void GLWindow::paintGL(){
 	deltaTimeMS = deltaTimeNS / 1000000.0;
 }
 
-void GLWindow::teardownGL(){
+void GLWidget::teardownGL(){
 	qWarning() << "TEARING DOWN OPENGL";
 	delete model;
 	model = nullptr;
@@ -141,7 +141,7 @@ void GLWindow::teardownGL(){
 	shader = nullptr;
 }
 
-void GLWindow::update(){
+void GLWidget::update(){
 	//qWarning() << "UPDATING";
 
     //model->rotate(0,1,0);
@@ -227,10 +227,10 @@ void GLWindow::update(){
 		camera.translate(transSpeed * translation);
 	}
 
-	QOpenGLWindow::update();
+	QOpenGLWidget::update();
 }
 
-void GLWindow::keyPressEvent(QKeyEvent* event)
+void GLWidget::keyPressEvent(QKeyEvent* event)
 {
 	if (event->isAutoRepeat())
 	{
@@ -242,7 +242,7 @@ void GLWindow::keyPressEvent(QKeyEvent* event)
 	}
 }
 
-void GLWindow::keyReleaseEvent(QKeyEvent* event)
+void GLWidget::keyReleaseEvent(QKeyEvent* event)
 {
 	if (event->isAutoRepeat())
 	{
@@ -254,18 +254,18 @@ void GLWindow::keyReleaseEvent(QKeyEvent* event)
 	}
 }
 
-void GLWindow::mousePressEvent(QMouseEvent* event)
+void GLWidget::mousePressEvent(QMouseEvent* event)
 {
 	qWarning() << "MOUSE PRESS EVENT";
 	InputManager::registerMousePress(event->button());
 }
 
-void GLWindow::mouseReleaseEvent(QMouseEvent* event)
+void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
 	InputManager::registerMouseRelease(event->button());
 }
 
-void GLWindow::printContextInformation(){
+void GLWidget::printContextInformation(){
 	QString glType;
 	QString glVersion;
 	QString glProfile;
@@ -284,12 +284,12 @@ void GLWindow::printContextInformation(){
 	qDebug() << qPrintable(glType) << qPrintable(glVersion) << "(" << qPrintable(glProfile) << ")";
 }
 
-void GLWindow::setWindowTitle(const QString& title)
+void GLWidget::setWindowTitle(const QString& title)
 {
 	windowTitle = title;
 }
 
-void GLWindow::updateWindowTitle()
+void GLWidget::updateWindowTitle()
 {
-    setTitle(windowTitle + "    Frame-Time: " + QString::number(deltaTimeMS, 'g', 2) + "ms" + "    FPS: " + QString::number(1000.0 / deltaTimeMS));
+	//setTitle(windowTitle + "    Frame-Time: " + QString::number(deltaTimeMS, 'g', 2) + "ms" + "    FPS: " + QString::number(1000.0 / deltaTimeMS));
 }

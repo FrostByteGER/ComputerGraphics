@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Camera.h"
 
-class GLWindow;
+class GLWidget;
 
 class Scene
 {
@@ -21,7 +21,7 @@ class Scene
 	private:
 		void teardownScene();
 
-		GLWindow* parentContextContainer;
+		GLWidget* parentContextContainer;
 		std::vector<Player*> players;
 		std::vector<Model*> models;
 		ShaderManager* shaderManager;

@@ -39,7 +39,7 @@ class InputManager
 		static void registerMousePress(Qt::MouseButton button);
 		static void registerMouseRelease(Qt::MouseButton button);
 		static void reset();
-		friend class GLWindow;
+		friend class GLWidget;
 };
 
 inline bool InputManager::keyTriggered(Qt::Key key)
