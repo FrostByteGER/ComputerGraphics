@@ -43,7 +43,7 @@ void GLWindow::initializeGL(){
 	glEnable(GL_MULTISAMPLE); // Enable MSAA
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	//glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, renderType);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
@@ -52,7 +52,7 @@ void GLWindow::initializeGL(){
 	this->model3 = new Model(customPath.toStdString(), shader, COLLISION_SPHERE);
 	this->model4 = new Model(spherePath.toStdString(), shader, COLLISION_SPHERE);
 
-	this->model->setLocation(0,0,-5);
+    this->model->setLocation(0,-10,-5);
 	this->model2->setLocation(1,0,-5);
 	this->model3->setLocation(7,-10,-10);
 	this->model4->setLocation(1.5,5,-5);
@@ -61,7 +61,7 @@ void GLWindow::initializeGL(){
 	this->model2->setModelColor(QColor(0,255,0,255));
 	this->model3->setModelColor(QColor(0,0,255,255));
 	this->model4->setModelColor(QColor(0,255,255,255));
-	//physicsSimulation.registerPhysicsBox(static_cast<PhysicsBox*>(model->getCollider()));
+    physicsSimulation.registerPhysicsBox(static_cast<PhysicsBox*>(model->getCollider()));
 	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(model2->getCollider()));
 	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(model4->getCollider()));
 
@@ -144,7 +144,7 @@ void GLWindow::teardownGL(){
 void GLWindow::update(){
 	//qWarning() << "UPDATING";
 
-	model->rotate(0,1,0);
+    //model->rotate(0,1,0);
 	//model2->rotate(0,-1,-1);
 
 	InputManager::update();

@@ -88,13 +88,16 @@ class PhysicsBox : public PhysicsObject
         void setMinZ(double value);
 
     private:
-		double maxX = 1.0;
-		double maxY = 1.0;
-		double maxZ = 1.0;
+        double maxX = 1;
+        double maxY = -9;
+        double maxZ = -5;
 
-		double minX = -1.0;
-		double minY = -1.0;
-		double minZ = -1.0;
+        double minX = -1;
+        double minY = -11;
+        double minZ = -6;
+
+        // 0,-10,-5
+        // -0.5
 };
 
 class PhysicsSphere : public PhysicsObject

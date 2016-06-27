@@ -50,7 +50,7 @@ class PhysicsThread : public QThread
 
 	private:
 		int minx = -25;
-		int miny = -25;
+        int miny = -11;
 		int minz = -25;
 
 		int maxx = 25;

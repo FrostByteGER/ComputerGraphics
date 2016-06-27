@@ -1,5 +1,7 @@
 #include "Collision.h"
 #include <cmath>
+#include <QDebug>
+
 
 Collision::Collision()
 {
