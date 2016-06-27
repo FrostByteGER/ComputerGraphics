@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <QVector3D>
 #include <QQuaternion>
 #include <QMatrix4x4>
@@ -63,14 +62,7 @@ class Transform3D
 		QVector3D m_scale;
 		QQuaternion m_rotation;
 		QMatrix4x4 m_world;
-
-#ifndef QT_NO_DATASTREAM
-		friend QDataStream &operator<<(QDataStream &out, const Transform3D &transform);
-		friend QDataStream &operator>>(QDataStream &in, Transform3D &transform);
-#endif
 };
-
-Q_DECLARE_TYPEINFO(Transform3D, Q_MOVABLE_TYPE);
 
 inline Transform3D::Transform3D() : needsUpdate(true), m_scale(1.0f, 1.0f, 1.0f) {}
 
@@ -101,13 +93,3 @@ inline void Transform3D::setRotation(const QVector3D& rotation) { setRotation(QQ
 inline const QVector3D& Transform3D::translation() const { return m_position; }
 inline const QVector3D& Transform3D::scale() const { return m_scale; }
 inline const QQuaternion& Transform3D::rotation() const { return m_rotation; }
-
-// Qt Streams
-#ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, const Transform3D &transform);
-#endif
-
-#ifndef QT_NO_DATASTREAM
-QDataStream &operator<<(QDataStream &out, const Transform3D &transform);
-QDataStream &operator>>(QDataStream &in, Transform3D &transform);
-#endif

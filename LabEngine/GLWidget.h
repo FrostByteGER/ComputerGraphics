@@ -6,7 +6,6 @@
 #include "Transform3D.h"
 #include "Camera.h"
 #include <chrono>
-#include "Scene.h"
 #include "Light.h"
 #include "PhysicsThread.h"
 
@@ -40,7 +39,6 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 
 	private:
 		void printContextInformation();
-		Scene* scene;
 		PhysicsThread physicsSimulation;
 		Light directionalLight;
 		QMatrix4x4 projection;

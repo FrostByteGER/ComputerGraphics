@@ -21,9 +21,7 @@ SOURCES += \
     Transform3D.cpp \
     InputManager.cpp \
     Camera.cpp \
-    Scene.cpp \
     Shader.cpp \
-    Player.cpp \
     PhysicsObject.cpp \
     PhysicsThread.cpp \
     PhysicsBox.cpp \
@@ -38,11 +36,8 @@ HEADERS += \
     Transform3D.h \
     InputManager.h \
     Camera.h \
-    Scene.h \
     Shader.h \
-    Player.h \
     Light.h \
-    PointLight.h \
     PhysicsThread.h \
     PhysicsObject.h \
     GLWidget.h
