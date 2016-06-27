@@ -89,12 +89,12 @@ class PhysicsBox : public PhysicsObject
 
     private:
         double maxX = 1;
-        double maxY = -9;
-        double maxZ = -5;
+        double maxY = 1;
+        double maxZ = 1;
 
         double minX = -1;
-        double minY = -11;
-        double minZ = -6;
+        double minY = -1;
+        double minZ = -1;
 
         // 0,-10,-5
         // -0.5

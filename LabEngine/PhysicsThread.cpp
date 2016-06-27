@@ -206,40 +206,40 @@ void PhysicsThread::runSimulation(const double& delta){
 
 
 
-            if(Collision::SphereVersusBox( op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getMinX() ,op2->getMinY() ,op2->getMinZ() ,op2->getMaxX() ,op2->getMaxY() ,op2->getMaxZ())){
+            if(Collision::SphereVersusBox( op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getMinX()+op2->getX() ,op2->getMinY()+op2->getY() ,op2->getMinZ()+op2->getZ() ,op2->getMaxX()+op2->getX() ,op2->getMaxY()+op2->getY() ,op2->getMaxZ()+op2->getZ())){
 
                 qDebug() << "Test";
 
-                if((op1->getX()+op1->getSize()) > op2->getMinX() && op1->getX() < op2->getMinX()){
+                if((op1->getX()+op1->getSize()) > op2->getMinX() && op1->getX() < op2->getMinX()+op2->getX()){
 
                     if(op1->getVelocityX() > 0){
                         op1->setVelocityX(-op1->getVelocityX());
                     }
                 }
-                if((op1->getX()-op1->getSize()) < op2->getMaxX() && op1->getX() > op2->getMaxX()){
+                if((op1->getX()-op1->getSize()) < op2->getMaxX() && op1->getX() > op2->getMaxX()+op2->getX()){
                     if(op1->getVelocityX() < 0){
                         op1->setVelocityX(-op1->getVelocityX());
                     }
                 }
 
-                if((op1->getY()+op1->getSize()) > op2->getMinY() && op1->getY() < op2->getMinY()){
+                if((op1->getY()+op1->getSize()) > op2->getMinY() && op1->getY() < op2->getMinY()+op2->getY()){
                     if(op1->getVelocityY() > 0){
                         op1->setVelocityY(-op1->getVelocityY());
                     }
                 }
-                if((op1->getY()-op1->getSize()) < op2->getMaxY() && op1->getY() > op2->getMaxY()){
+                if((op1->getY()-op1->getSize()) < op2->getMaxY() && op1->getY() > op2->getMaxY()+op2->getY()){
 
                     if(op1->getVelocityY() < 0){
                         op1->setVelocityY(-op1->getVelocityY());
                     }
                 }
 
-                if((op1->getZ()+op1->getSize()) > op2->getMinZ() && op1->getZ() < op2->getMinZ()){
+                if((op1->getZ()+op1->getSize()) > op2->getMinZ() && op1->getZ() < op2->getMinZ()+op2->getZ()){
                     if(op1->getVelocityZ() > 0){
                         op1->setVelocityZ(-op1->getVelocityZ());
                     }
                 }
-                if((op1->getZ()-op1->getSize()) < op2->getMaxZ() && op1->getZ() > op2->getMaxZ()){
+                if((op1->getZ()-op1->getSize()) < op2->getMaxZ() && op1->getZ() > op2->getMaxZ()+op2->getZ()){
                     if(op1->getVelocityZ() < 0){
                         op1->setVelocityZ(-op1->getVelocityZ());
                     }
