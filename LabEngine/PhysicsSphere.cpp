@@ -1,8 +1,7 @@
 #include "PhysicsObject.h"
 
-PhysicsSphere::PhysicsSphere()
+PhysicsSphere::PhysicsSphere(Model* parent, Transform3D* parentTransform) : PhysicsObject(parent, parentTransform)
 {
-
 }
 
 PhysicsSphere::~PhysicsSphere()

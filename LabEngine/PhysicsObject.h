@@ -3,11 +3,14 @@
 #include <QVector3D>
 #include "Transform3D.h"
 
+
+class Model;
+
 class PhysicsObject
 {
 	public:
 
-		PhysicsObject();
+		PhysicsObject(Model* parent, Transform3D* parentTransform);
 		~PhysicsObject();
 
 		double getX() const;
@@ -34,16 +37,17 @@ class PhysicsObject
 		void setMass(const double value);
 		double getCollideCounter() const;
 		void setCollideCounter(const double value);
-        double getFriction() const;
-        void setFriction(const double value);
+		double getRemainingEnergy() const;
+		void setRemainingEnergy(const double value);
         bool getIsMovable() const;
         void setIsMovable(bool value);
 
 	private:
+		Model* parent;
 		double x = 0.0;
 		double y = 0.0;
 		double z = 0.0;
-		Transform3D transform;
+		Transform3D* transform;
 
 		double velocityX = 0.0;
 		double velocityY = 0.0;
@@ -52,9 +56,9 @@ class PhysicsObject
 
 		double mass = 1.0;
 
-        double friction = 0.94868329805;
+		double remainingEnergy = 0.94868329805;
 
-        bool isMovable = false;
+		bool isMovable = true;
 
 
 };
@@ -62,7 +66,7 @@ class PhysicsObject
 class PhysicsBox : public PhysicsObject
 {
     public:
-        PhysicsBox();
+		PhysicsBox(Model* parent, Transform3D* parentTransform);
 		~PhysicsBox();
 
         double getMaxX() const;
@@ -84,24 +88,24 @@ class PhysicsBox : public PhysicsObject
         void setMinZ(double value);
 
     private:
-        double maxX = 0;
-        double maxY = 0;
-        double maxZ = 0;
+		double maxX = 1.0;
+		double maxY = 1.0;
+		double maxZ = 1.0;
 
-        double minX = 0;
-        double minY = 0;
-        double minZ = 0;
+		double minX = -1.0;
+		double minY = -1.0;
+		double minZ = -1.0;
 };
 
 class PhysicsSphere : public PhysicsObject
 {
     public:
-		PhysicsSphere();
+		PhysicsSphere(Model* parent, Transform3D* parentTransform);
 		~PhysicsSphere();
 
         double getSize() const;
         void setSize(double value);
 
     private:
-        double size = 0;
+		double size = 1.0;
 };

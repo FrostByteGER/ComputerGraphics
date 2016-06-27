@@ -58,6 +58,7 @@ class GLWindow : public QOpenGLWindow, protected QOpenGLFunctions
 		Model* model;
 		Model* model2;
 		Model* model3;
+		Model* model4;
 		QString windowTitle;
 		const QString vertexPath   = "Resources/Shaders/simple.vert";
 		const QString fragmentPath = "Resources/Shaders/simple.frag";

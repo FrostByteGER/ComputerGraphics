@@ -4,11 +4,17 @@
 #include <vector>
 #include "Mesh.h"
 #include "ShaderManager.h"
+#include "PhysicsObject.h"
+
+enum CollisionType {
+	COLLISION_BOX,
+	COLLISION_SPHERE
+};
 
 class Model
 {
 	public:
-		Model(const std::string& path, ShaderManager* sm);
+		Model(const std::string& path, ShaderManager* sm, CollisionType collisionType = COLLISION_SPHERE);
 		~Model();
 		void DrawModel();
 
@@ -41,6 +47,9 @@ class Model
 		QColor getModelColor() const;
 		void setModelColor(const QColor& value);
 
+		PhysicsObject* getCollider() const;
+		void setCollider(PhysicsObject* value);
+
 	private:
 		QString name;
 		size_t shaderID;
@@ -50,6 +59,8 @@ class Model
 		std::string directory;
 		Transform3D transform;
 		QColor modelColor;
+		PhysicsObject* collider;
+		CollisionType colliderType;
 		void loadModel(const std::string& path);
 		void processNode(aiNode* node, const aiScene* scene);
 		Mesh* processMesh(aiMesh* mesh, const aiScene* scene);

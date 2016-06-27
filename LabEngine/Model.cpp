@@ -5,11 +5,21 @@
 #include <memory>
 #include "Model.h"
 
-Model::Model(const std::string& path, ShaderManager* sm)
+Model::Model(const std::string& path, ShaderManager* sm, CollisionType collisionType) : shaderManager(sm), colliderType(collisionType)
 {
-	shaderManager = sm;
 	this->name = QString::fromStdString(path.substr(path.find_last_of('/') + 1,std::string::npos));
 	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
+	switch (collisionType) {
+		case COLLISION_SPHERE:
+			this->collider = new PhysicsSphere(this, &(this->transform));
+			break;
+		case COLLISION_BOX:
+			this->collider = new PhysicsBox(this, &(this->transform));
+			break;
+		default:
+			this->collider = new PhysicsSphere(this, &(this->transform));
+			break;
+	}
 
 	this->loadModel(path);
 
@@ -237,4 +247,14 @@ void Model::setModelColor(const QColor& value)
 	for(Mesh* m : meshes){
 		m->setMeshColor(value);
 	}
+}
+
+PhysicsObject* Model::getCollider() const
+{
+	return collider;
+}
+
+void Model::setCollider(PhysicsObject* value)
+{
+	collider = value;
 }

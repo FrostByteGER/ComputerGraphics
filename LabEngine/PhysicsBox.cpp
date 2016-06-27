@@ -1,6 +1,6 @@
 #include "PhysicsObject.h"
 
-PhysicsBox::PhysicsBox()
+PhysicsBox::PhysicsBox(Model* parent, Transform3D* parentTransform) : PhysicsObject(parent, parentTransform)
 {
 
 }

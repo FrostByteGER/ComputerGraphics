@@ -49,17 +49,18 @@ class PhysicsThread : public QThread
 		virtual void quit();
 
 	private:
-		int minx = std::numeric_limits<int>::min();
-		int miny = std::numeric_limits<int>::min();
-		int minz = std::numeric_limits<int>::min();
+		int minx = -25;
+		int miny = -25;
+		int minz = -25;
 
-		int maxx = std::numeric_limits<int>::max();
-		int maxy = std::numeric_limits<int>::max();
-		int maxz = std::numeric_limits<int>::max();
+		int maxx = 25;
+		int maxy = 25;
+		int maxz = 25;
 
-		double g = 9.81;
+		double g = -9.81;
 		bool stop = false;
 		bool bPause = false;
+		int pauseTickTime = 10;
 
 		// Observer, do not delete pointers!
 		std::vector<PhysicsObject*> pobjects;

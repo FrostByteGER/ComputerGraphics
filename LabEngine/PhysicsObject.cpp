@@ -1,11 +1,8 @@
 #include "PhysicsObject.h"
 #include <iostream>
 
-//TODO:Replace maybe
-
-PhysicsObject::PhysicsObject()
+PhysicsObject::PhysicsObject(Model* parent, Transform3D* parentTransform) : parent(parent), transform(parentTransform)
 {
-
 }
 
 PhysicsObject::~PhysicsObject()
@@ -15,53 +12,53 @@ PhysicsObject::~PhysicsObject()
 
 double PhysicsObject::getX() const
 {
-	return transform.translation().x();
+	return transform->translation().x();
 	//return x;
 }
 
 void PhysicsObject::setX(const double value)
 {
-	transform.setTranslationX(value);
+	transform->setTranslationX(value);
 	x = value;
 }
 
 double PhysicsObject::getY() const
 {
-	return transform.translation().y();
+	return transform->translation().y();
 	//return y;
 }
 
 void PhysicsObject::setY(const double value)
 {
-	transform.setTranslationY(value);
+	transform->setTranslationY(value);
 	y = value;
 }
 
 double PhysicsObject::getZ() const
 {
-	return transform.translation().z();
+	return transform->translation().z();
 	//return z;
 }
 
 void PhysicsObject::setZ(const double value)
 {
-	transform.setTranslationZ(value);
+	transform->setTranslationZ(value);
 	z = value;
 }
 
 QVector3D PhysicsObject::getPosition() const
 {
-	return transform.translation();
+	return transform->translation();
 }
 
 void PhysicsObject::setPosition(const QVector3D& position)
 {
-	transform.setTranslation(position);
+	transform->setTranslation(position);
 }
 
 void PhysicsObject::setPosition(const float& x, const float& y, const float& z)
 {
-	transform.setTranslation(x,y,z);
+	transform->setTranslation(x,y,z);
 }
 
 double PhysicsObject::getVelocityX() const
@@ -137,10 +134,10 @@ void PhysicsObject::setIsMovable(bool value)
     isMovable = value;
 }
 
-double PhysicsObject::getFriction() const{
-    return friction;
+double PhysicsObject::getRemainingEnergy() const{
+	return remainingEnergy;
 }
 
-void PhysicsObject::setFriction(const double value){
-    friction = value;
+void PhysicsObject::setRemainingEnergy(const double value){
+	remainingEnergy = value;
 }
