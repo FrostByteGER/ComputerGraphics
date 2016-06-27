@@ -37,7 +37,7 @@ void PhysicsThread::run(){
 	qDebug() << "SUCCESSFULLY STARTED UP PHYSICS-SIMULATION";
 	forever{
 		mutex.lock();
-		qDebug() << "RUNNING PHYSICS-SIMULATION";
+		//qDebug() << "RUNNING PHYSICS-SIMULATION";
 		runSimulation();
 		if(stop){
 			mutex.unlock();
@@ -276,10 +276,13 @@ void PhysicsThread::runSimulation(){
 	std::chrono::duration<double> time = endTime - startTime;
 	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
     deltaTimeMS = deltaTimeNS / 1000000.0;
-    if(deltaTimeMS == 0){
-        deltaTimeMS = 0.05;
-    }
-    qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;
+#ifdef __MINGW32__
+	//MinGW specific fix, allows partially smooth physics simulation
+	if(deltaTimeMS == 0){
+		deltaTimeMS = 0.05;
+	}
+#endif
+	qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;
 }
 
 int PhysicsThread::getMiny() const
