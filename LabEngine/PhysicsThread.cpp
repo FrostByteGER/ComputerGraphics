@@ -181,6 +181,26 @@ void PhysicsThread::runSimulation(const double& delta){
 
 				// TODO
 				qDebug() << op1->getPosition() << "BEFORE";
+                if(!op1->getIsMovable() && op2->getIsMovable){
+                    op2->setX(op2->getX() - op1->getVelocityX() * delta);
+                    op2->setY(op2->getY() - op1->getVelocityY() * delta);
+                    op2->setZ(op2->getZ() - op1->getVelocityZ() * delta);
+
+                    op1->setVelocityX(0.0);
+                    op1->setVelocityY(0.0);
+                    op1->setVelocityZ(0.0);
+
+                }else if(op1->getIsMovable() && !op2->getIsMovable){
+                    op1->setX(op1->getX() - op2->getVelocityX() * delta);
+                    op1->setY(op1->getY() - op2->getVelocityY() * delta);
+                    op1->setZ(op1->getZ() - op2->getVelocityZ() * delta);
+
+                    op2->setVelocityX(0.0);
+                    op2->setVelocityY(0.0);
+                    op2->setVelocityZ(0.0);
+                }
+
+
 				op1->setX(op1->getX() + op1->getVelocityX() * delta);
 				op1->setY(op1->getY() + op1->getVelocityY() * delta);
 				op1->setZ(op1->getZ() + op1->getVelocityZ() * delta);
@@ -244,76 +264,6 @@ void PhysicsThread::runSimulation(const double& delta){
                         op1->setVelocityZ(-op1->getVelocityZ());
                     }
                 }
-
-
-
-
-                /*
-                if(closeDistance > std::abs( op1->getX() - op2->getMinX()) && op1->getX() > op2->getMaxX()){
-                    closeDistance = std::abs( op1->getX() - op2->getMaxX());
-                    point = 0;
-
-                }
-
-                if(closeDistance > std::abs( op1->getX() - op2->getMinX()) && op1->getX() < op2->getMinX()){
-                    closeDistance = std::abs( op1->getX() - op2->getMinX());
-                    point = 1;
-                }
-
-                if(closeDistance > std::abs( op1->getY() - op2->getMaxY()) && op1->getY() > op2->getMaxY()){
-                    closeDistance = std::abs( op1->getY() - op2->getMaxY());
-                    point = 2;
-                }
-
-                if(closeDistance > std::abs( op1->getY() - op2->getMinY()) && op1->getY() < op2->getMinY()){
-                    closeDistance = std::abs( op1->getY() - op2->getMinY());
-                    point = 3;
-                }
-
-                if(closeDistance > std::abs( op1->getZ() - op2->getMaxZ()) && op1->getZ() > op2->getMaxZ()){
-                    closeDistance = std::abs( op1->getZ() - op2->getMaxZ());
-                    point = 4;
-                }
-
-                if(closeDistance > std::abs( op1->getZ() - op2->getMinZ()) && op1->getZ() < op2->getMinZ()){
-                    closeDistance = std::abs( op1->getZ() - op2->getMinZ());
-                    point = 5;
-                }
-
-                qDebug() << point << " p ";
-
-                if(point == 0){
-                    // maxX
-                    if(op1->getVelocityX() < 0){
-                        op1->setVelocityX(-op1->getVelocityX());
-                    }
-                }else if(point == 1){
-                    // minX
-                    if(op1->getVelocityX() > 0){
-                        op1->setVelocityX(-op1->getVelocityX());
-                    }
-                }else if(point == 2){
-                    // maxY
-                    if(op1->getVelocityY() < 0){
-                        op1->setVelocityY(-op1->getVelocityY());
-                    }
-                }else if(point == 3){
-                    // minY
-                    if(op1->getVelocityY() > 0){
-                        op1->setVelocityY(-op1->getVelocityY());
-                    }
-                }else if(point == 4){
-                    // maxZ
-                    if(op1->getVelocityZ() < 0){
-                        op1->setVelocityZ(-op1->getVelocityZ());
-                    }
-                }else if(point == 5){
-                    // minZ
-                    if(op1->getVelocityZ() > 0){
-                        op1->setVelocityZ(-op1->getVelocityZ());
-                    }
-                }
-                */
             }
         }
     }
