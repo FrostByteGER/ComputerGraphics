@@ -38,8 +38,9 @@ void PhysicsThread::run(){
 	forever{
 		mutex.lock();
 		qDebug() << "RUNNING PHYSICS-SIMULATION";
-		runSimulation(1.0/60.0);
+		runSimulation();
 		if(stop){
+			mutex.unlock();
 			break;
 		}
 		if(bPause){
@@ -75,59 +76,58 @@ void PhysicsThread::quit()
 	qDebug() << "STOPPING PHYSICS-THREAD";
 }
 
-void PhysicsThread::runSimulation(const double& delta){
+void PhysicsThread::runSimulation(){
+	auto startTime = std::chrono::high_resolution_clock::now();
 
 	// Collision Border
 	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
 
 		PhysicsSphere* op = pobjectsSphere.at(i);
 		if(op->getIsMovable()){
-			// is Sphere TODO
-			if(true){
-				if(op->getX()-(op->getSize()) < minx ){
-					if(op->getVelocityX() < 0){
-						op->setVelocityX(-op->getVelocityX());
-					}else{
-						op->setVelocityX(op->getVelocityX());
-					}
-				}else if(op->getX()+(op->getSize()) > maxx) {
-					if(op->getVelocityX() > 0){
-						op->setVelocityX(-op->getVelocityX());
-					}else{
-						op->setVelocityX(op->getVelocityX());
-					}
+			if(op->getX()-(op->getSize()) < minx ){
+				if(op->getVelocityX() < 0){
+					op->setVelocityX(-op->getVelocityX());
+				}else{
+					op->setVelocityX(op->getVelocityX());
 				}
+			}else if(op->getX()+(op->getSize()) > maxx) {
+				if(op->getVelocityX() > 0){
+					op->setVelocityX(-op->getVelocityX());
+				}else{
+					op->setVelocityX(op->getVelocityX());
+				}
+			}
 
-				if(op->getY()-(op->getSize()) < miny){
-					if(op->getVelocityY() < 0){
-						op->setVelocityY(-op->getVelocityY() * op->getRemainingEnergy());
+			if(op->getY()-(op->getSize()) < miny){
+				if(op->getVelocityY() < 0){
+					op->setVelocityY(-op->getVelocityY() * op->getRemainingEnergy());
+				}else{
+					op->setVelocityY(op->getVelocityY());
+				}
+			}else{
+				if(op->getY()+(op->getSize()) > maxy){
+					if(op->getVelocityY() > 0){
+						op->setVelocityY(-op->getVelocityY());
 					}else{
 						op->setVelocityY(op->getVelocityY());
 					}
-				}else{
-					if(op->getY()+(op->getSize()) > maxy){
-						if(op->getVelocityY() > 0){
-							op->setVelocityY(-op->getVelocityY());
-						}else{
-							op->setVelocityY(op->getVelocityY());
-						}
-					}
-					// Gravity
-					op->setVelocityY(op->getVelocityY() + g*delta*op->getMass());
 				}
 
-				if(op->getZ()-(op->getSize()) < minz){
-					if(op->getVelocityZ() < 0){
-						op->setVelocityZ(-op->getVelocityZ());
-					}else{
-						op->setVelocityZ(op->getVelocityZ());
-					}
-				}else if(op->getZ()+(op->getSize()) > maxz){
-					if(op->getVelocityZ() > 0){
-						op->setVelocityZ(-op->getVelocityZ());
-					}else{
-						op->setVelocityZ(op->getVelocityZ());
-					}
+				// Gravity
+				op->setVelocityY(op->getVelocityY() + g*deltaTimeMS*op->getMass());
+			}
+
+			if(op->getZ()-(op->getSize()) < minz){
+				if(op->getVelocityZ() < 0){
+					op->setVelocityZ(-op->getVelocityZ());
+				}else{
+					op->setVelocityZ(op->getVelocityZ());
+				}
+			}else if(op->getZ()+(op->getSize()) > maxz){
+				if(op->getVelocityZ() > 0){
+					op->setVelocityZ(-op->getVelocityZ());
+				}else{
+					op->setVelocityZ(op->getVelocityZ());
 				}
 			}
 		}
@@ -139,9 +139,7 @@ void PhysicsThread::runSimulation(const double& delta){
 		for(int j = i ; j < pobjectsSphere.size() ; j++) {
 			PhysicsSphere* op2 = pobjectsSphere.at(j);
 
-			// bool Collision::SphereVersusSphere(const int& x1 , const int& y1 , const int& z1 , const int& size1 , const int& x2 , const int& y2 , const int& z2 , const int& size2)
 			// Sphere on Sphere
-			// SIZE
 			if(i != j && Collision::SphereVersusSphere(op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getX() ,op2->getY() ,op2->getZ() ,op2->getSize())){
 
 				double tempX (op1->getX() - op2->getX());
@@ -157,14 +155,10 @@ void PhysicsThread::runSimulation(const double& delta){
 				double a1 = (op1->getVelocityX() * tempX) + (op1->getVelocityY() * tempY) + (op1->getVelocityZ() * tempZ);
 				double a2 = (op2->getVelocityX() * tempX) + (op2->getVelocityY() * tempY) + (op2->getVelocityZ() * tempZ);
 
-				// double optimizedP = (2.0D * (a1 - a2)) / (e1.getWhight() + e2.getWhight());
-
 				double optimizedP = (2.0 * (a1 - a2)) / (op1->getMass() + op2->getMass());
 
 				// fix
 				optimizedP = std::abs(optimizedP);
-
-				qDebug() << optimizedP;
 
 				// 0.9 Verlusst
 				if(op1->getIsMovable()){
@@ -179,112 +173,106 @@ void PhysicsThread::runSimulation(const double& delta){
 					op2->setVelocityZ( op2->getVelocityZ() - (optimizedP * op1->getMass() * tempZ) * (op1->getRemainingEnergy()*op2->getRemainingEnergy()));
 				}
 
-				// TODO
-				qDebug() << op1->getPosition() << "BEFORE";
-                if(!op1->getIsMovable() && op2->getIsMovable()){
-                    op2->setX(op2->getX() - op1->getVelocityX() * delta);
-                    op2->setY(op2->getY() - op1->getVelocityY() * delta);
-                    op2->setZ(op2->getZ() - op1->getVelocityZ() * delta);
+				if(!op1->getIsMovable() && op2->getIsMovable()){
+					op2->setX(op2->getX() - op1->getVelocityX() * deltaTimeMS);
+					op2->setY(op2->getY() - op1->getVelocityY() * deltaTimeMS);
+					op2->setZ(op2->getZ() - op1->getVelocityZ() * deltaTimeMS);
 
-                    op1->setVelocityX(0.0);
-                    op1->setVelocityY(0.0);
-                    op1->setVelocityZ(0.0);
+					op1->setVelocityX(0.0);
+					op1->setVelocityY(0.0);
+					op1->setVelocityZ(0.0);
 
-                }else if(op1->getIsMovable() && !op2->getIsMovable()){
-                    op1->setX(op1->getX() - op2->getVelocityX() * delta);
-                    op1->setY(op1->getY() - op2->getVelocityY() * delta);
-                    op1->setZ(op1->getZ() - op2->getVelocityZ() * delta);
+				}else if(op1->getIsMovable() && !op2->getIsMovable()){
+					op1->setX(op1->getX() - op2->getVelocityX() * deltaTimeMS);
+					op1->setY(op1->getY() - op2->getVelocityY() * deltaTimeMS);
+					op1->setZ(op1->getZ() - op2->getVelocityZ() * deltaTimeMS);
 
-                    op2->setVelocityX(0.0);
-                    op2->setVelocityY(0.0);
-                    op2->setVelocityZ(0.0);
-                }
+					op2->setVelocityX(0.0);
+					op2->setVelocityY(0.0);
+					op2->setVelocityZ(0.0);
+				}
 
 
-				op1->setX(op1->getX() + op1->getVelocityX() * delta);
-				op1->setY(op1->getY() + op1->getVelocityY() * delta);
-				op1->setZ(op1->getZ() + op1->getVelocityZ() * delta);
+				op1->setX(op1->getX() + op1->getVelocityX() * deltaTimeMS);
+				op1->setY(op1->getY() + op1->getVelocityY() * deltaTimeMS);
+				op1->setZ(op1->getZ() + op1->getVelocityZ() * deltaTimeMS);
 
-				op2->setX(op2->getX() + op2->getVelocityX() * delta);
-				op2->setY(op2->getY() + op2->getVelocityY() * delta);
-				op2->setZ(op2->getZ() + op2->getVelocityZ() * delta);
-				qDebug() << op1->getPosition() << "AFTER";
+				op2->setX(op2->getX() + op2->getVelocityX() * deltaTimeMS);
+				op2->setY(op2->getY() + op2->getVelocityY() * deltaTimeMS);
+				op2->setZ(op2->getZ() + op2->getVelocityZ() * deltaTimeMS);
 			}
 		}
 	}
 
-//	// Collision Shere on Box
-//	// bool Collision::SphereVersusBox
-//	//(const int& sphereX ,const int& sphereY ,const int& sphereZ ,const int& sphereSize
-//	// ,const int& boxMinX ,const int& boxMinY ,const int& boxMinZ ,const int& boxMaxX ,const int& boxMaxY ,const int& boxMaxZ)
-
-
-    for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
-        PhysicsSphere* op1 = pobjectsSphere.at(i);
-        for(int j = 0 ; j < pobjectsBox.size() ; j++) {
-            PhysicsBox* op2 = pobjectsBox.at(j);
+	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
+		PhysicsSphere* op1 = pobjectsSphere.at(i);
+		for(int j = 0 ; j < pobjectsBox.size() ; j++) {
+			PhysicsBox* op2 = pobjectsBox.at(j);
 
 
 
-            if(Collision::SphereVersusBox( op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getMinX()+op2->getX() ,op2->getMinY()+op2->getY() ,op2->getMinZ()+op2->getZ() ,op2->getMaxX()+op2->getX() ,op2->getMaxY()+op2->getY() ,op2->getMaxZ()+op2->getZ())){
+			if(Collision::SphereVersusBox( op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getMinX()+op2->getX() ,op2->getMinY()+op2->getY() ,op2->getMinZ()+op2->getZ() ,op2->getMaxX()+op2->getX() ,op2->getMaxY()+op2->getY() ,op2->getMaxZ()+op2->getZ())){
 
-                qDebug() << "Test";
+				if((op1->getX()+op1->getSize()) > op2->getMinX() && op1->getX() < op2->getMinX()+op2->getX()){
 
-                if((op1->getX()+op1->getSize()) > op2->getMinX() && op1->getX() < op2->getMinX()+op2->getX()){
+					if(op1->getVelocityX() > 0){
+						op1->setVelocityX(-op1->getVelocityX());
+					}
+				}
+				if((op1->getX()-op1->getSize()) < op2->getMaxX() && op1->getX() > op2->getMaxX()+op2->getX()){
+					if(op1->getVelocityX() < 0){
+						op1->setVelocityX(-op1->getVelocityX());
+					}
+				}
 
-                    if(op1->getVelocityX() > 0){
-                        op1->setVelocityX(-op1->getVelocityX());
-                    }
-                }
-                if((op1->getX()-op1->getSize()) < op2->getMaxX() && op1->getX() > op2->getMaxX()+op2->getX()){
-                    if(op1->getVelocityX() < 0){
-                        op1->setVelocityX(-op1->getVelocityX());
-                    }
-                }
+				if((op1->getY()+op1->getSize()) > op2->getMinY() && op1->getY() < op2->getMinY()+op2->getY()){
+					if(op1->getVelocityY() > 0){
+						op1->setVelocityY(-op1->getVelocityY());
+					}
+				}
+				if((op1->getY()-op1->getSize()) < op2->getMaxY() && op1->getY() > op2->getMaxY()+op2->getY()){
 
-                if((op1->getY()+op1->getSize()) > op2->getMinY() && op1->getY() < op2->getMinY()+op2->getY()){
-                    if(op1->getVelocityY() > 0){
-                        op1->setVelocityY(-op1->getVelocityY());
-                    }
-                }
-                if((op1->getY()-op1->getSize()) < op2->getMaxY() && op1->getY() > op2->getMaxY()+op2->getY()){
+					if(op1->getVelocityY() < 0){
+						op1->setVelocityY(-op1->getVelocityY());
+					}
+				}
 
-                    if(op1->getVelocityY() < 0){
-                        op1->setVelocityY(-op1->getVelocityY());
-                    }
-                }
-
-                if((op1->getZ()+op1->getSize()) > op2->getMinZ() && op1->getZ() < op2->getMinZ()+op2->getZ()){
-                    if(op1->getVelocityZ() > 0){
-                        op1->setVelocityZ(-op1->getVelocityZ());
-                    }
-                }
-                if((op1->getZ()-op1->getSize()) < op2->getMaxZ() && op1->getZ() > op2->getMaxZ()+op2->getZ()){
-                    if(op1->getVelocityZ() < 0){
-                        op1->setVelocityZ(-op1->getVelocityZ());
-                    }
-                }
-            }
-        }
-    }
+				if((op1->getZ()+op1->getSize()) > op2->getMinZ() && op1->getZ() < op2->getMinZ()+op2->getZ()){
+					if(op1->getVelocityZ() > 0){
+						op1->setVelocityZ(-op1->getVelocityZ());
+					}
+				}
+				if((op1->getZ()-op1->getSize()) < op2->getMaxZ() && op1->getZ() > op2->getMaxZ()+op2->getZ()){
+					if(op1->getVelocityZ() < 0){
+						op1->setVelocityZ(-op1->getVelocityZ());
+					}
+				}
+			}
+		}
+	}
 
 	// Move
 	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
 		PhysicsSphere* op = pobjectsSphere.at(i);
-        if(op->getIsMovable()){
-            op->setX(op->getX() + op->getVelocityX()*delta);
-            op->setY(op->getY() + op->getVelocityY()*delta);
-            op->setZ(op->getZ() + op->getVelocityZ()*delta);
-        }else{
-            op->setVelocityX(0.0);
-            op->setVelocityY(0.0);
-            op->setVelocityZ(0.0);
-        }
-
-		//qDebug() << op->getVelocity();
+		if(op->getIsMovable()){
+			op->setX(op->getX() + op->getVelocityX()*deltaTimeMS);
+			op->setY(op->getY() + op->getVelocityY()*deltaTimeMS);
+			op->setZ(op->getZ() + op->getVelocityZ()*deltaTimeMS);
+		}else{
+			op->setVelocityX(0.0);
+			op->setVelocityY(0.0);
+			op->setVelocityZ(0.0);
+		}
 
 	}
-	this->msleep(pauseTickTime);
+	if(pauseTickTime > 0.0){
+		this->msleep(pauseTickTime);
+	}
+	auto endTime = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> time = endTime - startTime;
+	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
+	deltaTimeMS = deltaTimeNS / 1000000.0;
+	//qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;
 }
 
 int PhysicsThread::getMiny() const

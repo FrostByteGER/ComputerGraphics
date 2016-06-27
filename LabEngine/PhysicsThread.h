@@ -6,6 +6,7 @@
 #include <limits>
 #include <QMutex>
 #include <QWaitCondition>
+#include <chrono>
 
 
 class PhysicsThread : public QThread
@@ -16,7 +17,7 @@ class PhysicsThread : public QThread
 		PhysicsThread(int minx , int miny , int minz , int maxx , int maxy , int maxz);
 		~PhysicsThread();
 
-		void runSimulation(const double& delta);
+		void runSimulation();
 
 		void registerPhysicsSphere(PhysicsSphere* physicsObject);
 		void deregisterPhysicsSphere(PhysicsSphere* physicsObject);
@@ -57,10 +58,13 @@ class PhysicsThread : public QThread
 		int maxy = 25;
 		int maxz = 25;
 
-		double g = -9.81;
+		double g = -0.0981;
 		bool stop = false;
 		bool bPause = false;
-		int pauseTickTime = 10;
+		int pauseTickTime = 0;
+		double deltaTimeNS = 0.0;
+		double deltaTimeMS = 0.0;
+		std::chrono::high_resolution_clock timer;
 
 		// Observer, do not delete pointers!
 		std::vector<PhysicsObject*> pobjects;
