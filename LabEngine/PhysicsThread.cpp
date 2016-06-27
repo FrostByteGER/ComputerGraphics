@@ -271,9 +271,16 @@ void PhysicsThread::runSimulation(const double& delta){
 	// Move
 	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
 		PhysicsSphere* op = pobjectsSphere.at(i);
-		op->setX(op->getX() + op->getVelocityX()*delta);
-		op->setY(op->getY() + op->getVelocityY()*delta);
-		op->setZ(op->getZ() + op->getVelocityZ()*delta);
+        if(op->getIsMovable()){
+            op->setX(op->getX() + op->getVelocityX()*delta);
+            op->setY(op->getY() + op->getVelocityY()*delta);
+            op->setZ(op->getZ() + op->getVelocityZ()*delta);
+        }else{
+            op->setVelocityX(0.0);
+            op->setVelocityY(0.0);
+            op->setVelocityZ(0.0);
+        }
+
 		//qDebug() << op->getVelocity();
 
 	}
