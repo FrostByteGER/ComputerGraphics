@@ -99,11 +99,14 @@ void PhysicsThread::runSimulation(){
 			}
 
 			if(op->getY()-(op->getSize()) < miny){
+
+                op->setVelocityY(-op->getVelocityY() * op->getVerticalFriction());
+                op->setVelocityX(op->getVelocityX() * op->getHorizontalFriction());
+                op->setVelocityZ(op->getVelocityZ() * op->getHorizontalFriction());
+
 				if(op->getVelocityY() < 0){
                     //op->setVelocityY(-op->getVelocityY() * op->getRemainingEnergy());
-                    op->setVelocityY(-op->getVelocityY() * op->getVerticalFriction());
-                    op->setVelocityX(op->getVelocityX() * op->getHorizontalFriction());
-                    op->setVelocityZ(op->getVelocityZ() * op->getHorizontalFriction());
+                    op->setVelocityY(-op->getVelocityY() );
 
                 }else{
 					op->setVelocityY(op->getVelocityY());
@@ -219,36 +222,37 @@ void PhysicsThread::runSimulation(){
 				if(op1->getID() == 1 && op2->getID() == 2){
 					qDebug() << "WIN!!!!";
 				}
-				if((op1->getX()+op1->getSize()) > op2->getMinX() && op1->getX() < op2->getMinX()+op2->getX()){
-
-					if(op1->getVelocityX() > 0){
+                if((op1->getX()+op1->getSize()) > op2->getMinX()+op2->getX() && op1->getX() < op2->getMinX()+op2->getX()){
+                    qDebug() << "m1 " << op1->getVelocityX();
+                    if(op1->getVelocityX() > 0){
 						op1->setVelocityX(-op1->getVelocityX());
 					}
 				}
-				if((op1->getX()-op1->getSize()) < op2->getMaxX() && op1->getX() > op2->getMaxX()+op2->getX()){
-					if(op1->getVelocityX() < 0){
+                if((op1->getX()-op1->getSize()) < op2->getMaxX()+op2->getX() && op1->getX() > op2->getMaxX()+op2->getX()){
+                    qDebug() << "m2 " << op1->getVelocityX();
+                    if(op1->getVelocityX() < 0){
 						op1->setVelocityX(-op1->getVelocityX());
 					}
 				}
 
-				if((op1->getY()+op1->getSize()) > op2->getMinY() && op1->getY() < op2->getMinY()+op2->getY()){
+                if((op1->getY()+op1->getSize()) > op2->getMinY()+op2->getY() && op1->getY() < op2->getMinY()+op2->getY()){
 					if(op1->getVelocityY() > 0){
 						op1->setVelocityY(-op1->getVelocityY());
 					}
 				}
-				if((op1->getY()-op1->getSize()) < op2->getMaxY() && op1->getY() > op2->getMaxY()+op2->getY()){
+                if((op1->getY()-op1->getSize()) < op2->getMaxY()+op2->getY() && op1->getY() > op2->getMaxY()+op2->getY()){
 
 					if(op1->getVelocityY() < 0){
 						op1->setVelocityY(-op1->getVelocityY());
 					}
 				}
 
-				if((op1->getZ()+op1->getSize()) > op2->getMinZ() && op1->getZ() < op2->getMinZ()+op2->getZ()){
+                if((op1->getZ()+op1->getSize()) > op2->getMinZ()+op2->getZ() && op1->getZ() < op2->getMinZ()+op2->getZ()){
 					if(op1->getVelocityZ() > 0){
 						op1->setVelocityZ(-op1->getVelocityZ());
 					}
 				}
-				if((op1->getZ()-op1->getSize()) < op2->getMaxZ() && op1->getZ() > op2->getMaxZ()+op2->getZ()){
+                if((op1->getZ()-op1->getSize()) < op2->getMaxZ()+op2->getZ() && op1->getZ() > op2->getMaxZ()+op2->getZ()){
 					if(op1->getVelocityZ() < 0){
 						op1->setVelocityZ(-op1->getVelocityZ());
 					}
