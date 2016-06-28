@@ -1,7 +1,7 @@
 #include "PhysicsObject.h"
 #include <iostream>
 
-PhysicsObject::PhysicsObject(Model* parent, Transform3D* parentTransform) : parent(parent), transform(parentTransform)
+PhysicsObject::PhysicsObject(PhysicsThread* parentSimulation, Model* parent, Transform3D* parentTransform) : parentSimulation(parentSimulation), parent(parent), transform(parentTransform)
 {
 }
 
@@ -144,24 +144,24 @@ void PhysicsObject::setRemainingEnergy(const double value){
 
 int PhysicsObject::getID() const{
     return ID;
-};
+}
 
 void PhysicsObject::setID(const int value){
     ID = value;
-};
+}
 
 double PhysicsObject::getHorizontalFriction() const{
     return horizontalFriction;
-};
+}
 void PhysicsObject::setHorizontalFriction(const double value)
 {
     horizontalFriction = value;
-};
+}
 
 double PhysicsObject::getVerticalFriction() const{
     return verticalFriction;
-};
+}
 void PhysicsObject::setVerticalFriction(const double value)
 {
     verticalFriction = value;
-};
+}

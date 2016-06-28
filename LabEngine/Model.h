@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "ShaderManager.h"
 #include "PhysicsObject.h"
+#include "PhysicsThread.h"
 
 enum CollisionType {
 	COLLISION_BOX,
@@ -14,7 +15,7 @@ enum CollisionType {
 class Model
 {
 	public:
-		Model(const std::string& path, ShaderManager* sm, CollisionType collisionType = COLLISION_SPHERE);
+		Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType = COLLISION_SPHERE);
 		~Model();
 		void DrawModel();
 
@@ -41,6 +42,8 @@ class Model
 		void rotate(const QQuaternion& drotation);
 		void rotate(const float& angle, const QVector3D& axis);
 		void rotate(const float& dyaw, const float& dpitch, const float& droll);
+		void setForceColorOnly(const bool& value);
+		void setColliderID(const int& id);
 
 		QMatrix4x4 toMatrix();
 
@@ -49,6 +52,10 @@ class Model
 
 		PhysicsObject* getCollider() const;
 		void setCollider(PhysicsObject* value);
+
+		bool isValid() const;
+
+		QString getName() const;
 
 	private:
 		QString name;
@@ -61,6 +68,7 @@ class Model
 		QColor modelColor;
 		PhysicsObject* collider;
 		CollisionType colliderType;
+		bool valid = true;
 		void loadModel(const std::string& path);
 		void processNode(aiNode* node, const aiScene* scene);
 		Mesh* processMesh(aiMesh* mesh, const aiScene* scene);

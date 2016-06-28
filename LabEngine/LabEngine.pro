@@ -1,4 +1,4 @@
-QT += core gui opengl
+QT += core gui opengl multimedia
 
 LIBS    += -lOpengl32
 
@@ -26,7 +26,8 @@ SOURCES += \
     PhysicsThread.cpp \
     PhysicsBox.cpp \
     PhysicsSphere.cpp \
-    GLWidget.cpp
+    GLWidget.cpp \
+    MainWindow.cpp
 
 HEADERS += \
     Mesh.h \
@@ -40,7 +41,8 @@ HEADERS += \
     Light.h \
     PhysicsThread.h \
     PhysicsObject.h \
-    GLWidget.h
+    GLWidget.h \
+    MainWindow.h
 
 FORMS += \
     MainWindow.ui

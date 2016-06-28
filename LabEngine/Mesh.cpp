@@ -18,6 +18,7 @@ Mesh::~Mesh(){
 
 
 void Mesh::SetupMesh(){
+	//qDebug() << vertices.size() << " " << indices.size() << " " << normals.size() << " " << uvs.size();
 	vao.create();
 	vao.bind();
 

@@ -8,12 +8,15 @@
 #include <chrono>
 #include "Light.h"
 #include "PhysicsThread.h"
+#include <QVector>
 
 
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
+
+	friend class MainWindow;
 
 	public:
 		GLWidget(QWidget* parent = nullptr);
@@ -26,6 +29,9 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 
 	public slots:
 		void updateWindowTitle();
+
+	signals:
+		void updateModels();
 
 	protected:
 		void keyPressEvent(QKeyEvent *event);
@@ -53,15 +59,13 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 		GLint renderType;
 		ShaderManager* shader;
 		Camera camera;
-		Model* model;
-		Model* model2;
-		Model* model3;
-		Model* model4;
+		QVector<Model*> models;
 		QString windowTitle;
 		const QString vertexPath   = "Resources/Shaders/simple.vert";
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
 		const QString cubePath     = "Resources/Models/crate/Crate.obj";
 		const QString spherePath   = "Resources/Models/Sphere.obj";
 		const QString customPath   = "Resources/Models/nanosuit/Nanosuit.obj";
+		const QString floorPath    = "Resources/Models/Floor.obj";
 };
 

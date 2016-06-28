@@ -1,13 +1,13 @@
 #include "PhysicsObject.h"
 
-PhysicsBox::PhysicsBox(Model* parent, Transform3D* parentTransform) : PhysicsObject(parent, parentTransform)
+PhysicsBox::PhysicsBox(PhysicsThread* parentSimulation, Model* parent, Transform3D* parentTransform) : PhysicsObject(parentSimulation, parent, parentTransform)
 {
 
 }
 
 PhysicsBox::~PhysicsBox()
 {
-
+	parentSimulation->deregisterPhysicsBox(this);
 }
 
 double PhysicsBox::getMaxX() const
