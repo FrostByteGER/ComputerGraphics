@@ -98,17 +98,28 @@ void PhysicsThread::runSimulation(){
 				}
 			}
 
-			if(op->getY()-(op->getSize()) < miny){
+            if(op->getY()-(op->getSize()) <= miny){
 
-                op->setVelocityY(-op->getVelocityY() * op->getVerticalFriction());
-                if(deltaTimeNS < 1){
-                    op->setVelocityX(op->getVelocityX() * (op->getHorizontalFriction() - (op->getHorizontalFriction()*deltaTimeNS)));
-                    op->setVelocityZ(op->getVelocityZ() * (op->getHorizontalFriction() - (op->getHorizontalFriction()*deltaTimeNS)));
+                op->setVelocityY(op->getVelocityY() * op->getVerticalFriction());
+
+                if(std::abs(op->getVelocityY()) <= -g){
+                    op->setVelocityY(0.0);
+                }else{
+                    qDebug() << "v" << op->getVelocityY() << " " << g;
+                }
+
+                qDebug() << "v" << op->getVelocityY() << " " << g << "|" << deltaTimeMS;
+
+                if(deltaTimeMS < 1 || true){
+                    op->setVelocityX(op->getVelocityX() * (1 - (op->getHorizontalFriction())));
+                    op->setVelocityZ(op->getVelocityZ() * (1 - (op->getHorizontalFriction())));
+                    qDebug() << "v" << op->getVelocityY() << " " << g << " " << deltaTimeMS;
+
                 }
 
 				if(op->getVelocityY() < 0){
                     //op->setVelocityY(-op->getVelocityY() * op->getRemainingEnergy());
-                    op->setVelocityY(-op->getVelocityY() );
+                    op->setVelocityY(-op->getVelocityY());
 
                 }else{
 					op->setVelocityY(op->getVelocityY());
@@ -123,7 +134,8 @@ void PhysicsThread::runSimulation(){
 				}
 
 				// Gravity
-				op->setVelocityY(op->getVelocityY() + g*deltaTimeMS*op->getMass());
+                op->setVelocityY(op->getVelocityY() + g*deltaTimeMS*op->getMass());
+
 			}
 
 			if(op->getZ()-(op->getSize()) < minz){
@@ -225,13 +237,11 @@ void PhysicsThread::runSimulation(){
 					qDebug() << "WIN!!!!";
 				}
                 if((op1->getX()+op1->getSize()) > op2->getMinX()+op2->getX() && op1->getX() < op2->getMinX()+op2->getX()){
-                    qDebug() << "m1 " << op1->getVelocityX();
                     if(op1->getVelocityX() > 0){
 						op1->setVelocityX(-op1->getVelocityX());
 					}
 				}
                 if((op1->getX()-op1->getSize()) < op2->getMaxX()+op2->getX() && op1->getX() > op2->getMaxX()+op2->getX()){
-                    qDebug() << "m2 " << op1->getVelocityX();
                     if(op1->getVelocityX() < 0){
 						op1->setVelocityX(-op1->getVelocityX());
 					}
@@ -293,7 +303,7 @@ void PhysicsThread::runSimulation(){
 #ifdef __MINGW32__
 	//MinGW specific fix, allows partially smooth physics simulation
 	if(deltaTimeMS == 0){
-		deltaTimeMS = 0.05;
+        deltaTimeMS = 0.000005;
 	}
 #endif
 	//qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;

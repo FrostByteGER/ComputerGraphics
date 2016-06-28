@@ -61,10 +61,10 @@ class PhysicsThread : public QThread
 		int maxy = 25;
 		int maxz = 12.5;
 
-		double g = -0.0981;
+        double g = -0.000981;
 		bool stop = false;
 		bool bPause = false;
-		int pauseTickTime = 0;
+        int pauseTickTime = 5;
 		double deltaTimeNS = 0.0;
 		double deltaTimeMS = 0.0;
 		std::chrono::high_resolution_clock timer;
