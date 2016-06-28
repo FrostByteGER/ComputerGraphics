@@ -101,8 +101,10 @@ void PhysicsThread::runSimulation(){
 			if(op->getY()-(op->getSize()) < miny){
 
                 op->setVelocityY(-op->getVelocityY() * op->getVerticalFriction());
-                op->setVelocityX(op->getVelocityX() * op->getHorizontalFriction());
-                op->setVelocityZ(op->getVelocityZ() * op->getHorizontalFriction());
+                if(deltaTimeNS < 1){
+                    op->setVelocityX(op->getVelocityX() * (op->getHorizontalFriction() - (op->getHorizontalFriction()*deltaTimeNS)));
+                    op->setVelocityZ(op->getVelocityZ() * (op->getHorizontalFriction() - (op->getHorizontalFriction()*deltaTimeNS)));
+                }
 
 				if(op->getVelocityY() < 0){
                     //op->setVelocityY(-op->getVelocityY() * op->getRemainingEnergy());

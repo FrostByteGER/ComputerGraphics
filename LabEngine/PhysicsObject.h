@@ -72,15 +72,14 @@ class PhysicsObject
 
 		double mass = 1.0;
 
-		double remainingEnergy = 1.0; //0.94868329805;
-		double horizontalFriction = 1;
+        double remainingEnergy = 0.94868329805;
+        double horizontalFriction = 0.999995;
 		double verticalFriction = 0.9;
 
 
 		bool isMovable = true;
 
         int ID = -1;
-
 
 };
 
