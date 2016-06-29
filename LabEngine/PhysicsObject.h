@@ -70,12 +70,11 @@ class PhysicsObject
 		double velocityZ = 0.0;
 		QVector3D velocity;
 
-		double mass = 1.0;
+        double mass = 0.5;
 
         double remainingEnergy = 0.94868329805;
-        double horizontalFriction = 0.999995;
-		double verticalFriction = 0.9;
-
+        double horizontalFriction = 0.005;
+        double verticalFriction = 0.8;
 
 		bool isMovable = true;
 
