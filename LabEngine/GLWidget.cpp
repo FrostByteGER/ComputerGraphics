@@ -92,42 +92,105 @@ void GLWidget::initializeGL(){
 	models.append(arena);
 	models.append(winBox);
 
-	Model* sphere = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
-	sphere->setLocation(-5,1, 0);
-	sphere->setForceColorOnly(true);
-	sphere->setModelColor(QColor(255,255,255));
-	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere->getCollider()));
-	models.append(sphere);
+	{
+		Model* sphere12 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere12->setLocation(-8,1, -1);
+		sphere12->setForceColorOnly(true);
+		sphere12->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere12->getCollider()));
+		models.append(sphere12);
 
-	Model* sphere4 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
-	sphere4->setLocation(-7,1, 0);
-	sphere4->setForceColorOnly(true);
-	sphere4->setModelColor(QColor(255,255,255));
-	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere4->getCollider()));
-	models.append(sphere4);
+		Model* sphere13 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere13->setLocation(-8,1, 1);
+		sphere13->setForceColorOnly(true);
+		sphere13->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere13->getCollider()));
+		models.append(sphere13);
 
-	Model* sphere5 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
-	sphere5->setLocation(-5,1, 2);
-	sphere5->setForceColorOnly(true);
-	sphere5->setModelColor(QColor(255,255,255));
-	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere5->getCollider()));
-	models.append(sphere5);
+		Model* sphere14 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere14->setLocation(-8,1, 3);
+		sphere14->setForceColorOnly(true);
+		sphere14->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere14->getCollider()));
+		models.append(sphere14);
 
-	Model* sphere6 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
-	sphere6->setLocation(-7,1, 2);
-	sphere6->setForceColorOnly(true);
-	sphere6->setModelColor(QColor(255,255,255));
-	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere6->getCollider()));
-	models.append(sphere6);
+		Model* sphere15 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere15->setLocation(-6,1, 3);
+		sphere15->setForceColorOnly(true);
+		sphere15->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere15->getCollider()));
+		models.append(sphere15);
 
-	Model* sphere7 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
-	sphere7->setLocation(-6,13, 1);
-	sphere7->setForceColorOnly(true);
-	sphere7->setModelColor(QColor(255,255,255));
-	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere7->getCollider()));
-	models.append(sphere7);
+		Model* sphere16 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere16->setLocation(-4,1, 3);
+		sphere16->setForceColorOnly(true);
+		sphere16->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere16->getCollider()));
+		models.append(sphere16);
 
+		Model* sphere8 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere8->setLocation(-4,1, -1);
+		sphere8->setForceColorOnly(true);
+		sphere8->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere8->getCollider()));
+		models.append(sphere8);
 
+		Model* sphere9 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere9->setLocation(-6,1, -1);
+		sphere9->setForceColorOnly(true);
+		sphere9->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere9->getCollider()));
+		models.append(sphere9);
+
+		Model* sphere10 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere10->setLocation(-4,1, 1);
+		sphere10->setForceColorOnly(true);
+		sphere10->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere10->getCollider()));
+		models.append(sphere10);
+
+		Model* sphere11 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere11->setLocation(-6,1, 1);
+		sphere11->setForceColorOnly(true);
+		sphere11->setModelColor(QColor(255,0,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere11->getCollider()));
+		models.append(sphere11);
+
+		Model* sphere = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere->setLocation(-5,17, 0);
+		sphere->setForceColorOnly(true);
+		sphere->setModelColor(QColor(255,165,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere->getCollider()));
+		models.append(sphere);
+
+		Model* sphere4 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere4->setLocation(-7,17, 0);
+		sphere4->setForceColorOnly(true);
+		sphere4->setModelColor(QColor(255,165,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere4->getCollider()));
+		models.append(sphere4);
+
+		Model* sphere5 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere5->setLocation(-5,17, 2);
+		sphere5->setForceColorOnly(true);
+		sphere5->setModelColor(QColor(255,165,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere5->getCollider()));
+		models.append(sphere5);
+
+		Model* sphere6 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere6->setLocation(-7,17, 2);
+		sphere6->setForceColorOnly(true);
+		sphere6->setModelColor(QColor(255,165,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere6->getCollider()));
+		models.append(sphere6);
+
+		Model* sphere7 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+		sphere7->setLocation(-6,20, 1);
+		sphere7->setForceColorOnly(true);
+		sphere7->setModelColor(QColor(255,255,0));
+		physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere7->getCollider()));
+		models.append(sphere7);
+	}
 
 
 	//TODO: Write custom class that wraps around this with simple integers
