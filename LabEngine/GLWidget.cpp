@@ -88,6 +88,41 @@ void GLWidget::initializeGL(){
 	models.append(arena);
 	models.append(winBox);
 
+	Model* sphere = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	sphere->setLocation(-5,1, 0);
+	sphere->setForceColorOnly(true);
+	sphere->setModelColor(QColor(255,255,255));
+	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere->getCollider()));
+	models.append(sphere);
+
+	Model* sphere4 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	sphere4->setLocation(-7,1, 0);
+	sphere4->setForceColorOnly(true);
+	sphere4->setModelColor(QColor(255,255,255));
+	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere4->getCollider()));
+	models.append(sphere4);
+
+	Model* sphere5 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	sphere5->setLocation(-5,1, 2);
+	sphere5->setForceColorOnly(true);
+	sphere5->setModelColor(QColor(255,255,255));
+	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere5->getCollider()));
+	models.append(sphere5);
+
+	Model* sphere6 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	sphere6->setLocation(-7,1, 2);
+	sphere6->setForceColorOnly(true);
+	sphere6->setModelColor(QColor(255,255,255));
+	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere6->getCollider()));
+	models.append(sphere6);
+
+	Model* sphere7 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	sphere7->setLocation(-6,13, 1);
+	sphere7->setForceColorOnly(true);
+	sphere7->setModelColor(QColor(255,255,255));
+	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere7->getCollider()));
+	models.append(sphere7);
+
 
 
 
