@@ -104,16 +104,17 @@ void PhysicsThread::runSimulation(){
 
                 if(std::abs(op->getVelocityY()) <= -g){
                     op->setVelocityY(0.0);
+                    op->setY(miny+op->getSize());
                 }else{
-                    qDebug() << "v" << op->getVelocityY() << " " << g;
+                    //qDebug() << "v" << op->getVelocityY() << " " << g;
                 }
 
-                qDebug() << "v" << op->getVelocityY() << " " << g << "|" << deltaTimeMS;
+                //qDebug() << "v" << op->getVelocityY() << " " << g << "|" << deltaTimeMS;
 
                 if(deltaTimeMS < 1 || true){
                     op->setVelocityX(op->getVelocityX() * (1 - (op->getHorizontalFriction())));
                     op->setVelocityZ(op->getVelocityZ() * (1 - (op->getHorizontalFriction())));
-                    qDebug() << "v" << op->getVelocityY() << " " << g << " " << deltaTimeMS;
+                    //qDebug() << "v" << op->getVelocityY() << " " << g << " " << deltaTimeMS;
 
                 }
 
