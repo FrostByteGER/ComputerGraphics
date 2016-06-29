@@ -4,10 +4,10 @@ LIBS    += -lOpengl32
 
 CONFIG += c++11
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = LabEngine
-CONFIG += console
+#CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
