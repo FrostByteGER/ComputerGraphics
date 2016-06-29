@@ -7,7 +7,7 @@ CONFIG += c++11
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = LabEngine
-#CONFIG += console
+CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
@@ -42,7 +42,8 @@ HEADERS += \
     PhysicsThread.h \
     PhysicsObject.h \
     GLWidget.h \
-    MainWindow.h
+    MainWindow.h \
+    LabEngine.h
 
 FORMS += \
     MainWindow.ui

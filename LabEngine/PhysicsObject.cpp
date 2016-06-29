@@ -7,7 +7,8 @@ PhysicsObject::PhysicsObject(PhysicsThread* parentSimulation, Model* parent, Tra
 
 PhysicsObject::~PhysicsObject()
 {
-
+	qDebug() << "DELETING PHYSICSOBJECT";
+	parentSimulation->deregisterPhysicsObject(this);
 }
 
 double PhysicsObject::getX() const

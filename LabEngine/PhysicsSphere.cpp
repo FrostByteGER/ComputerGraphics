@@ -8,6 +8,7 @@ PhysicsSphere::PhysicsSphere(PhysicsThread* parentSimulation, Model* parent, Tra
 PhysicsSphere::~PhysicsSphere()
 {
 	parentSimulation->deregisterPhysicsSphere(this);
+	qDebug() << "DELETING COLLIDER";
 }
 double PhysicsSphere::getSize() const{
     return size;

@@ -9,8 +9,7 @@
 #include "Light.h"
 #include "PhysicsThread.h"
 #include <QVector>
-
-
+#include "LabEngine.h"
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -25,13 +24,12 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 		void resizeGL(int width, int height);
 		void paintGL();
 
-		void setWindowTitle(const QString& title);
-
-	public slots:
-		void updateWindowTitle();
-
 	signals:
 		void updateModels();
+		void updateWindowTitle(const QString& title);
+
+	public slots:
+		void fireUpdateWindowTitle();
 
 	protected:
 		void keyPressEvent(QKeyEvent *event);
@@ -50,10 +48,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 		QMatrix4x4 projection;
 		int worldToCamera;
 		int cameraToProjection;
-		double deltaTimeNS;
-		double deltaTimeMS;
 		uint32_t windowUpdateTime;
-		std::chrono::high_resolution_clock timer;
 		QTimer* windowUpdateTimer;
 		bool updateRenderType;
 		GLint renderType;
@@ -61,6 +56,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 		Camera camera;
 		QVector<Model*> models;
 		QString windowTitle;
+		uint32_t frameCount;
 		const QString vertexPath   = "Resources/Shaders/simple.vert";
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
 		const QString cubePath     = "Resources/Models/crate/Crate.obj";

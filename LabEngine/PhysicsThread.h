@@ -7,6 +7,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <chrono>
+#include "LabEngine.h"
 
 class PhysicsBox;
 class PhysicsSphere;
@@ -31,6 +32,8 @@ class PhysicsThread : public QThread
 		void deregisterPhysicsBox(PhysicsBox* physicsObject);
 		PhysicsObject subPhysicsBox(PhysicsBox* physicsObject);
         PhysicsObject subPhysicsBox(int index);
+
+		void deregisterPhysicsObject(PhysicsObject* object);
 
 		int getMinx() const;
 		void setMinx(const int value);
@@ -64,10 +67,9 @@ class PhysicsThread : public QThread
         double g = -0.000981;
 		bool stop = false;
 		bool bPause = false;
-        int pauseTickTime = 5;
-		double deltaTimeNS = 0.0;
-		double deltaTimeMS = 0.0;
-		std::chrono::high_resolution_clock timer;
+		double pauseTickTime = 0;
+		double deltaTime = 1.0/120.0;
+		double elapsedTime = 0.0;
 
 		// Observer, do not delete pointers!
 		std::vector<PhysicsObject*> pobjects;

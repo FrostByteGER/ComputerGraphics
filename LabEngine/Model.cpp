@@ -23,11 +23,30 @@ Model::Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsS
 	}
 
 	this->loadModel(path);
+}
 
+Model::Model(const std::string& path, const QString& name, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType) : name(name), shaderManager(sm), colliderType(collisionType)
+{
+	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
+	qDebug() << "SHADERID: " <<shaderID;
+	switch (collisionType) {
+		case COLLISION_SPHERE:
+			this->collider = new PhysicsSphere(physicsSimulation, this, &(this->transform));
+			break;
+		case COLLISION_BOX:
+			this->collider = new PhysicsBox(physicsSimulation, this, &(this->transform));
+			break;
+		default:
+			this->collider = new PhysicsSphere(physicsSimulation, this, &(this->transform));
+			break;
+	}
+
+	this->loadModel(path);
 }
 
 Model::~Model(){
 	std::for_each(meshes.begin(), meshes.end(), std::default_delete<Mesh>());
+	qDebug() << "DELETING MODEL";
 	delete collider;
 }
 

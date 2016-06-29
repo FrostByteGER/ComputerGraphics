@@ -241,6 +241,9 @@
                <property name="text">
                 <string>Resume Simulation</string>
                </property>
+               <property name="shortcut">
+                <string>F6</string>
+               </property>
               </widget>
              </item>
              <item row="2" column="1">
@@ -256,6 +259,9 @@
                </property>
                <property name="text">
                 <string>Pause Simulation</string>
+               </property>
+               <property name="shortcut">
+                <string>F6</string>
                </property>
               </widget>
              </item>
@@ -275,6 +281,9 @@
                </property>
                <property name="text">
                 <string>Start Simulation</string>
+               </property>
+               <property name="shortcut">
+                <string>F5</string>
                </property>
                <property name="autoDefault">
                 <bool>false</bool>
@@ -300,6 +309,9 @@
                </property>
                <property name="text">
                 <string>Stop Simulation</string>
+               </property>
+               <property name="shortcut">
+                <string>F7</string>
                </property>
                <property name="checkable">
                 <bool>false</bool>

@@ -14,19 +14,21 @@ GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent)
 {
 	directionalLight.transform.setTranslation(0,10,5);
 	directionalLight.lightColor.setRgb(255,255,255);
-	deltaTimeNS = 0.0;
-	deltaTimeMS = 0.0;
 	windowUpdateTime = 100;
 	shader = new ShaderManager();
 	windowUpdateTimer = new QTimer();
 	updateRenderType = false;
-	renderType = GL_LINE;
+	renderType = GL_FILL;
+	camera.setTranslation(20,15,10);
+	camera.rotate(-30.0f,1,0,0);
+	camera.rotate(60.0f,0,1,0);
 }
 
 GLWidget::~GLWidget(){
 	makeCurrent();
 	teardownGL();
 	physicsSimulation.quit();
+	physicsSimulation.wait();
 	windowUpdateTimer->stop();
 	delete windowUpdateTimer;
 	windowUpdateTimer = nullptr;
@@ -36,9 +38,11 @@ void GLWidget::initializeGL(){
 	initializeOpenGLFunctions();
 	connect(context(), SIGNAL(aboutToBeDestroyed()), this, SLOT(teardownGL()), Qt::DirectConnection);
 	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
-	connect(windowUpdateTimer, SIGNAL(timeout()), this, SLOT(updateWindowTitle()));
+
+	connect(windowUpdateTimer, SIGNAL(timeout()), this, SLOT(fireUpdateWindowTitle()));
 	windowUpdateTimer->start(windowUpdateTime);
 	printContextInformation();
+	qDebug() << "ENGINE: Clock Precision is:" << LabEngine::HiResClock::period::den << "Ticks per Second." << "Clock is steady =" << LabEngine::HiResClock::is_steady;
 
 	glEnable(GL_MULTISAMPLE); // Enable MSAA
 	glEnable(GL_DEPTH_TEST);
@@ -48,13 +52,13 @@ void GLWidget::initializeGL(){
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
 
-	Model* box = new Model(cubePath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
-	Model* box2 = new Model(cubePath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
-	Model* box3 = new Model(cubePath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
-	Model* winBox = new Model(cubePath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
-	Model* sphere1 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
-	Model* playerSphere = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
-	Model* arena = new Model(floorPath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
+	Model* box = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX);
+	Model* box2 = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX);
+	Model* box3 = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX);
+	Model* winBox = new Model(cubePath.toStdString(), "Target", shader, &physicsSimulation, COLLISION_BOX);
+	Model* sphere1 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* playerSphere = new Model(spherePath.toStdString(), "Player Sphere", shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* arena = new Model(floorPath.toStdString(), "Arena", shader, &physicsSimulation, COLLISION_BOX);
 
 	playerSphere->setColliderID(1);
 	winBox->setColliderID(2);
@@ -88,35 +92,35 @@ void GLWidget::initializeGL(){
 	models.append(arena);
 	models.append(winBox);
 
-	Model* sphere = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* sphere = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
 	sphere->setLocation(-5,1, 0);
 	sphere->setForceColorOnly(true);
 	sphere->setModelColor(QColor(255,255,255));
 	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere->getCollider()));
 	models.append(sphere);
 
-	Model* sphere4 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* sphere4 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
 	sphere4->setLocation(-7,1, 0);
 	sphere4->setForceColorOnly(true);
 	sphere4->setModelColor(QColor(255,255,255));
 	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere4->getCollider()));
 	models.append(sphere4);
 
-	Model* sphere5 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* sphere5 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
 	sphere5->setLocation(-5,1, 2);
 	sphere5->setForceColorOnly(true);
 	sphere5->setModelColor(QColor(255,255,255));
 	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere5->getCollider()));
 	models.append(sphere5);
 
-	Model* sphere6 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* sphere6 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
 	sphere6->setLocation(-7,1, 2);
 	sphere6->setForceColorOnly(true);
 	sphere6->setModelColor(QColor(255,255,255));
 	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere6->getCollider()));
 	models.append(sphere6);
 
-	Model* sphere7 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* sphere7 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
 	sphere7->setLocation(-6,13, 1);
 	sphere7->setForceColorOnly(true);
 	sphere7->setModelColor(QColor(255,255,255));
@@ -144,7 +148,6 @@ void GLWidget::resizeGL(int width, int height){
 
 void GLWidget::paintGL(){
 
-	auto startTime = std::chrono::high_resolution_clock::now();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if(updateRenderType){
 		glPolygonMode(GL_FRONT_AND_BACK, renderType);
@@ -165,10 +168,12 @@ void GLWidget::paintGL(){
 		}
 		currentShader->release();
 	}
-	auto endTime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> time = endTime - startTime;
-	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
-	deltaTimeMS = deltaTimeNS / 1000000.0;
+}
+
+void GLWidget::fireUpdateWindowTitle()
+{
+	emit updateWindowTitle("Frame-Time: ");
+	frameCount = 0;
 }
 
 void GLWidget::teardownGL(){
@@ -176,6 +181,7 @@ void GLWidget::teardownGL(){
 }
 
 void GLWidget::update(){
+	++frameCount;
 	InputManager::update();
 
 	if(InputManager::keyTriggered(Qt::Key_Escape)){
@@ -200,21 +206,6 @@ void GLWidget::update(){
 	}
 	if(InputManager::keyPressed(Qt::Key_F3)){
 		directionalLight.transform.translate(0,1,0);
-	}
-
-	if(InputManager::keyTriggered(Qt::Key_F5)){
-		qDebug() << ">>>STARTING PHYSICS-SIMULATION<<<";
-		physicsSimulation.start();
-	}
-
-	if(InputManager::keyTriggered(Qt::Key_F6)){
-		qDebug() << ">>>PAUSING/RESUMING PHYSICS-SIMULATION<<<";
-		physicsSimulation.TogglePause();
-	}
-
-	if(InputManager::keyTriggered(Qt::Key_F7)){
-		qDebug() << ">>>STOPPING PHYSICS-SIMULATION<<<";
-		physicsSimulation.quit();
 	}
 
 	// Camera Transformation
@@ -311,14 +302,4 @@ void GLWidget::printContextInformation(){
 #undef CASE
 
 	qDebug() << qPrintable(glType) << qPrintable(glVersion) << "(" << qPrintable(glProfile) << ")";
-}
-
-void GLWidget::setWindowTitle(const QString& title)
-{
-	windowTitle = title;
-}
-
-void GLWidget::updateWindowTitle()
-{
-	//setTitle(windowTitle + "    Frame-Time: " + QString::number(deltaTimeMS, 'g', 2) + "ms" + "    FPS: " + QString::number(1000.0 / deltaTimeMS));
 }

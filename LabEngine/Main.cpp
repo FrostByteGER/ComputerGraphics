@@ -16,18 +16,15 @@ int main(int argc, char *argv[])
 	mainWindow.setWindowTitle(applicationName + "   " + "MINGW x32");
 #elif _MSC_VER
 #if _MSC_VER == 1900
-	mainWindow.setWindowTitle(applicationName + "   " + "MSVC2015 x64");
+	mainWindow.setTitle(applicationName + "   " + "MSVC2015 x64");
 #elif _MSC_VER == 1800
-	mainWindow.setWindowTitle(applicationName + "   " + "MSVC2013 x64");
+	mainWindow.setTitle(applicationName + "   " + "MSVC2013 x64");
 #endif
 #elif __ARM_ARCH_7A__
-	mainWindow.setWindowTitle(applicationName + "   " + "ARMv7");
+	mainWindow.setTitle(applicationName + "   " + "ARMv7");
 #else
-	mainWindow.setWindowTitle(applicationName + "   " + "UNKNOWN COMPILER");
+	mainWindow.setTitle(applicationName + "   " + "UNKNOWN COMPILER");
 #endif
-
-	//mainWindow.updateWindowTitle();
-
 	//window.show();
 	mainWindow.show();
 	return app.exec();

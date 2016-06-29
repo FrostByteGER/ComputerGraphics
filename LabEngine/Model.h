@@ -16,6 +16,7 @@ class Model
 {
 	public:
 		Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType = COLLISION_SPHERE);
+		Model(const std::string& path, const QString& name, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType = COLLISION_SPHERE);
 		~Model();
 		void DrawModel();
 

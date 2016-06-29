@@ -77,7 +77,7 @@ void PhysicsThread::quit()
 }
 
 void PhysicsThread::runSimulation(){
-	auto startTime = std::chrono::high_resolution_clock::now();
+	auto startTime = LabEngine::HiResClock::now();
 
 	// Collision Border
 	for(size_t i = 0 ; i < pobjectsSphere.size() ; i++) {
@@ -109,17 +109,12 @@ void PhysicsThread::runSimulation(){
                     //qDebug() << "v" << op->getVelocityY() << " " << g;
                 }
 
-                //qDebug() << "v" << op->getVelocityY() << " " << g << "|" << deltaTimeMS;
-
-                if(deltaTimeMS < 1 || true){
+				if(deltaTime < 1 || true){
                     op->setVelocityX(op->getVelocityX() * (1 - (op->getHorizontalFriction())));
                     op->setVelocityZ(op->getVelocityZ() * (1 - (op->getHorizontalFriction())));
-                    //qDebug() << "v" << op->getVelocityY() << " " << g << " " << deltaTimeMS;
-
                 }
 
 				if(op->getVelocityY() < 0){
-                    //op->setVelocityY(-op->getVelocityY() * op->getRemainingEnergy());
                     op->setVelocityY(-op->getVelocityY());
 
                 }else{
@@ -135,7 +130,7 @@ void PhysicsThread::runSimulation(){
 				}
 
 				// Gravity
-                op->setVelocityY(op->getVelocityY() + g*deltaTimeMS*op->getMass());
+				op->setVelocityY(op->getVelocityY() + g*deltaTime*op->getMass());
 
 			}
 
@@ -196,18 +191,18 @@ void PhysicsThread::runSimulation(){
 				}
 
 				if(!op1->getIsMovable() && op2->getIsMovable()){
-					op2->setX(op2->getX() - op1->getVelocityX() * deltaTimeMS);
-					op2->setY(op2->getY() - op1->getVelocityY() * deltaTimeMS);
-					op2->setZ(op2->getZ() - op1->getVelocityZ() * deltaTimeMS);
+					op2->setX(op2->getX() - op1->getVelocityX() * deltaTime);
+					op2->setY(op2->getY() - op1->getVelocityY() * deltaTime);
+					op2->setZ(op2->getZ() - op1->getVelocityZ() * deltaTime);
 
 					op1->setVelocityX(0.0);
 					op1->setVelocityY(0.0);
 					op1->setVelocityZ(0.0);
 
 				}else if(op1->getIsMovable() && !op2->getIsMovable()){
-					op1->setX(op1->getX() - op2->getVelocityX() * deltaTimeMS);
-					op1->setY(op1->getY() - op2->getVelocityY() * deltaTimeMS);
-					op1->setZ(op1->getZ() - op2->getVelocityZ() * deltaTimeMS);
+					op1->setX(op1->getX() - op2->getVelocityX() * deltaTime);
+					op1->setY(op1->getY() - op2->getVelocityY() * deltaTime);
+					op1->setZ(op1->getZ() - op2->getVelocityZ() * deltaTime);
 
 					op2->setVelocityX(0.0);
 					op2->setVelocityY(0.0);
@@ -215,13 +210,13 @@ void PhysicsThread::runSimulation(){
 				}
 
 
-				op1->setX(op1->getX() + op1->getVelocityX() * deltaTimeMS);
-				op1->setY(op1->getY() + op1->getVelocityY() * deltaTimeMS);
-				op1->setZ(op1->getZ() + op1->getVelocityZ() * deltaTimeMS);
+				op1->setX(op1->getX() + op1->getVelocityX() * deltaTime);
+				op1->setY(op1->getY() + op1->getVelocityY() * deltaTime);
+				op1->setZ(op1->getZ() + op1->getVelocityZ() * deltaTime);
 
-				op2->setX(op2->getX() + op2->getVelocityX() * deltaTimeMS);
-				op2->setY(op2->getY() + op2->getVelocityY() * deltaTimeMS);
-				op2->setZ(op2->getZ() + op2->getVelocityZ() * deltaTimeMS);
+				op2->setX(op2->getX() + op2->getVelocityX() * deltaTime);
+				op2->setY(op2->getY() + op2->getVelocityY() * deltaTime);
+				op2->setZ(op2->getZ() + op2->getVelocityZ() * deltaTime);
 			}
 		}
 	}
@@ -278,16 +273,9 @@ void PhysicsThread::runSimulation(){
 	for(size_t i = 0 ; i < pobjectsSphere.size() ; i++) {
 		PhysicsSphere* op = pobjectsSphere.at(i);
 		if(op->getIsMovable()){
-			op->setX(op->getX() + op->getVelocityX()*deltaTimeMS);
-			op->setY(op->getY() + op->getVelocityY()*deltaTimeMS);
-			op->setZ(op->getZ() + op->getVelocityZ()*deltaTimeMS);
-			//TODO: REMOVE
-//			if(op->velocityToAdd.x() > 0.0f || op->velocityToAdd.y() > 0.0f, op->velocityToAdd.z() > 0.0f){
-//				op->setX(op->getX() + op->velocityToAdd.x()*deltaTimeMS);
-//				op->setY(op->getY() + op->velocityToAdd.y()*deltaTimeMS);
-//				op->setZ(op->getZ() + op->velocityToAdd.z()*deltaTimeMS);
-//				op->velocityToAdd -= QVector3D(deltaTimeMS,deltaTimeMS,deltaTimeMS);
-//			}
+			op->setX(op->getX() + op->getVelocityX()*deltaTime);
+			op->setY(op->getY() + op->getVelocityY()*deltaTime);
+			op->setZ(op->getZ() + op->getVelocityZ()*deltaTime);
 		}else{
 			op->setVelocityX(0.0);
 			op->setVelocityY(0.0);
@@ -295,18 +283,20 @@ void PhysicsThread::runSimulation(){
 		}
 	}
 	if(pauseTickTime > 0.0){
-		this->msleep(pauseTickTime);
+		this->msleep(pauseTickTime * 1000);
 	}
-	auto endTime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> time = endTime - startTime;
-	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
-    deltaTimeMS = deltaTimeNS / 1000000.0;
-#ifdef __MINGW32__
-	//MinGW specific fix, allows partially smooth physics simulation
-	if(deltaTimeMS == 0){
-        deltaTimeMS = 0.000005;
-	}
-#endif
+
+
+//	auto endTime = LabEngine::HiResClock:::now();
+//	std::chrono::duration<double> time = endTime - startTime;
+//	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
+//    deltaTimeMS = deltaTimeNS / 1000000.0;
+//#ifdef __MINGW32__
+//	//MinGW specific fix, allows partially smooth physics simulation
+//	if(deltaTimeMS == 0){
+//        deltaTimeMS = 0.000005;
+//	}
+//#endif
 	//qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;
 }
 
@@ -372,20 +362,38 @@ void PhysicsThread::setMinx(const int value)
 
 void PhysicsThread::registerPhysicsSphere(PhysicsSphere* physicsObject)
 {
+	qDebug() << "REGISTERING PHYSICSSPHERE";
 	pobjectsSphere.push_back(physicsObject);
 }
 
 void PhysicsThread::deregisterPhysicsSphere(PhysicsSphere* physicsObject)
 {
+	qDebug() << "DEREGISTERING PHYSICSSPHERE";
 	pobjectsSphere.erase(std::remove(pobjectsSphere.begin(), pobjectsSphere.end(),physicsObject), pobjectsSphere.end());
 }
 
 void PhysicsThread::registerPhysicsBox(PhysicsBox* physicsObject)
 {
+	qDebug() << "REGISTERING PHYSICSBOX";
 	pobjectsBox.push_back(physicsObject);
 }
 
 void PhysicsThread::deregisterPhysicsBox(PhysicsBox* physicsObject)
 {
+	qDebug() << "DEREGISTERING PHYSICSBOX";
 	pobjectsBox.erase(std::remove(pobjectsBox.begin(), pobjectsBox.end(),physicsObject), pobjectsBox.end());
+}
+
+void PhysicsThread::deregisterPhysicsObject(PhysicsObject* object)
+{
+	auto sphere = static_cast<PhysicsSphere*>(object);
+	if(sphere){
+		deregisterPhysicsSphere(sphere);
+		return;
+	}
+	auto box = static_cast<PhysicsBox*>(object);
+	if(box){
+		deregisterPhysicsBox(box);
+		return;
+	}
 }
