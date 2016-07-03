@@ -9,7 +9,6 @@
 #include <cmath>
 #include <QOpenGLFunctions_4_3_Core>
 #include "InputManager.h"
-#include "Models.h"
 
 GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent)
 {
@@ -53,13 +52,13 @@ void GLWidget::initializeGL(){
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
 
-	Model* box = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX);
-	Model* box2 = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX);
-	Model* box3 = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX);
-	Model* winBox = new Model(cubePath.toStdString(), "Target", shader, &physicsSimulation, COLLISION_BOX);
-	Model* sphere1 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
-	Model* playerSphere = new Model(spherePath.toStdString(), "Player Sphere", shader, &physicsSimulation, COLLISION_SPHERE);
-	Model* arena = new Model(floorPath.toStdString(), "Arena", shader, &physicsSimulation, COLLISION_BOX);
+	Model* box = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
+	Model* box2 = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
+	Model* box3 = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
+	Model* winBox = new Model(cubePath.toStdString(), "Target", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
+	Model* sphere1 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE, MODEL_SPHERE);
+	Model* playerSphere = new Model(spherePath.toStdString(), "Player Sphere", shader, &physicsSimulation, COLLISION_SPHERE, MODEL_SPHERE);
+	Model* arena = new Model(floorPath.toStdString(), "Arena", shader, &physicsSimulation, COLLISION_BOX, MODEL_FLOOR);
 
 	playerSphere->setColliderID(1);
 	winBox->setColliderID(2);

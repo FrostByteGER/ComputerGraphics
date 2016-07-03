@@ -1,11 +1,9 @@
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 #include <QOpenGLTexture>
 #include <memory>
 #include "Model.h"
+#include "Models.h"
 
-Model::Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType) : shaderManager(sm), colliderType(collisionType)
+Model::Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType, ModelType type) : shaderManager(sm), colliderType(collisionType)
 {
 	this->name = QString::fromStdString(path.substr(path.find_last_of('/') + 1,std::string::npos));
 	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
@@ -22,10 +20,10 @@ Model::Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsS
 			break;
 	}
 
-	this->loadModel(path);
+	this->loadModel(path, type);
 }
 
-Model::Model(const std::string& path, const QString& name, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType) : name(name), shaderManager(sm), colliderType(collisionType)
+Model::Model(const std::string& path, const QString& name, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType, ModelType type) : name(name), shaderManager(sm), colliderType(collisionType)
 {
 	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
 	qDebug() << "SHADERID: " <<shaderID;
@@ -41,7 +39,7 @@ Model::Model(const std::string& path, const QString& name, ShaderManager* sm, Ph
 			break;
 	}
 
-	this->loadModel(path);
+	this->loadModel(path, type);
 }
 
 Model::~Model(){
@@ -61,90 +59,25 @@ void Model::DrawModel(){
 	}
 }
 
-void Model::loadModel(const std::string& path){
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-
-	if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
-		qCritical() << "Assimp Error: " << importer.GetErrorString();
-		valid = false;
-		return;
-	}
+void Model::loadModel(const std::string& path, const ModelType& type){
 	this->directory = path.substr(0,path.find_last_of('/'));
-	this->processNode(scene->mRootNode, scene);
-}
-
-void Model::processNode(aiNode* node, const aiScene* scene)
-{
-	for(uint i = 0; i < node->mNumMeshes; ++i){
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		auto* processedMesh = this->processMesh(mesh, scene);
-		this->meshes.push_back(processedMesh);
-	}
-
-	for(uint i = 0; i < node->mNumChildren; ++i){
-		this->processNode(node->mChildren[i], scene);
-	}
-}
-
-Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
-{
-	std::vector<QVector3D> vertices;
-	std::vector<QVector3D> normals;
-	std::vector<QVector2D> uvs;
-	std::vector<GLuint> indices;
 	std::vector<QOpenGLTexture*> textures;
-
-	// Get Vertices, Normals and UVs
-	for(uint i = 0; i < mesh->mNumVertices; ++i){
-		QVector3D vertex(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-		vertices.push_back(vertex);
-		QVector3D normal(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
-		normals.push_back(normal);
-		if(mesh->mTextureCoords[0]){
-			QVector2D uv(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
-			uvs.push_back(uv);
-		}else{
-			uvs.push_back(QVector2D());
-		}
-	}
-
-	// Get Indices
-	for(uint i = 0; i < mesh->mNumFaces; ++i){
-		aiFace face = mesh->mFaces[i];
-		for(uint j = 0; j < face.mNumIndices; ++j){
-			indices.push_back(face.mIndices[j]);
-		}
-	}
-
-	// Get Materials
-	if(mesh->mMaterialIndex >= 0){
-		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<QOpenGLTexture*> diffuseMaps = this->loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-		std::vector<QOpenGLTexture*> specularMaps = this->loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-	}
-
-	// Return the constructed Mesh
 	Shader* shader = shaderManager->getShader(shaderID);
 	if(!shader){
 		qWarning() << "SHADER NOT FOUND";
 	}
-	return new Mesh(vertices, normals, uvs, indices, textures, shader, this);
-}
-
-std::vector<QOpenGLTexture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
-{
-	//TODO: Check if textures are already loaded! If so, don't reload the texture
-	std::vector<QOpenGLTexture*> textures;
-	for(uint i = 0; i < mat->GetTextureCount(type); ++i){
-		aiString str;
-		mat->GetTexture(type, i, &str);
-		QOpenGLTexture* texture = loadTextureFromFile(std::string(str.C_Str()), this->directory);
-		textures.push_back(texture);
+	switch(type){
+		case MODEL_BOX:
+			textures.push_back(loadTextureFromFile("crate_diffuse.png",directory));
+			this->meshes.push_back(new Mesh(Models::box_vertices, Models::box_normals, Models::box_uvs, Models::box_indices, textures, shader, this));
+			break;
+		case MODEL_SPHERE:
+			this->meshes.push_back(new Mesh(Models::sphere_vertices, Models::sphere_normals, Models::sphere_uvs, Models::sphere_indices, textures, shader, this));
+			break;
+		case MODEL_FLOOR:
+			this->meshes.push_back(new Mesh(Models::floor_vertices, Models::floor_normals, Models::floor_uvs, Models::floor_indices, textures, shader, this));
+			break;
 	}
-	return textures;
 }
 
 QOpenGLTexture* Model::loadTextureFromFile(const std::string& name, const std::string& directory){

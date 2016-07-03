@@ -1,6 +1,5 @@
 #pragma once
 
-#include <assimp/scene.h>
 #include <vector>
 #include "Mesh.h"
 #include "ShaderManager.h"
@@ -12,11 +11,17 @@ enum CollisionType {
 	COLLISION_SPHERE
 };
 
+enum ModelType{
+	MODEL_BOX,
+	MODEL_SPHERE,
+	MODEL_FLOOR
+};
+
 class Model
 {
 	public:
-		Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType = COLLISION_SPHERE);
-		Model(const std::string& path, const QString& name, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType = COLLISION_SPHERE);
+		Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType = COLLISION_SPHERE, ModelType type = MODEL_SPHERE);
+		Model(const std::string& path, const QString& name, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType = COLLISION_SPHERE, ModelType type = MODEL_SPHERE);
 		~Model();
 		void DrawModel();
 
@@ -70,10 +75,7 @@ class Model
 		PhysicsObject* collider;
 		CollisionType colliderType;
 		bool valid = true;
-		void loadModel(const std::string& path);
-		void processNode(aiNode* node, const aiScene* scene);
-		Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
-		std::vector<QOpenGLTexture*> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+		void loadModel(const std::string& path, const ModelType& type);
 		QOpenGLTexture* loadTextureFromFile(const std::string& name, const std::string& directory);
 };
 
