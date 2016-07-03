@@ -43,7 +43,8 @@ HEADERS += \
     PhysicsObject.h \
     GLWidget.h \
     MainWindow.h \
-    LabEngine.h
+    LabEngine.h \
+    Models.h
 
 FORMS += \
     MainWindow.ui

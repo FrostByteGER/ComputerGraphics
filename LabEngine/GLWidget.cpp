@@ -9,6 +9,7 @@
 #include <cmath>
 #include <QOpenGLFunctions_4_3_Core>
 #include "InputManager.h"
+#include "Models.h"
 
 GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent)
 {
@@ -85,12 +86,12 @@ void GLWidget::initializeGL(){
 	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(playerSphere->getCollider()));
 
 	models.append(playerSphere);
+	models.append(winBox);
 	models.append(box);
 	models.append(box2);
 	models.append(box3);
 	models.append(sphere1);
 	models.append(arena);
-	models.append(winBox);
 
 	{
 		Model* sphere12 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);

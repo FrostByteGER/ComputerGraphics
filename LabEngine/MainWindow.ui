@@ -35,6 +35,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="AddModelBtn">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Add Model</string>
             </property>

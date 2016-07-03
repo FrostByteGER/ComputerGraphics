@@ -151,25 +151,42 @@ void MainWindow::on_RemoveModelBtn_clicked()
 
 void MainWindow::on_StartPhysicsBtn_clicked()
 {
-	float x = ui->VelocityXSpinBox->value();
-	float y = ui->VelocityYSpinBox->value();
-	float z = ui->VelocityZSpinBox->value();
+	if(glWidget->models.empty()){
+		qDebug() << "NO OBJECTS IN SCENE FOUND";
+		return;
+	}
+
+	float x = ui->VelocityXSpinBox->value()/-100.0f;
+	float y = ui->VelocityYSpinBox->value()/-100.0f;
+	float z = ui->VelocityZSpinBox->value()/-100.0f;
 	Model* model = glWidget->models.at(0);
 	bool error = false;
 	if(model){
-		auto player = static_cast<PhysicsSphere*>(model->getCollider());
-		player->setVelocity(x,y,z);
-		if(player->getID() != 1){
+		auto id = model->getCollider()->getID();
+		if(id == 1){
+			auto player = static_cast<PhysicsSphere*>(model->getCollider());
+			if(player){
+				player->setVelocity(x,y,z);
+			}else{
+				error = true;
+			}
+			Model* model2 = glWidget->models.at(1);
+			auto id2 = model2->getCollider()->getID();
+			if(id2 != 2){
+				error = true;
+			}
+		}else{
 			error = true;
 		}
 	}else{
 		error = true;
 	}
 	if(error){
-		qWarning() << "WARNING: PLAYER SPHERE NOT FOUND!";
-		QMessageBox::critical(this->centralWidget(),QString("Player Sphere not found!"),QString("There is no Player Sphere in the scene, please restart application!"),QMessageBox::Ok, QMessageBox::NoButton);
+		qWarning() << "WARNING: PLAYER SPHERE OR WIN-BOX NOT FOUND!";
+		QMessageBox::critical(this->centralWidget(),QString("Player Sphere or Win-Box not found!"),QString("There is no Player Sphere or Win-Box in the scene, please restart application!"),QMessageBox::Ok, QMessageBox::NoButton);
 		return;
 	}
+	ui->RemoveModelBtn->setEnabled(false);
 	glWidget->physicsSimulation.start();
 	ui->StartPhysicsBtn->setEnabled(false);
 	ui->PausePhysicsBtn->setEnabled(true);
