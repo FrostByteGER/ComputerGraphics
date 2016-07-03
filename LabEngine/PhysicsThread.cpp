@@ -7,6 +7,7 @@
 #include <iterator>
 #include <QDebug>
 
+#include <QMessageBox>
 
 
 

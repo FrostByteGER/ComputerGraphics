@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <QPair>
 #include <cmath>
-#include <QOpenGLFunctions_4_3_Core>
+#include <QOpenGLFunctions_3_3_Core>
 #include "InputManager.h"
 
 GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent)
@@ -195,7 +195,7 @@ void GLWidget::initializeGL(){
 
 	//TODO: Write custom class that wraps around this with simple integers
 	//TODO2: move to main again with thread synchronization and wait for completion of initializeGL
-	auto version = context()->versionFunctions<QOpenGLFunctions_4_3_Core>();
+	auto version = context()->versionFunctions<QOpenGLFunctions_3_3_Core>();
 	if(!version){
 		qFatal(QString("FATAL ERROR: OPENGL VERSION INSUFFICIENT. REQUIRED: " + QString::number(format().version().first) + "." + QString::number(format().version().second)).toStdString().c_str());
 		QCoreApplication::exit(-1);

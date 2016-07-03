@@ -1,11 +1,17 @@
 #include "Transform3D.h"
 #include <QDebug>
 
+//
+// Idea originally by Trent Reed
+// This class is based on the tutorial Qt5 OpenGL Part 2: 3D Rendering
+// Link: http://www.trentreed.net/blog/qt5-opengl-part-2-3d-rendering/
+// However no copy-paste was made and everything has been understood and is used in the project.
+//
+
 const QVector3D Transform3D::LocalForward(0.0f, 0.0f, 1.0f);
 const QVector3D Transform3D::LocalUp(0.0f, 1.0f, 0.0f);
 const QVector3D Transform3D::LocalRight(1.0f, 0.0f, 0.0f);
 
-// Transform By (Add/Scale)
 void Transform3D::translate(const QVector3D &dt)
 {
 	needsUpdate = true;
@@ -30,7 +36,6 @@ void Transform3D::grow(const QVector3D &ds)
 	m_scale += ds;
 }
 
-// Transform To (Setters)
 void Transform3D::setTranslation(const QVector3D& t)
 {
 	needsUpdate = true;
@@ -49,7 +54,6 @@ void Transform3D::setRotation(const QQuaternion& r)
 	m_rotation = r;
 }
 
-// Accessors
 const QMatrix4x4 &Transform3D::toMatrix()
 {
 	if (needsUpdate)
@@ -63,7 +67,6 @@ const QMatrix4x4 &Transform3D::toMatrix()
 	return m_world;
 }
 
-// Queries
 QVector3D Transform3D::forward() const
 {
 	return m_rotation.rotatedVector(LocalForward);

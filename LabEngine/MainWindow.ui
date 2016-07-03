@@ -362,7 +362,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionLoad_Model"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -389,14 +388,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
-   </property>
-  </action>
-  <action name="actionLoad_Model">
-   <property name="text">
-    <string>Load Model</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+L</string>
    </property>
   </action>
  </widget>

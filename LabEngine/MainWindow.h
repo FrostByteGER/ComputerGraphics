@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow
 
 		void setMainWindowTitle(const QString& value);
 
+		void showWinScreen();
 	public slots:
 		void updateModelData();
 		void setTitle(const QString& title);
@@ -47,9 +48,10 @@ class MainWindow : public QMainWindow
 
 		void on_ModelList_currentRowChanged(int currentRow);
 
+		void on_actionAbout_triggered();
+
 	private:
 		Ui::MainWindow *ui;
 		GLWidget* glWidget = nullptr;
-		QString musicPath = "Resources/Music/track_01_main.mp3";
 		QString mainWindowTitle;
 };

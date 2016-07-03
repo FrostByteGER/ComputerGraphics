@@ -3,6 +3,14 @@
 #include <vector>
 #include <algorithm>
 
+
+//
+// Idea originally by Trent Reed
+// This class is based on the tutorial Qt5 OpenGL Part 3b: Camera Control
+// Link: http://www.trentreed.net/blog/qt5-opengl-part-3b-camera-control/
+// However no copy-paste was made and everything has been understood and is used in the project.
+//
+
 template <typename T>
 struct InputInstance : std::pair<T, InputManager::InputState>
 {
@@ -15,15 +23,12 @@ struct InputInstance : std::pair<T, InputManager::InputState>
 		}
 };
 
-// Instance types
 typedef InputInstance<Qt::Key> KeyInstance;
 typedef InputInstance<Qt::MouseButton> ButtonInstance;
 
-// Container types
 typedef std::vector<KeyInstance> KeyContainer;
 typedef std::vector<ButtonInstance> ButtonContainer;
 
-// Globals
 static KeyContainer sg_keyInstances;
 static ButtonContainer sg_buttonInstances;
 static QPoint sg_mouseCurrPosition;
@@ -71,11 +76,9 @@ static inline void Update(Container &container)
 	typedef typename Container::iterator Iter;
 	typedef typename Container::value_type TPair;
 
-	// Remove old data
 	Iter remove = std::remove_if(container.begin(), container.end(), &CheckReleased<TPair>);
 	container.erase(remove, container.end());
 
-	// Update existing data
 	std::for_each(container.begin(), container.end(), &UpdateStates<TPair>);
 }
 
@@ -103,12 +106,10 @@ QPoint InputManager::mouseDelta()
 
 void InputManager::update()
 {
-	// Update Mouse Delta
 	sg_mousePrevPosition = sg_mouseCurrPosition;
 	sg_mouseCurrPosition = QCursor::pos();
 	sg_mouseDelta = sg_mouseCurrPosition - sg_mousePrevPosition;
 
-	// Update KeyState values
 	Update(sg_buttonInstances);
 	Update(sg_keyInstances);
 }

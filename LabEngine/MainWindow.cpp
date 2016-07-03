@@ -2,7 +2,6 @@
 #include "ui_MainWindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QSoundEffect>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -11,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 
 	// OpenGL Version
-	const int OPENGL_MAJOR_VERSION       = 4;
+	const int OPENGL_MAJOR_VERSION       = 3;
 	const int OPENGL_MINOR_VERSION       = 3;
 
 	// OpenGL Buffer Sizes
@@ -229,4 +228,13 @@ void MainWindow::on_ModelList_currentRowChanged(int currentRow)
 	ui->XspnBox->setValue(pos.x());
 	ui->YspnBox->setValue(pos.y());
 	ui->ZspnBox->setValue(pos.z());
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+	QMessageBox::about(this->centralWidget(), QString("LabEngine v0.0.1"), QString("Made by Kevin Kügler and Jan Schult"));
+}
+
+void MainWindow::showWinScreen(){
+	QMessageBox::about(this->centralWidget(),QString("You Won!!!"), QString("Congratulations, you won! To play again, please restart the application"));
 }

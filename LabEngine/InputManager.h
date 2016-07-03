@@ -3,6 +3,13 @@
 #include <Qt>
 #include <QPoint>
 
+//
+// Idea originally by Trent Reed
+// This class is based on the tutorial Qt5 OpenGL Part 3b: Camera Control
+// Link: http://www.trentreed.net/blog/qt5-opengl-part-3b-camera-control/
+// However no copy-paste was made and everything has been understood and is used in the project.
+//
+
 class InputManager
 {
 	public:

@@ -11,6 +11,7 @@
 #include <QVector>
 #include "LabEngine.h"
 
+
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
@@ -61,7 +62,6 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 		const QString fragmentPath = "Resources/Shaders/simple.frag";
 		const QString cubePath     = "Resources/Models/crate/Crate.obj";
 		const QString spherePath   = "Resources/Models/Sphere.obj";
-		const QString customPath   = "Resources/Models/nanosuit/Nanosuit.obj";
 		const QString floorPath    = "Resources/Models/Floor.obj";
 };
 

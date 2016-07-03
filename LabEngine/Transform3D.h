@@ -4,18 +4,22 @@
 #include <QQuaternion>
 #include <QMatrix4x4>
 
+//
+// Idea originally by Trent Reed
+// This class is based on the tutorial Qt5 OpenGL Part 2: 3D Rendering
+// Link: http://www.trentreed.net/blog/qt5-opengl-part-2-3d-rendering/
+// However no copy-paste was made and everything has been understood and is used in the project.
+//
+
 class Transform3D
 {
 	public:
-		// Constructors
 		Transform3D();
 
-		// Constants
 		static const QVector3D LocalForward;
 		static const QVector3D LocalUp;
 		static const QVector3D LocalRight;
 
-		// Transform By (Add/Scale)
 		void translate(const QVector3D &dt);
 		void translate(float dx, float dy, float dz);
 		void scale(const QVector3D &ds);
@@ -30,7 +34,6 @@ class Transform3D
 		void grow(float dx, float dy, float dz);
 		void grow(float factor);
 
-		// Transform To (Setters)
 		void setTranslation(const QVector3D& t);
 		void setTranslation(const float& x, const float& y, const float& z);
 		void setTranslationX(const float& x);
@@ -66,7 +69,6 @@ class Transform3D
 
 inline Transform3D::Transform3D() : needsUpdate(true), m_scale(1.0f, 1.0f, 1.0f) {}
 
-// Transform By (Add/Scale)
 inline void Transform3D::translate(float dx, float dy,float dz) { translate(QVector3D(dx, dy, dz)); }
 inline void Transform3D::scale(float dx, float dy,float dz) { scale(QVector3D(dx, dy, dz)); }
 inline void Transform3D::scale(float factor) { scale(QVector3D(factor, factor, factor)); }
@@ -77,7 +79,6 @@ inline void Transform3D::rotate(const QVector3D& drotation) {rotate(QQuaternion:
 inline void Transform3D::grow(float dx, float dy, float dz) { grow(QVector3D(dx, dy, dz)); }
 inline void Transform3D::grow(float factor) { grow(QVector3D(factor, factor, factor)); }
 
-// Transform To (Setters)
 inline void Transform3D::setTranslation(const float& x, const float& y, const float& z) { setTranslation(QVector3D(x, y, z)); }
 inline void Transform3D::setTranslationX(const float& x) { setTranslation(QVector3D(x, m_position.y(), m_position.z())); }
 inline void Transform3D::setTranslationY(const float& y) { setTranslation(QVector3D(m_position.x(), y, m_position.z())); }
@@ -89,7 +90,6 @@ inline void Transform3D::setRotation(const float& angle, const float& ax, const 
 inline void Transform3D::setRotation(const float& x, const float& y, const float& z) { setRotation(QQuaternion::fromEulerAngles(x, y, z)); }
 inline void Transform3D::setRotation(const QVector3D& rotation) { setRotation(QQuaternion::fromEulerAngles(rotation)); }
 
-// Accessors
 inline const QVector3D& Transform3D::translation() const { return m_position; }
 inline const QVector3D& Transform3D::scale() const { return m_scale; }
 inline const QQuaternion& Transform3D::rotation() const { return m_rotation; }
