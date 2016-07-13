@@ -72,7 +72,7 @@ class PhysicsObject
 
         double mass = 0.5;
 
-		double remainingEnergy = 1;//0.94868329805;
+		double remainingEnergy = 0.94868329805;
 		double horizontalFriction = 0.000009;
 		double verticalFriction = 0.8;
 
