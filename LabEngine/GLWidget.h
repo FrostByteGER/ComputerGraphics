@@ -24,10 +24,13 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 		void initializeGL();
 		void resizeGL(int width, int height);
 		void paintGL();
+		void reinitializeScene();
+
 
 	signals:
 		void updateModels();
 		void updateWindowTitle(const QString& title);
+
 
 	public slots:
 		void fireUpdateWindowTitle();
@@ -44,6 +47,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 
 	private:
 		void printContextInformation();
+		void initializeScene();
 		PhysicsThread physicsSimulation;
 		Light directionalLight;
 		QMatrix4x4 projection;
@@ -58,10 +62,8 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 		QVector<Model*> models;
 		QString windowTitle;
 		uint32_t frameCount;
-		const QString vertexPath   = "Resources/Shaders/simple.vert";
-		const QString fragmentPath = "Resources/Shaders/simple.frag";
-		const QString cubePath     = "Resources/Models/crate/Crate.obj";
-		const QString spherePath   = "Resources/Models/Sphere.obj";
-		const QString floorPath    = "Resources/Models/Floor.obj";
+		const QString cubePath     = ":/Resources/Models/crate/Crate.obj";
+		const QString spherePath   = ":/Resources/Models/Sphere.obj";
+		const QString floorPath    = ":/Resources/Models/Floor.obj";
 };
 

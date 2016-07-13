@@ -2,12 +2,19 @@
 #include "ui_MainWindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QProcess>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
+
+	QList<QKeySequence> shortcuts;
+	shortcuts << QKeySequence("ESC") << QKeySequence("Ctrl+Q");
+	ui->actionQuit->setShortcuts(shortcuts);
+
 
 	// OpenGL Version
 	const int OPENGL_MAJOR_VERSION       = 3;
@@ -49,17 +56,19 @@ MainWindow::MainWindow(QWidget *parent) :
 	qWarning() << qPrintable("Alpha Buffer:   " + QString::number(format.alphaBufferSize()));
 	qWarning() << "### END ###";
 	connect(glWidget,SIGNAL(updateModels()),this, SLOT(updateModelData()));
-	connect(glWidget, SIGNAL(updateWindowTitle(QString)), this, SLOT(setTitle(QString)));
+	connect(&(glWidget->physicsSimulation),SIGNAL(initiateWin()),this, SLOT(showWinScreen()));
+
+	playlist = new QMediaPlaylist();
+	playlist->addMedia(QUrl(musicPath));
+	playlist->setPlaybackMode(QMediaPlaylist::Loop);
+	mediaPlayer.setPlaylist(playlist);
+	mediaPlayer.setVolume(35);
+	mediaPlayer.play();
 }
 
 MainWindow::~MainWindow()
 {
 	delete ui;
-}
-
-void MainWindow::setTitle(const QString& title)
-{
-	setWindowTitle(mainWindowTitle + title);
 }
 
 Ui::MainWindow* MainWindow::getUi()
@@ -84,52 +93,45 @@ void MainWindow::on_actionQuit_triggered()
 	QApplication::instance()->quit();
 }
 
-void MainWindow::on_XspnBox_valueChanged(double arg1)
+void MainWindow::on_XspnBox_valueChanged(double value)
 {
 	int row = ui->ModelList->currentRow();
 	if(row == -1){
 		return;
 	}
 	auto model = glWidget->models.at(row);
-	model->setLocation(arg1, model->getLocation().y(), model->getLocation().z());
+	model->setLocation(value, model->getLocation().y(), model->getLocation().z());
 }
 
-void MainWindow::on_YspnBox_valueChanged(double arg1)
+void MainWindow::on_YspnBox_valueChanged(double value)
 {
 	int row = ui->ModelList->currentRow();
 	if(row == -1){
 		return;
 	}
 	auto model = glWidget->models.at(row);
-	model->setLocation(model->getLocation().x(),arg1, model->getLocation().z());
+	model->setLocation(model->getLocation().x(),value, model->getLocation().z());
 }
 
-void MainWindow::on_ZspnBox_valueChanged(double arg1)
+void MainWindow::on_ZspnBox_valueChanged(double value)
 {
 	int row = ui->ModelList->currentRow();
 	if(row == -1){
 		return;
 	}
 	auto model = glWidget->models.at(row);
-	model->setLocation(model->getLocation().x(), model->getLocation().y(), arg1);
+	model->setLocation(model->getLocation().x(), model->getLocation().y(), value);
 }
 
 void MainWindow::on_AddModelBtn_clicked()
 {
-	QString filename = QFileDialog::getOpenFileName(this->centralWidget(),QString("Open OBJ"),QString(),QString("OBJ Files (*.obj)"));
-	qDebug() << filename;
-	if(!filename.isEmpty()){
-		Model* model = new Model(glWidget->cubePath.toStdString(),glWidget->shader, &(glWidget->physicsSimulation)); //filename.toStdString()
-		model->setModelColor(QColor(255,255,255));
-		if(model->isValid()){
-			glWidget->models.append(model);
-			QString name = filename.section('/',-1);
-			qDebug() << name;
-			ui->ModelList->addItem(new QListWidgetItem(name));
-		}else{
-			QMessageBox::critical(this->centralWidget(),QString("Error parsing OBJ!"),QString("There was an error parsing the selected .obj file!"),QMessageBox::Ok, QMessageBox::NoButton);
-		}
-
+	Model* model = new Model(glWidget->cubePath.toStdString(),QString("Dynamic Obstacle"),glWidget->shader, &(glWidget->physicsSimulation),COLLISION_BOX,MODEL_BOX); //filename.toStdString()
+	model->setModelColor(QColor(255,255,255));
+	model->setLocation(0,0,0);
+	if(model->isValid()){
+		glWidget->models.append(model);
+		qDebug() << model->getName();
+		ui->ModelList->addItem(new QListWidgetItem(model->getName()));
 
 	}
 }
@@ -152,6 +154,7 @@ void MainWindow::on_StartPhysicsBtn_clicked()
 {
 	if(glWidget->models.empty()){
 		qDebug() << "NO OBJECTS IN SCENE FOUND";
+		QMessageBox::critical(this->centralWidget(),QString("No objects in scene found!"),QString("There are no objects in the scene, please restart application!"),QMessageBox::Ok, QMessageBox::NoButton);
 		return;
 	}
 
@@ -214,11 +217,6 @@ void MainWindow::on_PausePhysicsBtn_clicked()
 	ui->PausePhysicsBtn->setEnabled(false);
 }
 
-void MainWindow::setMainWindowTitle(const QString& value)
-{
-	mainWindowTitle = value;
-}
-
 void MainWindow::on_ModelList_currentRowChanged(int currentRow)
 {
 	if(currentRow == -1){
@@ -232,9 +230,55 @@ void MainWindow::on_ModelList_currentRowChanged(int currentRow)
 
 void MainWindow::on_actionAbout_triggered()
 {
-	QMessageBox::about(this->centralWidget(), QString("LabEngine v0.0.1"), QString("Made by Kevin Kügler and Jan Schult"));
+	QMessageBox::about(this->centralWidget(), QString("Minigolf | LabEngine v0.0.2"), QString("Made by Kevin Kügler and Jan Schult"));
 }
 
 void MainWindow::showWinScreen(){
-	QMessageBox::about(this->centralWidget(),QString("You Won!!!"), QString("Congratulations, you won! To play again, please restart the application"));
+	if(!won){
+		won = true;
+		QMessageBox::about(this->centralWidget(),QString("You Won!!!"), QString("Congratulations, you won! To play again, press CTRL+R or select Reinitialize Scene from File Menu"));
+	}
+
+}
+
+void MainWindow::on_remEnergySpinBox_valueChanged(double value)
+{
+	for(Model* model : glWidget->models){
+		model->getCollider()->setRemainingEnergy(value);
+	}
+}
+
+void MainWindow::on_horiFrictionSpinBox_valueChanged(double value)
+{
+	for(Model* model : glWidget->models){
+		model->getCollider()->setHorizontalFriction(value);
+	}
+}
+
+void MainWindow::on_vertFrictionSpinBox_valueChanged(double value)
+{
+	for(Model* model : glWidget->models){
+		model->getCollider()->setVerticalFriction(value);
+	}
+}
+
+void MainWindow::on_gravitySpinBox_valueChanged(double value)
+{
+	glWidget->physicsSimulation.setG(value);
+}
+
+void MainWindow::on_simulationPauseSpinBox_valueChanged(int value)
+{
+	glWidget->physicsSimulation.setPauseTickTime(value);
+}
+
+void MainWindow::on_actionRestart_Scene_triggered()
+{
+	qApp->quit();
+	QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+}
+
+void MainWindow::on_actionControls_triggered()
+{
+	QMessageBox::about(this->centralWidget(),QString("Control Sheet"), QString("Hold the Right Mousebutton and use WASD to move in the scene. \nQ and E are for vertical movement. \n\nUse F1 to toggle Wireframe Mode. \n\nUse F2 and F3 to move the light around."));
 }

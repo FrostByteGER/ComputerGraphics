@@ -19,7 +19,7 @@ GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent)
 	windowUpdateTimer = new QTimer();
 	updateRenderType = false;
 	renderType = GL_FILL;
-	camera.setTranslation(20,15,10);
+	camera.setTranslation(35,20,20);
 	camera.rotate(-30.0f,1,0,0);
 	camera.rotate(60.0f,0,1,0);
 }
@@ -33,28 +33,10 @@ GLWidget::~GLWidget(){
 	delete windowUpdateTimer;
 	windowUpdateTimer = nullptr;
 }
-
-void GLWidget::initializeGL(){
-	initializeOpenGLFunctions();
-	connect(context(), SIGNAL(aboutToBeDestroyed()), this, SLOT(teardownGL()), Qt::DirectConnection);
-	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
-
-	connect(windowUpdateTimer, SIGNAL(timeout()), this, SLOT(fireUpdateWindowTitle()));
-	windowUpdateTimer->start(windowUpdateTime);
-	printContextInformation();
-	qDebug() << "ENGINE: Clock Precision is:" << LabEngine::HiResClock::period::den << "Ticks per Second." << "Clock is steady =" << LabEngine::HiResClock::is_steady;
-
-	glEnable(GL_MULTISAMPLE); // Enable MSAA
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-    //glEnable(GL_CULL_FACE);
-	glPolygonMode(GL_FRONT_AND_BACK, renderType);
-	glClearColor(0.0f,0.0f,0.0f,1.0f);
-
-
-	Model* box = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
-	Model* box2 = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
-	Model* box3 = new Model(cubePath.toStdString(), "Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
+void GLWidget::initializeScene(){
+	Model* box = new Model(cubePath.toStdString(), "Static Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
+	Model* box2 = new Model(cubePath.toStdString(), "Static Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
+	Model* box3 = new Model(cubePath.toStdString(), "Static Obstacle", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
 	Model* winBox = new Model(cubePath.toStdString(), "Target", shader, &physicsSimulation, COLLISION_BOX, MODEL_BOX);
 	Model* sphere1 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE, MODEL_SPHERE);
 	Model* playerSphere = new Model(spherePath.toStdString(), "Player Sphere", shader, &physicsSimulation, COLLISION_SPHERE, MODEL_SPHERE);
@@ -86,11 +68,11 @@ void GLWidget::initializeGL(){
 
 	models.append(playerSphere);
 	models.append(winBox);
+	models.append(arena);
 	models.append(box);
 	models.append(box2);
 	models.append(box3);
 	models.append(sphere1);
-	models.append(arena);
 
 	{
 		Model* sphere12 = new Model(spherePath.toStdString(), "Movable Obstacle", shader, &physicsSimulation, COLLISION_SPHERE);
@@ -192,6 +174,39 @@ void GLWidget::initializeGL(){
 		models.append(sphere7);
 	}
 
+	emit updateModels();
+}
+
+//TODO: Not working!
+void GLWidget::reinitializeScene()
+{
+	qDebug() << ">>>>>>>Reinitializing the Scene...<<<<<<<";
+	physicsSimulation.quit();
+	physicsSimulation.wait();
+	qDeleteAll(models);
+	models.clear();
+	this->initializeScene();
+}
+
+void GLWidget::initializeGL(){
+	initializeOpenGLFunctions();
+	connect(context(), SIGNAL(aboutToBeDestroyed()), this, SLOT(teardownGL()), Qt::DirectConnection);
+	connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
+
+	connect(windowUpdateTimer, SIGNAL(timeout()), this, SLOT(fireUpdateWindowTitle()));
+	windowUpdateTimer->start(windowUpdateTime);
+	printContextInformation();
+	qDebug() << "ENGINE: Clock Precision is:" << LabEngine::HiResClock::period::den << "Ticks per Second." << "Clock is steady =" << LabEngine::HiResClock::is_steady;
+
+	glEnable(GL_MULTISAMPLE); // Enable MSAA
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glPolygonMode(GL_FRONT_AND_BACK, renderType);
+	glClearColor(0.0f,0.0f,0.0f,1.0f);
+
+
+	// Populates the scene with Models
+	initializeScene();
 
 	//TODO: Write custom class that wraps around this with simple integers
 	//TODO2: move to main again with thread synchronization and wait for completion of initializeGL
@@ -201,7 +216,6 @@ void GLWidget::initializeGL(){
 		QCoreApplication::exit(-1);
 	}
 
-	emit updateModels();
 }
 
 void GLWidget::resizeGL(int width, int height){

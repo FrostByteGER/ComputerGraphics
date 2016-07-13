@@ -36,6 +36,10 @@ size_t ShaderManager::loadShader(const QString& vertexShaderPath, const QString&
 	return shaderList.size() - 1;
 }
 
+size_t ShaderManager::loadShader(){
+	return loadShader(this->vertexPath, this->fragmentPath);
+}
+
 std::vector<Shader*> ShaderManager::getShaderList() const
 {
 	return shaderList;

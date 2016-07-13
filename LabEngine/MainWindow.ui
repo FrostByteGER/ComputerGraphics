@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>768</height>
+    <height>811</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,20 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="GLWidget" name="renderWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>255</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3"/>
+     </widget>
+    </item>
     <item row="0" column="1">
      <widget class="QWidget" name="mainWidget" native="true">
       <layout class="QFormLayout" name="formLayout_2">
@@ -36,7 +50,10 @@
           <item>
            <widget class="QPushButton" name="AddModelBtn">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
+            </property>
+            <property name="toolTip">
+             <string>Currently disabled!</string>
             </property>
             <property name="text">
              <string>Add Model</string>
@@ -45,6 +62,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="RemoveModelBtn">
+            <property name="toolTip">
+             <string>Removes the currently selected Model from the scene.</string>
+            </property>
             <property name="text">
              <string>Remove Model</string>
             </property>
@@ -106,6 +126,9 @@
              </item>
              <item row="0" column="1">
               <widget class="QDoubleSpinBox" name="XspnBox">
+               <property name="toolTip">
+                <string>X-Axis Position of the currently selected Model </string>
+               </property>
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -116,6 +139,9 @@
              </item>
              <item row="1" column="1">
               <widget class="QDoubleSpinBox" name="YspnBox">
+               <property name="toolTip">
+                <string>Y-Axis Position of the currently selected Model </string>
+               </property>
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -126,6 +152,9 @@
              </item>
              <item row="2" column="1">
               <widget class="QDoubleSpinBox" name="ZspnBox">
+               <property name="toolTip">
+                <string>Z-Axis Position of the currently selected Model </string>
+               </property>
                <property name="minimum">
                 <double>-1000.000000000000000</double>
                </property>
@@ -161,7 +190,7 @@
           <item>
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Starting Velocity X:</string>
+             <string>Player Starting Velocity X:</string>
             </property>
             <property name="scaledContents">
              <bool>false</bool>
@@ -170,6 +199,9 @@
           </item>
           <item>
            <widget class="QDoubleSpinBox" name="VelocityXSpinBox">
+            <property name="toolTip">
+             <string>Starting Velocity of the Player Sphere in X-Axis direction</string>
+            </property>
             <property name="minimum">
              <double>-1000.000000000000000</double>
             </property>
@@ -181,12 +213,15 @@
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Starting Velocity Y:</string>
+             <string>Player Starting Velocity Y:</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QDoubleSpinBox" name="VelocityYSpinBox">
+            <property name="toolTip">
+             <string>Starting Velocity of the Player Sphere in Y-Axis direction</string>
+            </property>
             <property name="minimum">
              <double>-99.000000000000000</double>
             </property>
@@ -198,14 +233,169 @@
           <item>
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Starting Velocity Z:</string>
+             <string>Player Starting Velocity Z:</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QDoubleSpinBox" name="VelocityZSpinBox">
+            <property name="toolTip">
+             <string>Starting Velocity of the Player Sphere in Z-Axis direction</string>
+            </property>
             <property name="minimum">
              <double>-99.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>60</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Remaining Energy:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="remEnergySpinBox">
+            <property name="toolTip">
+             <string>Remaining Energy from collisions</string>
+            </property>
+            <property name="decimals">
+             <number>6</number>
+            </property>
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.010000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.948683000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Horizontal Friction</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="horiFrictionSpinBox">
+            <property name="toolTip">
+             <string>Horizontal Friction of all Models. Use very low values or Models will lose too much speed</string>
+            </property>
+            <property name="decimals">
+             <number>6</number>
+            </property>
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.000010000000000</double>
+            </property>
+            <property name="value">
+             <double>0.000900000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Vertical Friction</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="vertFrictionSpinBox">
+            <property name="toolTip">
+             <string>Vertical Friction of all Models</string>
+            </property>
+            <property name="decimals">
+             <number>6</number>
+            </property>
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.010000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.800000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Gravity:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="gravitySpinBox">
+            <property name="toolTip">
+             <string>Global Gravity</string>
+            </property>
+            <property name="decimals">
+             <number>6</number>
+            </property>
+            <property name="minimum">
+             <double>-1.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.000100000000000</double>
+            </property>
+            <property name="value">
+             <double>-0.000981000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Simulation Tick Pause:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="simulationPauseSpinBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>Pauses between simulation ticks(Currently disabled!)</string>
+            </property>
+            <property name="suffix">
+             <string>µs</string>
+            </property>
+            <property name="prefix">
+             <string/>
+            </property>
+            <property name="maximum">
+             <number>100000</number>
+            </property>
+            <property name="value">
+             <number>1</number>
             </property>
            </widget>
           </item>
@@ -241,6 +431,9 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="toolTip">
+                <string>Resumes the physics simulation</string>
+               </property>
                <property name="text">
                 <string>Resume Simulation</string>
                </property>
@@ -259,6 +452,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Pauses the physics simulation</string>
                </property>
                <property name="text">
                 <string>Pause Simulation</string>
@@ -281,6 +477,9 @@
                  <width>16777215</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="toolTip">
+                <string>Starts the physics simulation(Cannot be started again!)</string>
                </property>
                <property name="text">
                 <string>Start Simulation</string>
@@ -306,6 +505,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Stops the physics simulation(Cannot be started again!)</string>
                </property>
                <property name="layoutDirection">
                 <enum>Qt::LeftToRight</enum>
@@ -333,20 +535,6 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="GLWidget" name="renderWidget" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>255</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::ClickFocus</enum>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3"/>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -362,12 +550,14 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionRestart_Scene"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionControls"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
@@ -386,8 +576,18 @@
    <property name="text">
     <string>Quit</string>
    </property>
+  </action>
+  <action name="actionRestart_Scene">
+   <property name="text">
+    <string>Reinitialize Scene</string>
+   </property>
    <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionControls">
+   <property name="text">
+    <string>Controls</string>
    </property>
   </action>
  </widget>

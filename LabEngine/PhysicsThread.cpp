@@ -38,7 +38,6 @@ void PhysicsThread::run(){
 	qDebug() << "SUCCESSFULLY STARTED UP PHYSICS-SIMULATION";
 	forever{
 		mutex.lock();
-		//qDebug() << "RUNNING PHYSICS-SIMULATION";
 		runSimulation();
 		if(stop){
 			mutex.unlock();
@@ -77,8 +76,27 @@ void PhysicsThread::quit()
 	qDebug() << "STOPPING PHYSICS-THREAD";
 }
 
+double PhysicsThread::getG() const
+{
+	return g;
+}
+
+void PhysicsThread::setG(double value)
+{
+	g = value;
+}
+
+uint64_t PhysicsThread::getPauseTickTime() const
+{
+	return pauseTickTime;
+}
+
+void PhysicsThread::setPauseTickTime(const uint64_t& value)
+{
+	pauseTickTime = value;
+}
+
 void PhysicsThread::runSimulation(){
-	auto startTime = LabEngine::HiResClock::now();
 
 	// Collision Border
 	for(size_t i = 0 ; i < pobjectsSphere.size() ; i++) {
@@ -231,7 +249,7 @@ void PhysicsThread::runSimulation(){
 
 			if(Collision::SphereVersusBox( op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getMinX()+op2->getX() ,op2->getMinY()+op2->getY() ,op2->getMinZ()+op2->getZ() ,op2->getMaxX()+op2->getX() ,op2->getMaxY()+op2->getY() ,op2->getMaxZ()+op2->getZ())){
 				if(op1->getID() == 1 && op2->getID() == 2){
-					qDebug() << "WIN!!!!";
+					emit initiateWin();
 				}
                 if((op1->getX()+op1->getSize()) > op2->getMinX()+op2->getX() && op1->getX() < op2->getMinX()+op2->getX()){
                     if(op1->getVelocityX() > 0){
@@ -284,7 +302,7 @@ void PhysicsThread::runSimulation(){
 		}
 	}
 	if(pauseTickTime > 0.0){
-		this->msleep(pauseTickTime * 1000);
+		this->usleep(pauseTickTime);
 	}
 
 
@@ -387,12 +405,12 @@ void PhysicsThread::deregisterPhysicsBox(PhysicsBox* physicsObject)
 
 void PhysicsThread::deregisterPhysicsObject(PhysicsObject* object)
 {
-	auto sphere = static_cast<PhysicsSphere*>(object);
+	auto sphere = dynamic_cast<PhysicsSphere*>(object);
 	if(sphere){
 		deregisterPhysicsSphere(sphere);
 		return;
 	}
-	auto box = static_cast<PhysicsBox*>(object);
+	auto box = dynamic_cast<PhysicsBox*>(object);
 	if(box){
 		deregisterPhysicsBox(box);
 		return;

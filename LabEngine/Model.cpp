@@ -6,17 +6,21 @@
 Model::Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType, ModelType type) : shaderManager(sm), colliderType(collisionType)
 {
 	this->name = QString::fromStdString(path.substr(path.find_last_of('/') + 1,std::string::npos));
-	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
+	qDebug() << "CREATING NEW MODEL:" << name;
+	shaderID = shaderManager->loadShader();
 	qDebug() << "SHADERID: " <<shaderID;
 	switch (collisionType) {
 		case COLLISION_SPHERE:
 			this->collider = new PhysicsSphere(physicsSimulation, this, &(this->transform));
+			qDebug() << "CREATING NEW PHYSICS SPHERE";
 			break;
 		case COLLISION_BOX:
 			this->collider = new PhysicsBox(physicsSimulation, this, &(this->transform));
+			qDebug() << "CREATING NEW PHYSICS BOX";
 			break;
 		default:
 			this->collider = new PhysicsSphere(physicsSimulation, this, &(this->transform));
+			qDebug() << "CREATING NEW PHYSICS SPHERE";
 			break;
 	}
 
@@ -25,17 +29,21 @@ Model::Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsS
 
 Model::Model(const std::string& path, const QString& name, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType, ModelType type) : name(name), shaderManager(sm), colliderType(collisionType)
 {
-	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
+	qDebug() << "CREATING NEW MODEL:" << this->name;
+	shaderID = shaderManager->loadShader();
 	qDebug() << "SHADERID: " <<shaderID;
 	switch (collisionType) {
 		case COLLISION_SPHERE:
 			this->collider = new PhysicsSphere(physicsSimulation, this, &(this->transform));
+			qDebug() << "CREATING NEW PHYSICS SPHERE";
 			break;
 		case COLLISION_BOX:
 			this->collider = new PhysicsBox(physicsSimulation, this, &(this->transform));
+			qDebug() << "CREATING NEW PHYSICS BOX";
 			break;
 		default:
 			this->collider = new PhysicsSphere(physicsSimulation, this, &(this->transform));
+			qDebug() << "CREATING NEW PHYSICS SPHERE";
 			break;
 	}
 
@@ -44,7 +52,7 @@ Model::Model(const std::string& path, const QString& name, ShaderManager* sm, Ph
 
 Model::~Model(){
 	std::for_each(meshes.begin(), meshes.end(), std::default_delete<Mesh>());
-	qDebug() << "DELETING MODEL";
+	qDebug() << "DELETING MODEL" << this->name;
 	delete collider;
 }
 
@@ -68,7 +76,7 @@ void Model::loadModel(const std::string& path, const ModelType& type){
 	}
 	switch(type){
 		case MODEL_BOX:
-			textures.push_back(loadTextureFromFile("crate_diffuse.png",directory));
+			textures.push_back(loadTextureFromFile(crateTexturePath));
 			this->meshes.push_back(new Mesh(Models::box_vertices, Models::box_normals, Models::box_uvs, Models::box_indices, textures, shader, this));
 			break;
 		case MODEL_SPHERE:
@@ -80,8 +88,8 @@ void Model::loadModel(const std::string& path, const ModelType& type){
 	}
 }
 
-QOpenGLTexture* Model::loadTextureFromFile(const std::string& name, const std::string& directory){
-	QOpenGLTexture* tex = new QOpenGLTexture(QImage(QString::fromStdString(directory + "/" + name)).mirrored());
+QOpenGLTexture* Model::loadTextureFromFile(const std::string& path){
+	QOpenGLTexture* tex = new QOpenGLTexture(QImage(QString::fromStdString(path)).mirrored());
 	tex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
 	tex->setMagnificationFilter(QOpenGLTexture::Linear);
 	return tex;

@@ -15,6 +15,9 @@ class PhysicsObject;
 
 class PhysicsThread : public QThread
 {
+	Q_OBJECT
+
+
 	public:
 
 		PhysicsThread();
@@ -52,8 +55,17 @@ class PhysicsThread : public QThread
 		void pause();
 		void resume();
 
+		uint64_t getPauseTickTime() const;
+		void setPauseTickTime(const uint64_t& value);
+
+		double getG() const;
+		void setG(double value);
+
 	public slots:
 		virtual void quit();
+
+	signals:
+		void initiateWin();
 
 	private:
 		int minx = -25;
@@ -67,8 +79,8 @@ class PhysicsThread : public QThread
         double g = -0.000981;
 		bool stop = false;
 		bool bPause = false;
-		double pauseTickTime = 0;
-		double deltaTime = 1.0/120.0;
+		uint64_t pauseTickTime = 1;
+		double deltaTime = 1.0/5.0;
 		double elapsedTime = 0.0;
 
 		// Observer, do not delete pointers!

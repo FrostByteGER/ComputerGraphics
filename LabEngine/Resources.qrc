@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/Shaders/simple.frag</file>
+        <file>Resources/Shaders/simple.vert</file>
+        <file>Resources/Models/Crate/crate_diffuse.png</file>
+        <file>Resources/Sounds/main_track.mp3</file>
+    </qresource>
+</RCC>

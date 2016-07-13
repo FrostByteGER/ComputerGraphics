@@ -8,6 +8,7 @@ PhysicsBox::PhysicsBox(PhysicsThread* parentSimulation, Model* parent, Transform
 PhysicsBox::~PhysicsBox()
 {
 	parentSimulation->deregisterPhysicsBox(this);
+	qDebug() << "DELETING COLLIDER";
 }
 
 double PhysicsBox::getMaxX() const

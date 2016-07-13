@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include "Mesh.h"
 #include "ShaderManager.h"
 #include "PhysicsObject.h"
@@ -76,6 +77,7 @@ class Model
 		CollisionType colliderType;
 		bool valid = true;
 		void loadModel(const std::string& path, const ModelType& type);
-		QOpenGLTexture* loadTextureFromFile(const std::string& name, const std::string& directory);
+		QOpenGLTexture* loadTextureFromFile(const std::string& path);
+		const std::string crateTexturePath = ":/Resources/Models/Crate/crate_diffuse.png";
 };
 

@@ -17,7 +17,7 @@ class PhysicsObject
 	public:
 
 		PhysicsObject(PhysicsThread* parentSimulation, Model* parent, Transform3D* parentTransform);
-		~PhysicsObject();
+		virtual ~PhysicsObject();
 
 		double getX() const;
 		void setX(const double value);
@@ -72,7 +72,7 @@ class PhysicsObject
 
         double mass = 0.5;
 
-		double remainingEnergy = 0.94868329805;
+		double remainingEnergy = 1;//0.94868329805;
 		double horizontalFriction = 0.000009;
 		double verticalFriction = 0.8;
 

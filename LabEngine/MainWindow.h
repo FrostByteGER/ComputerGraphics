@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include "GLWidget.h"
 
 namespace Ui {
@@ -14,25 +16,20 @@ class MainWindow : public QMainWindow
 	public:
 		explicit MainWindow(QWidget *parent = 0);
 		~MainWindow();
-
 		Ui::MainWindow* getUi();
 
-
-		void setMainWindowTitle(const QString& value);
-
-		void showWinScreen();
 	public slots:
 		void updateModelData();
-		void setTitle(const QString& title);
+		void showWinScreen();
 
 	private slots:
 		void on_actionQuit_triggered();
 
-		void on_XspnBox_valueChanged(double arg1);
+		void on_XspnBox_valueChanged(double value);
 
-		void on_YspnBox_valueChanged(double arg1);
+		void on_YspnBox_valueChanged(double value);
 
-		void on_ZspnBox_valueChanged(double arg1);
+		void on_ZspnBox_valueChanged(double value);
 
 		void on_AddModelBtn_clicked();
 
@@ -50,8 +47,25 @@ class MainWindow : public QMainWindow
 
 		void on_actionAbout_triggered();
 
+		void on_remEnergySpinBox_valueChanged(double value);
+
+		void on_horiFrictionSpinBox_valueChanged(double value);
+
+		void on_vertFrictionSpinBox_valueChanged(double value);
+
+		void on_gravitySpinBox_valueChanged(double value);
+
+		void on_simulationPauseSpinBox_valueChanged(int value);
+
+		void on_actionRestart_Scene_triggered();
+
+		void on_actionControls_triggered();
+
 	private:
 		Ui::MainWindow *ui;
 		GLWidget* glWidget = nullptr;
-		QString mainWindowTitle;
+		QMediaPlayer mediaPlayer;
+		QMediaPlaylist* playlist = nullptr;
+		const QString musicPath = "qrc:/Resources/Sounds/main_track.mp3";
+		bool won = false;
 };
