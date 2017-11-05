@@ -204,12 +204,12 @@ size_t Mesh::getShaderID() const
 	return shaderID;
 }
 
-Transform3D Mesh::getTransform() const
+VTransform Mesh::getTransform() const
 {
 	return transform;
 }
 
-void Mesh::setTransform(const Transform3D& value)
+void Mesh::setTransform(const VTransform& value)
 {
 	transform = value;
 }

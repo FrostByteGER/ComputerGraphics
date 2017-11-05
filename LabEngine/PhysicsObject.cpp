@@ -1,7 +1,7 @@
 #include "PhysicsObject.h"
 #include <iostream>
 
-PhysicsObject::PhysicsObject(Model* parent, Transform3D* parentTransform) : parent(parent), transform(parentTransform)
+PhysicsObject::PhysicsObject(Model* parent, VTransform* parentTransform) : parent(parent), transform(parentTransform)
 {
 }
 

@@ -2,9 +2,9 @@ QT += core gui opengl
 
 LIBS    += -lOpengl32
 
-CONFIG += c++11
+CONFIG += c++17
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = LabEngine
 CONFIG += console
@@ -18,7 +18,6 @@ SOURCES += \
     Main.cpp \
     ShaderManager.cpp \
     Collision.cpp \
-    Transform3D.cpp \
     InputManager.cpp \
     Camera.cpp \
     Scene.cpp \
@@ -28,14 +27,14 @@ SOURCES += \
     PhysicsThread.cpp \
     PhysicsBox.cpp \
     PhysicsSphere.cpp \
-    GLWidget.cpp
+    GLWidget.cpp \
+    VTransform.cpp
 
 HEADERS += \
     Mesh.h \
     Model.h \
     ShaderManager.h \
     Collision.h \
-    Transform3D.h \
     InputManager.h \
     Camera.h \
     Scene.h \
@@ -45,14 +44,15 @@ HEADERS += \
     PointLight.h \
     PhysicsThread.h \
     PhysicsObject.h \
-    GLWidget.h
+    GLWidget.h \
+    VTransform.h
 
 FORMS += \
     MainWindow.ui
 
 
-win32-msvc2015:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mt
-else:win32-msvc2015:CONFIG(debug, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2015/ -lassimp-vc130-mtd
+win32-msvc2017:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2017/ -lassimp-vc140-mt
+else:win32-msvc2017:CONFIG(debug, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2017/ -lassimp-vc140-mtd
 
 win32-g++: LIBS += -L$$PWD/Libraries/Assimp/mingw/ -llibassimp.dll
 

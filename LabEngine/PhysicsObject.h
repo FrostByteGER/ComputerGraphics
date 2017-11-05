@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QVector3D>
-#include "Transform3D.h"
+#include "VTransform.h"
 
 
 class Model;
@@ -10,7 +10,7 @@ class PhysicsObject
 {
 	public:
 
-		PhysicsObject(Model* parent, Transform3D* parentTransform);
+		PhysicsObject(Model* parent, VTransform* parentTransform);
 		~PhysicsObject();
 
 		double getX() const;
@@ -55,7 +55,7 @@ class PhysicsObject
 		double x = 0.0;
 		double y = 0.0;
 		double z = 0.0;
-		Transform3D* transform;
+		VTransform* transform;
 
 		double velocityX = 0.0;
 		double velocityY = 0.0;
@@ -79,7 +79,7 @@ class PhysicsObject
 class PhysicsBox : public PhysicsObject
 {
     public:
-		PhysicsBox(Model* parent, Transform3D* parentTransform);
+		PhysicsBox(Model* parent, VTransform* parentTransform);
 		~PhysicsBox();
 
         double getMaxX() const;
@@ -116,7 +116,7 @@ class PhysicsBox : public PhysicsObject
 class PhysicsSphere : public PhysicsObject
 {
     public:
-		PhysicsSphere(Model* parent, Transform3D* parentTransform);
+		PhysicsSphere(Model* parent, VTransform* parentTransform);
 		~PhysicsSphere();
 
         double getSize() const;
