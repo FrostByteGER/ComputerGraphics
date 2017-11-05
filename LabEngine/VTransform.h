@@ -1,22 +1,25 @@
 #pragma once
 
-
 #include <QVector3D>
 #include <QQuaternion>
 #include <QMatrix4x4>
 
+//
+// Idea originally by Trent Reed
+// This class is based on the tutorial Qt5 OpenGL Part 2: 3D Rendering
+// Link: http://www.trentreed.net/blog/qt5-opengl-part-2-3d-rendering/
+// However no copy-paste was made and everything has been understood and is used in the project.
+//
+
 class VTransform
 {
 	public:
-		// Constructors
 		VTransform();
 
-		// Constants
 		static const QVector3D LocalForward;
 		static const QVector3D LocalUp;
 		static const QVector3D LocalRight;
 
-		// Transform By (Add/Scale)
 		void translate(const QVector3D &dt);
 		void translate(float dx, float dy, float dz);
 		void scale(const QVector3D &ds);
@@ -31,7 +34,6 @@ class VTransform
 		void grow(float dx, float dy, float dz);
 		void grow(float factor);
 
-		// Transform To (Setters)
 		void setTranslation(const QVector3D& t);
 		void setTranslation(const float& x, const float& y, const float& z);
 		void setTranslationX(const float& x);
@@ -57,24 +59,61 @@ class VTransform
 		QVector3D up() const;
 		QVector3D right() const;
 
+		// Operators
+		inline VTransform operator +(const VTransform& other){
+			VTransform combined;
+			combined.m_position = this->m_position + other.m_position;
+			combined.m_rotation = this->m_rotation + other.m_rotation;
+			combined.m_scale    = this->m_scale    + other.m_scale;
+			combined.m_world    = this->m_world    + other.m_world;
+			return combined;
+		}
+
+		inline VTransform operator -(const VTransform& other){
+			VTransform combined;
+			combined.m_position = this->m_position - other.m_position;
+			combined.m_rotation = this->m_rotation - other.m_rotation;
+			combined.m_scale    = this->m_scale    - other.m_scale;
+			combined.m_world    = this->m_world    - other.m_world;
+			return combined;
+		}
+
+		inline VTransform& operator +=(const VTransform& other){
+			this->m_position += other.m_position;
+			this->m_rotation += other.m_rotation;
+			this->m_scale    += other.m_scale;
+			this->m_world    += other.m_world;
+			return *this;
+		}
+
+		inline VTransform& operator -=(const VTransform& other){
+			this->m_position -= other.m_position;
+			this->m_rotation -= other.m_rotation;
+			this->m_scale    -= other.m_scale;
+			this->m_world    -= other.m_world;
+			return *this;
+		}
+
+		inline bool operator ==(const VTransform& other){
+			if(this->m_position == other.m_position && this->m_rotation == other.m_rotation && this->m_scale == other.m_scale && this->m_world == other.m_world) return true;
+			else return false;
+		}
+
+		inline bool operator !=(const VTransform& other){
+			if(this->m_position != other.m_position || this->m_rotation != other.m_rotation || this->m_scale != other.m_scale || this->m_world != other.m_world) return true;
+			else return false;
+		}
+
 	private:
 		bool needsUpdate;
 		QVector3D m_position;
 		QVector3D m_scale;
 		QQuaternion m_rotation;
 		QMatrix4x4 m_world;
-
-#ifndef QT_NO_DATASTREAM
-		friend QDataStream &operator<<(QDataStream &out, const VTransform &transform);
-		friend QDataStream &operator>>(QDataStream &in, VTransform &transform);
-#endif
 };
-
-Q_DECLARE_TYPEINFO(VTransform, Q_MOVABLE_TYPE);
 
 inline VTransform::VTransform() : needsUpdate(true), m_scale(1.0f, 1.0f, 1.0f) {}
 
-// Transform By (Add/Scale)
 inline void VTransform::translate(float dx, float dy,float dz) { translate(QVector3D(dx, dy, dz)); }
 inline void VTransform::scale(float dx, float dy,float dz) { scale(QVector3D(dx, dy, dz)); }
 inline void VTransform::scale(float factor) { scale(QVector3D(factor, factor, factor)); }
@@ -85,7 +124,6 @@ inline void VTransform::rotate(const QVector3D& drotation) {rotate(QQuaternion::
 inline void VTransform::grow(float dx, float dy, float dz) { grow(QVector3D(dx, dy, dz)); }
 inline void VTransform::grow(float factor) { grow(QVector3D(factor, factor, factor)); }
 
-// Transform To (Setters)
 inline void VTransform::setTranslation(const float& x, const float& y, const float& z) { setTranslation(QVector3D(x, y, z)); }
 inline void VTransform::setTranslationX(const float& x) { setTranslation(QVector3D(x, m_position.y(), m_position.z())); }
 inline void VTransform::setTranslationY(const float& y) { setTranslation(QVector3D(m_position.x(), y, m_position.z())); }
@@ -97,17 +135,6 @@ inline void VTransform::setRotation(const float& angle, const float& ax, const f
 inline void VTransform::setRotation(const float& x, const float& y, const float& z) { setRotation(QQuaternion::fromEulerAngles(x, y, z)); }
 inline void VTransform::setRotation(const QVector3D& rotation) { setRotation(QQuaternion::fromEulerAngles(rotation)); }
 
-// Accessors
 inline const QVector3D& VTransform::translation() const { return m_position; }
 inline const QVector3D& VTransform::scale() const { return m_scale; }
 inline const QQuaternion& VTransform::rotation() const { return m_rotation; }
-
-// Qt Streams
-#ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug dbg, const VTransform &transform);
-#endif
-
-#ifndef QT_NO_DATASTREAM
-QDataStream &operator<<(QDataStream &out, const VTransform &transform);
-QDataStream &operator>>(QDataStream &in, VTransform &transform);
-#endif
