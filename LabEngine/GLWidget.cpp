@@ -43,7 +43,7 @@ void GLWidget::initializeGL(){
 	glEnable(GL_MULTISAMPLE); // Enable MSAA
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-    //glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, renderType);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
@@ -126,9 +126,9 @@ void GLWidget::paintGL(){
 	qDebug() << derp;
 	if(derp >= 250.0f){
 		qDebug() << "ADDDDDDING MODEL!!!";
-		models.append(new Model(customPath.toStdString(), shader));
+		//models.append(new Model(customPath.toStdString(), shader));
 		derp = 0.0f;
-		emit updateModels();
+		//emit updateModels();
 	}
 	auto endTime = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> time = endTime - startTime;
