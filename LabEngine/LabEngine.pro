@@ -17,15 +17,10 @@ SOURCES += \
     Model.cpp \
     Main.cpp \
     ShaderManager.cpp \
-    Collision.cpp \
     Transform3D.cpp \
     InputManager.cpp \
     Camera.cpp \
     Shader.cpp \
-    PhysicsObject.cpp \
-    PhysicsThread.cpp \
-    PhysicsBox.cpp \
-    PhysicsSphere.cpp \
     GLWidget.cpp \
     MainWindow.cpp
 
@@ -33,14 +28,11 @@ HEADERS += \
     Mesh.h \
     Model.h \
     ShaderManager.h \
-    Collision.h \
     Transform3D.h \
     InputManager.h \
     Camera.h \
     Shader.h \
     Light.h \
-    PhysicsThread.h \
-    PhysicsObject.h \
     GLWidget.h \
     MainWindow.h
 

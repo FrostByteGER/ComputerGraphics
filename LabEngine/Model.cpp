@@ -5,30 +5,17 @@
 #include <memory>
 #include "Model.h"
 
-Model::Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType) : shaderManager(sm), colliderType(collisionType)
+Model::Model(const std::string& path, ShaderManager* sm) : shaderManager(sm)
 {
 	this->name = QString::fromStdString(path.substr(path.find_last_of('/') + 1,std::string::npos));
 	shaderID = shaderManager->loadShader("Resources/Shaders/simple.vert", "Resources/Shaders/simple.frag");
 	qDebug() << "SHADERID: " <<shaderID;
-	switch (collisionType) {
-		case COLLISION_SPHERE:
-			this->collider = new PhysicsSphere(physicsSimulation, this, &(this->transform));
-			break;
-		case COLLISION_BOX:
-			this->collider = new PhysicsBox(physicsSimulation, this, &(this->transform));
-			break;
-		default:
-			this->collider = new PhysicsSphere(physicsSimulation, this, &(this->transform));
-			break;
-	}
-
 	this->loadModel(path);
 
 }
 
 Model::~Model(){
 	std::for_each(meshes.begin(), meshes.end(), std::default_delete<Mesh>());
-	delete collider;
 }
 
 void Model::DrawModel(){
@@ -257,21 +244,6 @@ void Model::setForceColorOnly(const bool& value)
 	for(Mesh* m : meshes){
 		m->setForceColorOnly(value);
 	}
-}
-
-void Model::setColliderID(const int& id)
-{
-	collider->setID(id);
-}
-
-PhysicsObject* Model::getCollider() const
-{
-	return collider;
-}
-
-void Model::setCollider(PhysicsObject* value)
-{
-	collider = value;
 }
 
 bool Model::isValid() const

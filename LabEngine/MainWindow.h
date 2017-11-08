@@ -33,14 +33,6 @@ class MainWindow : public QMainWindow
 
 		void on_RemoveModelBtn_clicked();
 
-		void on_StartPhysicsBtn_clicked();
-
-		void on_StopPhysicsBtn_clicked();
-
-		void on_ResumePhysicsBtn_clicked();
-
-		void on_PausePhysicsBtn_clicked();
-
 	private:
 		Ui::MainWindow *ui;
 		GLWidget* glWidget = nullptr;

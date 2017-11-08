@@ -7,7 +7,6 @@
 #include "Camera.h"
 #include <chrono>
 #include "Light.h"
-#include "PhysicsThread.h"
 #include <QVector>
 
 
@@ -45,7 +44,6 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 
 	private:
 		void printContextInformation();
-		PhysicsThread physicsSimulation;
 		Light directionalLight;
 		QMatrix4x4 projection;
 		int worldToCamera;
