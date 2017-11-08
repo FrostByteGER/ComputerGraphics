@@ -14,20 +14,20 @@ class MainWindow : public QMainWindow
 	public:
 		explicit MainWindow(QWidget *parent = 0);
 		~MainWindow();
+
 		Ui::MainWindow* getUi();
 
 	public slots:
 		void updateModelData();
-		void showWinScreen();
 
 	private slots:
 		void on_actionQuit_triggered();
 
-		void on_XspnBox_valueChanged(double value);
+		void on_XspnBox_valueChanged(double arg1);
 
-		void on_YspnBox_valueChanged(double value);
+		void on_YspnBox_valueChanged(double arg1);
 
-		void on_ZspnBox_valueChanged(double value);
+		void on_ZspnBox_valueChanged(double arg1);
 
 		void on_AddModelBtn_clicked();
 
@@ -41,25 +41,8 @@ class MainWindow : public QMainWindow
 
 		void on_PausePhysicsBtn_clicked();
 
-		void on_ModelList_currentRowChanged(int currentRow);
-
-		void on_actionAbout_triggered();
-
-		void on_remEnergySpinBox_valueChanged(double value);
-
-		void on_horiFrictionSpinBox_valueChanged(double value);
-
-		void on_vertFrictionSpinBox_valueChanged(double value);
-
-		void on_gravitySpinBox_valueChanged(double value);
-
-		void on_simulationPauseSpinBox_valueChanged(int value);
-
-		void on_actionRestart_Scene_triggered();
-
-		void on_actionControls_triggered();
-
 	private:
 		Ui::MainWindow *ui;
 		GLWidget* glWidget = nullptr;
+		QString musicPath = "Resources/Music/track_01_main.mp3";
 };

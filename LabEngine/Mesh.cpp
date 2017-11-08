@@ -18,6 +18,7 @@ Mesh::~Mesh(){
 
 
 void Mesh::SetupMesh(){
+	//qDebug() << vertices.size() << " " << indices.size() << " " << normals.size() << " " << uvs.size();
 	vao.create();
 	vao.bind();
 
@@ -204,12 +205,12 @@ size_t Mesh::getShaderID() const
 	return shaderID;
 }
 
-VTransform Mesh::getTransform() const
+Transform3D Mesh::getTransform() const
 {
 	return transform;
 }
 
-void Mesh::setTransform(const VTransform& value)
+void Mesh::setTransform(const Transform3D& value)
 {
 	transform = value;
 }

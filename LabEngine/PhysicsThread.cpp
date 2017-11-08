@@ -80,7 +80,7 @@ void PhysicsThread::runSimulation(){
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	// Collision Border
-	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
+	for(size_t i = 0 ; i < pobjectsSphere.size() ; i++) {
 
 		PhysicsSphere* op = pobjectsSphere.at(i);
 		if(op->getIsMovable()){
@@ -138,9 +138,9 @@ void PhysicsThread::runSimulation(){
 	}
 
 	// Collision Sphere on Sphere
-	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
+	for(size_t i = 0 ; i < pobjectsSphere.size() ; i++) {
 		PhysicsSphere* op1 = pobjectsSphere.at(i);
-		for(int j = i ; j < pobjectsSphere.size() ; j++) {
+		for(size_t j = i ; j < pobjectsSphere.size() ; j++) {
 			PhysicsSphere* op2 = pobjectsSphere.at(j);
 
 			// Sphere on Sphere
@@ -208,15 +208,17 @@ void PhysicsThread::runSimulation(){
 		}
 	}
 
-	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
+	for(size_t i = 0 ; i < pobjectsSphere.size() ; i++) {
 		PhysicsSphere* op1 = pobjectsSphere.at(i);
-		for(int j = 0 ; j < pobjectsBox.size() ; j++) {
+		for(size_t j = 0 ; j < pobjectsBox.size() ; j++) {
 			PhysicsBox* op2 = pobjectsBox.at(j);
 
 
 
 			if(Collision::SphereVersusBox( op1->getX() ,op1->getY() ,op1->getZ() ,op1->getSize() ,op2->getMinX()+op2->getX() ,op2->getMinY()+op2->getY() ,op2->getMinZ()+op2->getZ() ,op2->getMaxX()+op2->getX() ,op2->getMaxY()+op2->getY() ,op2->getMaxZ()+op2->getZ())){
-
+				if(op1->getID() == 1 && op2->getID() == 2){
+					qDebug() << "WIN!!!!";
+				}
 				if((op1->getX()+op1->getSize()) > op2->getMinX() && op1->getX() < op2->getMinX()+op2->getX()){
 
 					if(op1->getVelocityX() > 0){
@@ -256,18 +258,24 @@ void PhysicsThread::runSimulation(){
 	}
 
 	// Move
-	for(int i = 0 ; i < pobjectsSphere.size() ; i++) {
+	for(size_t i = 0 ; i < pobjectsSphere.size() ; i++) {
 		PhysicsSphere* op = pobjectsSphere.at(i);
 		if(op->getIsMovable()){
 			op->setX(op->getX() + op->getVelocityX()*deltaTimeMS);
 			op->setY(op->getY() + op->getVelocityY()*deltaTimeMS);
 			op->setZ(op->getZ() + op->getVelocityZ()*deltaTimeMS);
+			//TODO: REMOVE
+//			if(op->velocityToAdd.x() > 0.0f || op->velocityToAdd.y() > 0.0f, op->velocityToAdd.z() > 0.0f){
+//				op->setX(op->getX() + op->velocityToAdd.x()*deltaTimeMS);
+//				op->setY(op->getY() + op->velocityToAdd.y()*deltaTimeMS);
+//				op->setZ(op->getZ() + op->velocityToAdd.z()*deltaTimeMS);
+//				op->velocityToAdd -= QVector3D(deltaTimeMS,deltaTimeMS,deltaTimeMS);
+//			}
 		}else{
 			op->setVelocityX(0.0);
 			op->setVelocityY(0.0);
 			op->setVelocityZ(0.0);
 		}
-
 	}
 	if(pauseTickTime > 0.0){
 		this->msleep(pauseTickTime);
@@ -282,7 +290,7 @@ void PhysicsThread::runSimulation(){
 		deltaTimeMS = 0.05;
 	}
 #endif
-	qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;
+	//qDebug() << "DeltaT NS: " << deltaTimeNS << " DeltaT MS: " << deltaTimeMS;
 }
 
 int PhysicsThread::getMiny() const

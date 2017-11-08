@@ -1,7 +1,7 @@
 #include "GLWidget.h"
 #include <QDebug>
 #include <QString>
-#include <QGuiApplication>
+#include <QApplication>
 #include <QKeyEvent>
 #include <QTime>
 #include <QTimer>
@@ -21,6 +21,7 @@ GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent)
 	windowUpdateTimer = new QTimer();
 	updateRenderType = false;
 	renderType = GL_LINE;
+	derp = 0.0f;
 }
 
 GLWidget::~GLWidget(){
@@ -47,23 +48,46 @@ void GLWidget::initializeGL(){
 	glPolygonMode(GL_FRONT_AND_BACK, renderType);
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 
-	this->model = new Model(cubePath.toStdString(), shader, COLLISION_BOX);
-	this->model2 = new Model(spherePath.toStdString(), shader, COLLISION_SPHERE);
-	this->model3 = new Model(customPath.toStdString(), shader, COLLISION_SPHERE);
-	this->model4 = new Model(spherePath.toStdString(), shader, COLLISION_SPHERE);
 
-    this->model->setLocation(0,-10,-5);
-	this->model2->setLocation(1,0,-5);
-	this->model3->setLocation(7,-10,-10);
-	this->model4->setLocation(1.5,5,-5);
+	Model* box = new Model(cubePath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
+	Model* box2 = new Model(cubePath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
+	Model* box3 = new Model(cubePath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
+	Model* winBox = new Model(cubePath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
+	Model* sphere1 = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* playerSphere = new Model(spherePath.toStdString(), shader, &physicsSimulation, COLLISION_SPHERE);
+	Model* arena = new Model(floorPath.toStdString(), shader, &physicsSimulation, COLLISION_BOX);
 
-	this->model->setModelColor(QColor(255,0,0,255));
-	this->model2->setModelColor(QColor(0,255,0,255));
-	this->model3->setModelColor(QColor(0,0,255,255));
-	this->model4->setModelColor(QColor(0,255,255,255));
-    physicsSimulation.registerPhysicsBox(static_cast<PhysicsBox*>(model->getCollider()));
-	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(model2->getCollider()));
-	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(model4->getCollider()));
+	playerSphere->setColliderID(1);
+	winBox->setColliderID(2);
+
+	playerSphere->setLocation(20,1.0,0);
+	box->setLocation(10,1,5);
+	box2->setLocation(1,1,9);
+	box3->setLocation(4,1,1);
+	winBox->setLocation(-20,1.0,0);
+	sphere1->setLocation(1,1,-5);
+	arena->setLocation(0,-1,0);
+
+	box->setModelColor(QColor(255,0,0,255));
+	winBox->setModelColor(QColor(255,215,0));
+	winBox->setForceColorOnly(true);
+	sphere1->setModelColor(QColor(0,255,0,255));
+	playerSphere->setModelColor(QColor(0,255,255,255));
+	arena->setModelColor(QColor(255,255,255));
+	physicsSimulation.registerPhysicsBox(static_cast<PhysicsBox*>(box->getCollider()));
+	physicsSimulation.registerPhysicsBox(static_cast<PhysicsBox*>(box2->getCollider()));
+	physicsSimulation.registerPhysicsBox(static_cast<PhysicsBox*>(box3->getCollider()));
+	physicsSimulation.registerPhysicsBox(static_cast<PhysicsBox*>(winBox->getCollider()));
+	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(sphere1->getCollider()));
+	physicsSimulation.registerPhysicsSphere(static_cast<PhysicsSphere*>(playerSphere->getCollider()));
+
+	models.append(playerSphere);
+	models.append(box);
+	models.append(box2);
+	models.append(box3);
+	models.append(sphere1);
+	models.append(arena);
+	models.append(winBox);
 
 
 
@@ -75,6 +99,8 @@ void GLWidget::initializeGL(){
 		qFatal(QString("FATAL ERROR: OPENGL VERSION INSUFFICIENT. REQUIRED: " + QString::number(format().version().first) + "." + QString::number(format().version().second)).toStdString().c_str());
 		QCoreApplication::exit(-1);
 	}
+
+	emit updateModels();
 }
 
 void GLWidget::resizeGL(int width, int height){
@@ -93,7 +119,6 @@ void GLWidget::paintGL(){
 	auto shaders = shader->getShaderList();
 	for(auto currentShader : shaders){
 		currentShader->bind();
-		//currentShader->setUniformValue("lightPosition", directionalLight.transform.translation());
 		currentShader->setAttributeValue("lightPosition", directionalLight.transform.translation());
 		currentShader->setUniformValue("lightColor", directionalLight.lightColor);
 		worldToCamera = currentShader->uniformLocation("worldToCamera");
@@ -106,23 +131,14 @@ void GLWidget::paintGL(){
 		}
 		currentShader->release();
 	}
-
-
-
-
-//	for(auto it = shaders.begin(); it != shaders.end(); ++it){
-//		auto currentShader = it.
-//		currentShader->bind();
-//		worldToCamera = currentShader->uniformLocation("worldToCamera");
-//		cameraToView = currentShader->uniformLocation("cameraToView");
-//		currentShader->setUniformValue(worldToCamera, camera.toMatrix());
-//		currentShader->setUniformValue(cameraToView, projection);
-//		auto meshes = shader->getMeshes(it.key());
-//		for(Mesh* mesh : meshes){
-//			mesh->DrawMesh(currentShader);
-//		}
-//		currentShader->release();
-//	}
+	derp += 1.0f;
+	qDebug() << derp;
+	if(derp >= 250.0f){
+		qDebug() << "ADDDDDDING MODEL!!!";
+		models.append(new Model(customPath.toStdString(), shader, &physicsSimulation));
+		derp = 0.0f;
+		emit updateModels();
+	}
 	auto endTime = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> time = endTime - startTime;
 	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
@@ -131,27 +147,14 @@ void GLWidget::paintGL(){
 
 void GLWidget::teardownGL(){
 	qWarning() << "TEARING DOWN OPENGL";
-	delete model;
-	model = nullptr;
-	delete model2;
-	model2 = nullptr;
-	delete model3;
-	model3 = nullptr;
-	delete shader;
-	shader = nullptr;
 }
 
 void GLWidget::update(){
-	//qWarning() << "UPDATING";
-
-    //model->rotate(0,1,0);
-	//model2->rotate(0,-1,-1);
-
 	InputManager::update();
 
 	if(InputManager::keyTriggered(Qt::Key_Escape)){
 		qWarning() << "CLOSING APPLICATION!";
-		QGuiApplication::instance()->quit();
+		QApplication::instance()->quit();
 	}
 	if(InputManager::keyTriggered(Qt::Key_F1)){
 		if(renderType == GL_LINE){

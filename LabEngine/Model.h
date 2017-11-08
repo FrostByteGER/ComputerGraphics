@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "ShaderManager.h"
 #include "PhysicsObject.h"
+#include "PhysicsThread.h"
 
 enum CollisionType {
 	COLLISION_BOX,
@@ -14,12 +15,12 @@ enum CollisionType {
 class Model
 {
 	public:
-		Model(const std::string& path, ShaderManager* sm, CollisionType collisionType = COLLISION_SPHERE);
+		Model(const std::string& path, ShaderManager* sm, PhysicsThread* physicsSimulation, CollisionType collisionType = COLLISION_SPHERE);
 		~Model();
 		void DrawModel();
 
-		const VTransform& getTransform() const;
-		void setTransform(const VTransform& value);
+		const Transform3D& getTransform() const;
+		void setTransform(const Transform3D& value);
 		const QVector3D& getLocation() const;
 		void setLocation(const QVector3D& location);
 		void setLocation(const float& x, const float& y, const float& z);
@@ -41,6 +42,8 @@ class Model
 		void rotate(const QQuaternion& drotation);
 		void rotate(const float& angle, const QVector3D& axis);
 		void rotate(const float& dyaw, const float& dpitch, const float& droll);
+		void setForceColorOnly(const bool& value);
+		void setColliderID(const int& id);
 
 		QMatrix4x4 toMatrix();
 
@@ -50,6 +53,10 @@ class Model
 		PhysicsObject* getCollider() const;
 		void setCollider(PhysicsObject* value);
 
+		bool isValid() const;
+
+		QString getName() const;
+
 	private:
 		QString name;
 		size_t shaderID;
@@ -57,10 +64,11 @@ class Model
 		//TODO: Maybe change to smartpointer!
 		std::vector<Mesh*> meshes;
 		std::string directory;
-		VTransform transform;
+		Transform3D transform;
 		QColor modelColor;
 		PhysicsObject* collider;
 		CollisionType colliderType;
+		bool valid = true;
 		void loadModel(const std::string& path);
 		void processNode(aiNode* node, const aiScene* scene);
 		Mesh* processMesh(aiMesh* mesh, const aiScene* scene);

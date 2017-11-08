@@ -1,16 +1,22 @@
 #pragma once
 
 #include <QVector3D>
-#include "VTransform.h"
+#include "Transform3D.h"
+#include "PhysicsThread.h"
 
 
 class Model;
+class PhysicsThread;
 
 class PhysicsObject
 {
+
+	friend class PhysicsBox;
+	friend class PhysicsSphere;
+
 	public:
 
-		PhysicsObject(Model* parent, VTransform* parentTransform);
+		PhysicsObject(PhysicsThread* parentSimulation, Model* parent, Transform3D* parentTransform);
 		~PhysicsObject();
 
 		double getX() const;
@@ -51,11 +57,13 @@ class PhysicsObject
         void setVerticalFriction(double value);
 
 	private:
+		PhysicsThread* parentSimulation;
+
 		Model* parent;
 		double x = 0.0;
 		double y = 0.0;
 		double z = 0.0;
-		VTransform* transform;
+		Transform3D* transform;
 
 		double velocityX = 0.0;
 		double velocityY = 0.0;
@@ -64,9 +72,9 @@ class PhysicsObject
 
 		double mass = 1.0;
 
-		double remainingEnergy = 0.94868329805;
-        double horizontalFriction = 0.9;
-        double verticalFriction = 0.9;
+		double remainingEnergy = 1.0; //0.94868329805;
+		double horizontalFriction = 1;
+		double verticalFriction = 0.9;
 
 
 		bool isMovable = true;
@@ -79,7 +87,7 @@ class PhysicsObject
 class PhysicsBox : public PhysicsObject
 {
     public:
-		PhysicsBox(Model* parent, VTransform* parentTransform);
+		PhysicsBox(PhysicsThread* parentSimulation, Model* parent, Transform3D* parentTransform);
 		~PhysicsBox();
 
         double getMaxX() const;
@@ -101,27 +109,29 @@ class PhysicsBox : public PhysicsObject
         void setMinZ(double value);
 
     private:
-        double maxX = 1;
-        double maxY = 1;
-        double maxZ = 1;
+		double maxX = 1;
+		double maxY = 1;
+		double maxZ = 1;
 
         double minX = -1;
         double minY = -1;
         double minZ = -1;
-
-        // 0,-10,-5
-        // -0.5
 };
 
 class PhysicsSphere : public PhysicsObject
 {
+	friend class PhysicsThread;
+
     public:
-		PhysicsSphere(Model* parent, VTransform* parentTransform);
+		PhysicsSphere(PhysicsThread* parentSimulation, Model* parent, Transform3D* parentTransform);
 		~PhysicsSphere();
 
         double getSize() const;
         void setSize(double value);
 
+		void addVelocity(const float& x, const float& y, const float& z);
+
     private:
 		double size = 1.0;
+		QVector3D velocityToAdd;
 };

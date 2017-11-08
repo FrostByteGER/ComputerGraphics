@@ -1,10 +1,10 @@
-QT += core gui opengl
+QT += core gui opengl multimedia
 
 LIBS    += -lOpengl32
 
-CONFIG += c++14
+CONFIG += c++11
 
-greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = LabEngine
 CONFIG += console
@@ -18,17 +18,15 @@ SOURCES += \
     Main.cpp \
     ShaderManager.cpp \
     Collision.cpp \
+    Transform3D.cpp \
     InputManager.cpp \
     Camera.cpp \
-    Scene.cpp \
     Shader.cpp \
-    Player.cpp \
     PhysicsObject.cpp \
     PhysicsThread.cpp \
     PhysicsBox.cpp \
     PhysicsSphere.cpp \
     GLWidget.cpp \
-    VTransform.cpp \
     MainWindow.cpp
 
 HEADERS += \
@@ -36,23 +34,19 @@ HEADERS += \
     Model.h \
     ShaderManager.h \
     Collision.h \
+    Transform3D.h \
     InputManager.h \
     Camera.h \
-    Scene.h \
     Shader.h \
-    Player.h \
     Light.h \
-    PointLight.h \
     PhysicsThread.h \
     PhysicsObject.h \
     GLWidget.h \
-    VTransform.h \
-    MainWindow.hpp
+    MainWindow.h
 
 FORMS += \
     MainWindow.ui
 
-message("Compiler Version is" $$COMPAT_MKSPEC)
 
 win32-msvc2017:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2017/ -lassimp-vc140-mt
 else:win32-msvc2017:CONFIG(debug, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2017/ -lassimp-vc140-mtd

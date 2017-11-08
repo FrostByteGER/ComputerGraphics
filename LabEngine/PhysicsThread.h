@@ -8,6 +8,9 @@
 #include <QWaitCondition>
 #include <chrono>
 
+class PhysicsBox;
+class PhysicsSphere;
+class PhysicsObject;
 
 class PhysicsThread : public QThread
 {
@@ -51,12 +54,12 @@ class PhysicsThread : public QThread
 
 	private:
 		int minx = -25;
-        int miny = -11;
-		int minz = -25;
+		int miny = 0;
+		int minz = -12.5;
 
 		int maxx = 25;
 		int maxy = 25;
-		int maxz = 25;
+		int maxz = 12.5;
 
 		double g = -0.0981;
 		bool stop = false;

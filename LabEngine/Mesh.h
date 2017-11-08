@@ -8,7 +8,7 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLTexture>
 #include "Shader.h"
-#include "VTransform.h"
+#include "Transform3D.h"
 
 class Model;
 class Shader;
@@ -24,8 +24,8 @@ class Mesh
 
 		size_t getShaderID() const;
 
-		VTransform getTransform() const;
-		void setTransform(const VTransform& value);
+		Transform3D getTransform() const;
+		void setTransform(const Transform3D& value);
 
 		Model* getParent() const;
 		void setParent(Model* value);
@@ -59,7 +59,7 @@ class Mesh
 		QColor meshColor;
 		bool forceColorOnly;
 		int modelToWorld;
-		VTransform transform;
+		Transform3D transform;
 		Model* parent;
 
 		void SetupMesh();

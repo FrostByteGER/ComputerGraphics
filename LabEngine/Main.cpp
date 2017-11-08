@@ -1,6 +1,6 @@
 #include <QApplication>
 #include <QString>
-#include "MainWindow.hpp"
+#include "MainWindow.h"
 #include "GLWidget.h"
 
 int main(int argc, char *argv[])
@@ -9,15 +9,13 @@ int main(int argc, char *argv[])
 	MainWindow mainWindow;
 
 	//Application Name
-	const QString applicationName = "Minigolf | LabEngine";
+	const QString applicationName = "LabEngine";
 
 	//Determine Compiler Type
 #ifdef __MINGW32__
 	mainWindow.setWindowTitle(applicationName + "   " + "MINGW x32");
 #elif _MSC_VER
-#if _MSC_VER == 1911
-	mainWindow.setWindowTitle(applicationName + "   " + "MSVC2017 x64");
-#elif _MSC_VER == 1900
+#if _MSC_VER == 1900
 	mainWindow.setWindowTitle(applicationName + "   " + "MSVC2015 x64");
 #elif _MSC_VER == 1800
 	mainWindow.setWindowTitle(applicationName + "   " + "MSVC2013 x64");
@@ -28,6 +26,9 @@ int main(int argc, char *argv[])
 	mainWindow.setWindowTitle(applicationName + "   " + "UNKNOWN COMPILER");
 #endif
 
+	//mainWindow.updateWindowTitle();
+
+	//window.show();
 	mainWindow.show();
 	return app.exec();
 }

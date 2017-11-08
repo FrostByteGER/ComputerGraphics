@@ -3,10 +3,6 @@
 #include <vector>
 #include <algorithm>
 
-
-/*******************************************************************************
- * Static Helper Structs
- ******************************************************************************/
 template <typename T>
 struct InputInstance : std::pair<T, InputManager::InputState>
 {
@@ -34,10 +30,6 @@ static QPoint sg_mouseCurrPosition;
 static QPoint sg_mousePrevPosition;
 static QPoint sg_mouseDelta;
 
-
-/*******************************************************************************
- * Static Helper Fucntions
- ******************************************************************************/
 static inline KeyContainer::iterator FindKey(Qt::Key value)
 {
 	return std::find(sg_keyInstances.begin(), sg_keyInstances.end(), value);

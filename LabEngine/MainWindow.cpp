@@ -1,9 +1,8 @@
-#include "MainWindow.hpp"
+#include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QProcess>
-#include <QUrl>
+#include <QSoundEffect>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -66,6 +65,7 @@ Ui::MainWindow* MainWindow::getUi()
 void MainWindow::updateModelData()
 {
 	qDebug() << glWidget->models.size();
+	ui->ModelList->clear();
 	for(Model* m :glWidget->models){
 		ui->ModelList->addItem(new QListWidgetItem(m->getName()));
 	}
@@ -111,7 +111,7 @@ void MainWindow::on_AddModelBtn_clicked()
 	QString filename = QFileDialog::getOpenFileName(this->centralWidget(),QString("Open OBJ"),QString(),QString("OBJ Files (*.obj)"));
 	qDebug() << filename;
 	if(!filename.isEmpty()){
-		Model* model = new Model(glWidget->cubePath.toStdString(),glWidget->shader, &(glWidget->physicsSimulation)); //filename.toStdString()
+		Model* model = new Model(filename.toStdString(),glWidget->shader, &(glWidget->physicsSimulation)); //
 		model->setModelColor(QColor(255,255,255));
 		if(model->isValid()){
 			glWidget->models.append(model);
@@ -135,4 +135,38 @@ void MainWindow::on_RemoveModelBtn_clicked()
 	}
 	delete glWidget->models.at(row);
 	glWidget->models.remove(row);
+}
+
+void MainWindow::on_StartPhysicsBtn_clicked()
+{
+	float x = ui->VelocityXSpinBox->value();
+	float y = ui->VelocityYSpinBox->value();
+	float z = ui->VelocityZSpinBox->value();
+	static_cast<PhysicsSphere*>(glWidget->models.at(0)->getCollider())->setVelocity(x,y,z);
+	glWidget->physicsSimulation.start();
+	ui->StartPhysicsBtn->setEnabled(false);
+	ui->PausePhysicsBtn->setEnabled(true);
+	ui->StopPhysicsBtn->setEnabled(true);
+}
+
+void MainWindow::on_StopPhysicsBtn_clicked()
+{
+	glWidget->physicsSimulation.quit();
+	ui->ResumePhysicsBtn->setEnabled(false);
+	ui->PausePhysicsBtn->setEnabled(false);
+	ui->StopPhysicsBtn->setEnabled(false);
+}
+
+void MainWindow::on_ResumePhysicsBtn_clicked()
+{
+	glWidget->physicsSimulation.TogglePause();
+	ui->ResumePhysicsBtn->setEnabled(false);
+	ui->PausePhysicsBtn->setEnabled(true);
+}
+
+void MainWindow::on_PausePhysicsBtn_clicked()
+{
+	glWidget->physicsSimulation.TogglePause();
+	ui->ResumePhysicsBtn->setEnabled(true);
+	ui->PausePhysicsBtn->setEnabled(false);
 }

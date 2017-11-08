@@ -1,10 +1,10 @@
 #pragma once
 
-#include "VTransform.h"
+#include "Transform3D.h"
 #include <QColor>
 
 struct Light{
-	VTransform transform;
+	Transform3D transform;
 	QColor lightColor;
 	float lightIntensity = 1.0f;
 };
