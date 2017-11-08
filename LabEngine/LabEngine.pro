@@ -2,7 +2,7 @@ QT += core gui opengl
 
 LIBS    += -lOpengl32
 
-CONFIG += c++17
+CONFIG += c++14
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
@@ -28,7 +28,8 @@ SOURCES += \
     PhysicsBox.cpp \
     PhysicsSphere.cpp \
     GLWidget.cpp \
-    VTransform.cpp
+    VTransform.cpp \
+    MainWindow.cpp
 
 HEADERS += \
     Mesh.h \
@@ -45,11 +46,13 @@ HEADERS += \
     PhysicsThread.h \
     PhysicsObject.h \
     GLWidget.h \
-    VTransform.h
+    VTransform.h \
+    MainWindow.hpp
 
 FORMS += \
     MainWindow.ui
 
+message("Compiler Version is" $$COMPAT_MKSPEC)
 
 win32-msvc2017:CONFIG(release, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2017/ -lassimp-vc140-mt
 else:win32-msvc2017:CONFIG(debug, debug|release): LIBS += -L$$PWD/Libraries/Assimp/msvc2017/ -lassimp-vc140-mtd

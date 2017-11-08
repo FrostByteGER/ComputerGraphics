@@ -84,24 +84,29 @@ QDebug operator<<(QDebug dbg, const VTransform &transform)
 {
 	dbg << "Transform3D\n{\n";
 	dbg << "Position: <" << transform.translation().x() << ", " << transform.translation().y() << ", " << transform.translation().z() << ">\n";
-	dbg << "Scale: <" << transform.scale().x() << ", " << transform.scale().y() << ", " << transform.scale().z() << ">\n";
-	dbg << "Rotation: <" << transform.rotation().x() << ", " << transform.rotation().y() << ", " << transform.rotation().z() << " | " << transform.rotation().scalar() << ">\n}";
+	dbg << "Rotation: <" << transform.rotation().x() << ", " << transform.rotation().y() << ", " << transform.rotation().z() << " | " << transform.rotation().scalar() << ">\n";
+	dbg << "Scale: <" << transform.scale().x() << ", " << transform.scale().y() << ", " << transform.scale().z() << ">\n}";
 	return dbg;
 }
 
 QDataStream &operator<<(QDataStream &out, const VTransform &transform)
 {
-	out << transform.m_position;
-	out << transform.m_scale;
-	out << transform.m_rotation;
+	out << transform.translation();
+	out << transform.rotation();
+	out << transform.scale();
 	return out;
 }
 
 QDataStream &operator>>(QDataStream &in, VTransform &transform)
 {
-	in >> transform.m_position;
-	in >> transform.m_scale;
-	in >> transform.m_rotation;
-	transform.needsUpdate = true;
+	QVector3D position;
+	QVector3D rotation;
+	QVector3D scale;
+	in >> position;
+	in >> rotation;
+	in >> scale;
+	transform.setTranslation(position);
+	transform.setRotation(rotation);
+	transform.setScale(scale);
 	return in;
 }
