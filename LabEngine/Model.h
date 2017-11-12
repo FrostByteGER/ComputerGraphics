@@ -12,8 +12,8 @@ class Model
 		~Model();
 		void DrawModel();
 
-		const Transform3D& getTransform() const;
-		void setTransform(const Transform3D& value);
+		const VTransform& getTransform() const;
+		void setTransform(const VTransform& value);
 		const QVector3D& getLocation() const;
 		void setLocation(const QVector3D& location);
 		void setLocation(const float& x, const float& y, const float& z);
@@ -53,7 +53,7 @@ class Model
 		//TODO: Maybe change to smartpointer!
 		std::vector<Mesh*> meshes;
 		std::string directory;
-		Transform3D transform;
+		VTransform transform;
 		QColor modelColor;
 		bool valid = true;
 		void loadModel(const std::string& path);

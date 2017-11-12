@@ -122,12 +122,12 @@ QOpenGLTexture* Model::loadTextureFromFile(const std::string& name, const std::s
 	return tex;
 }
 
-const Transform3D& Model::getTransform() const
+const VTransform& Model::getTransform() const
 {
 	return transform;
 }
 
-void Model::setTransform(const Transform3D& value)
+void Model::setTransform(const VTransform& value)
 {
 	transform = value;
 }

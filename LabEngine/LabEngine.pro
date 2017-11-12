@@ -17,24 +17,24 @@ SOURCES += \
     Model.cpp \
     Main.cpp \
     ShaderManager.cpp \
-    Transform3D.cpp \
     InputManager.cpp \
     Camera.cpp \
     Shader.cpp \
     GLWidget.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    VTransform.cpp
 
 HEADERS += \
     Mesh.h \
     Model.h \
     ShaderManager.h \
-    Transform3D.h \
     InputManager.h \
     Camera.h \
     Shader.h \
     Light.h \
     GLWidget.h \
-    MainWindow.h
+    MainWindow.h \
+    VTransform.h
 
 FORMS += \
     MainWindow.ui
