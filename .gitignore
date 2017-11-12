@@ -322,9 +322,6 @@ OpenCover/
 *.out
 *.app
 
-#Exclude specific folders
-!LabEngine/Resources/Models/**/*.obj
-
 # =========================
 # Operating System Files
 # =========================
@@ -402,3 +399,7 @@ Makefile*
 
 # QtCtreator CMake
 CMakeLists.txt.user
+
+#Exclude specific folders
+!LabEngine/Resources/Models/**/*.obj
+!LabEngine/Libraries/**
