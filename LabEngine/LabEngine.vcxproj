@@ -172,6 +172,7 @@ if %errorlevel% leq 3 exit 0 else exit %errorlevel%</Command>
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="EngineClock.cpp" />
     <ClCompile Include="VTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +204,7 @@ if %errorlevel% leq 3 exit 0 else exit %errorlevel%</Command>
     <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="EngineClock.h" />
     <ClInclude Include="VTransform.h" />
   </ItemGroup>
   <ItemGroup>

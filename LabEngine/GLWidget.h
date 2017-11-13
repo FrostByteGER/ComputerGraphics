@@ -8,7 +8,7 @@
 #include <chrono>
 #include "Light.h"
 #include <QVector>
-
+#include "EngineClock.h"
 
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
@@ -43,13 +43,12 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 		void update();
 
 	private:
+		EngineClock clock;
 		void printContextInformation();
 		Light directionalLight;
 		QMatrix4x4 projection;
 		int worldToCamera;
 		int cameraToProjection;
-		double deltaTimeNS;
-		double deltaTimeMS;
 		uint32_t windowUpdateTime;
 		std::chrono::high_resolution_clock timer;
 		QTimer* windowUpdateTimer;

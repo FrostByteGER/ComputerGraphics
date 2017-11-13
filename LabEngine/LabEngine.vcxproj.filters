@@ -89,6 +89,9 @@
     <ClCompile Include="Release\moc_GLWidget.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="EngineClock.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -123,6 +126,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineClock.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

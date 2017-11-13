@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// OpenGL Version
 	const int OPENGL_MAJOR_VERSION       = 4;
-	const int OPENGL_MINOR_VERSION       = 3;
+	const int OPENGL_MINOR_VERSION       = 6;
 
 	// OpenGL Buffer Sizes
 	const int OPENGL_DEPTH_BUFFER_SIZE   = 24;
@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	format.setGreenBufferSize(OPENGL_GREEN_BUFFER_SIZE);
 	format.setBlueBufferSize(OPENGL_BLUE_BUFFER_SIZE);
 	format.setAlphaBufferSize(OPENGL_ALPHA_BUFFER_SIZE);
+	format.setSwapInterval(0);
 
 	glWidget = ui->renderWidget;
 	glWidget->setFormat(format);

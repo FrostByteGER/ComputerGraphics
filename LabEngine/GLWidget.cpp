@@ -14,8 +14,6 @@ GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent)
 {
 	directionalLight.transform.setTranslation(0,10,5);
 	directionalLight.lightColor.setRgb(255,255,255);
-	deltaTimeNS = 0.0;
-	deltaTimeMS = 0.0;
 	windowUpdateTime = 100;
 	shader = new ShaderManager();
 	windowUpdateTimer = new QTimer();
@@ -101,7 +99,7 @@ void GLWidget::resizeGL(int width, int height){
 
 void GLWidget::paintGL(){
 
-	auto startTime = std::chrono::high_resolution_clock::now();
+	qDebug() << clock.GetFrameDelta();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if(updateRenderType){
 		glPolygonMode(GL_FRONT_AND_BACK, renderType);
@@ -123,17 +121,13 @@ void GLWidget::paintGL(){
 		currentShader->release();
 	}
 	derp += 1.0f;
-	qDebug() << derp;
+	//qDebug() << derp;
 	if(derp >= 250.0f){
-		qDebug() << "ADDDDDDING MODEL!!!";
+		//qDebug() << "ADDDDDDING MODEL!!!";
 		//models.append(new Model(customPath.toStdString(), shader));
 		derp = 0.0f;
 		//emit updateModels();
 	}
-	auto endTime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> time = endTime - startTime;
-	deltaTimeNS = std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
-	deltaTimeMS = deltaTimeNS / 1000000.0;
 }
 
 void GLWidget::teardownGL(){
